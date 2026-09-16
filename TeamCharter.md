@@ -48,6 +48,6 @@
 
 ## 9. Підписи
 - [x] Анастасія Покормяк (GitHub: @zarizanakulbabka)
-- [ ] Анастасія Лавришин (GitHub: @magicteamwinx)
+- [x] Анастасія Лавришин (GitHub: @magicteamwinx)
 - [x] Марія Ромах (GitHub: @regjine)
 - [x] Іван Балабанов (GitHub: @Ivan-Balabanov)
