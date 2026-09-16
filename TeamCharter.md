@@ -50,4 +50,4 @@
 - [x] Анастасія Покормяк (GitHub: @zarizanakulbabka)
 - [ ] Анастасія Лавришин (GitHub: @magicteamwinx)
 - [x] Марія Ромах (GitHub: @regjine)
-- [ ] Іван Балабанов (GitHub: @Ivan-Balabanov)
+- [x] Іван Балабанов (GitHub: @Ivan-Balabanov)
