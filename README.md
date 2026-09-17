@@ -1,3 +1,5 @@
+![CI Status](https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/workflows/ci.yml/badge.svg)
+
 # Reserve Flow
 Вебсервіс для бронювання приміщень у НаУКМА в онлайн-форматі.
 
