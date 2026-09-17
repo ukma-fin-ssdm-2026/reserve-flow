@@ -1,3 +1,5 @@
+![CI Status](https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/workflows/ci.yml/badge.svg)
+
 ## Робочий процес
 
 Команда відстежує всю роботу через GitHub Issues і дошку Project з чотирма колонками:
