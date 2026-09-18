@@ -30,5 +30,10 @@
 
 Issues групуються за milestones (наприклад, `Lab01: Team & Tooling Setup`), щоб відстежувати прогрес по кожному етапу проєкту окремо.
 
+## Артефакти вимог:
+- *requirements.md* з FR та NFR: https://github.com/ukma-fin-ssdm-2026/reserve-flow/blob/main/docs/requirements/reqirements.md
+- *user-stories.md* з 0 історіями: https://github.com/ukma-fin-ssdm-2026/reserve-flow/blob/main/docs/requirements/user-stories.md
+- *rtm.md* таблиця простежуваності: https://github.com/ukma-fin-ssdm-2026/reserve-flow/blob/main/docs/requirements/rtm.md
+
 ----------
 Використання ШІ: Структурування документа та базовий текст згенеровані за допомогою ШІ Claude на основі ідей команди. Увесь текст вичитано, відредаговано та затверджено учасниками команди для відповідності реальним планам проєкту
