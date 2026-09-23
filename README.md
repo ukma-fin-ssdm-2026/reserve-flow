@@ -17,6 +17,14 @@
 * `tests/` — модульні та інтеграційні тести
 * `labs/` — посилання на Loom-відео до лабораторних у txt-файлах
 
+## Артефакти вимог (Requirements Artifacts)
+
+Уся документація з інженерії вимог зберігається в каталозі `docs/requirements/`. Ключові документи проєкту:
+
+* [Користувацькі історії (User Stories)](docs/requirements/user-stories.md)
+* [Функціональні та нефункціональні вимоги (FR & NFR)](docs/requirements/requirements.md)
+* [Матриця простежуваності (Requirements Traceability Matrix)](docs/requirements/rtm.md)
+
 ## Робочий процес
 
 Команда відстежує всю роботу через GitHub Issues і дошку Project з чотирма колонками:
