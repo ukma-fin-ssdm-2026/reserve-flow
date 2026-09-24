@@ -40,7 +40,7 @@ Issues групуються за milestones (наприклад, `Lab01: Team & 
 
 ## Артефакти вимог:
 - *requirements.md* з FR та NFR: https://github.com/ukma-fin-ssdm-2026/reserve-flow/blob/main/docs/requirements/requirements.md
-- *user-stories.md* з 0 історіями: https://github.com/ukma-fin-ssdm-2026/reserve-flow/blob/main/docs/requirements/user-stories.md
+- *user-stories.md* з 8 історіями: https://github.com/ukma-fin-ssdm-2026/reserve-flow/blob/main/docs/requirements/user-stories.md
 - *rtm.md* таблиця простежуваності: https://github.com/ukma-fin-ssdm-2026/reserve-flow/blob/main/docs/requirements/rtm.md
 
 ----------
