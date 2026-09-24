@@ -24,6 +24,7 @@
 * [Користувацькі історії (User Stories)](docs/requirements/user-stories.md)
 * [Функціональні та нефункціональні вимоги (FR & NFR)](docs/requirements/requirements.md)
 * [Матриця простежуваності (Requirements Traceability Matrix)](docs/requirements/rtm.md)
+* [Варіанти використання (Use Cases)](docs/requirements/use-cases.md)
 
 ## Робочий процес
 
