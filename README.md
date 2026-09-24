@@ -24,6 +24,7 @@
 * [Користувацькі історії (User Stories)](docs/requirements/user-stories.md)
 * [Функціональні та нефункціональні вимоги (FR & NFR)](docs/requirements/requirements.md)
 * [Матриця простежуваності (Requirements Traceability Matrix)](docs/requirements/rtm.md)
+* [Варіанти використання (Use Cases)](docs/requirements/use-cases.md)
 
 ## Робочий процес
 
@@ -37,12 +38,6 @@
 Кожен issue має дві мітки: одну за **зоною відповідальності** (`repo`, `ci`, `tracker`, `brief`) і одну за **типом** (`bug`, `enhancement`, `documentation`, `task`, `question`, `scope`). Issues, пов'язані з невирішеними питаннями обсягу проєкту, позначаються міткою `scope` і розглядаються разом перед початком реалізації.
 
 Issues групуються за milestones (наприклад, `Lab01: Team & Tooling Setup`), щоб відстежувати прогрес по кожному етапу проєкту окремо.
-
-## Артефакти вимог:
-- *requirements.md* з FR та NFR: https://github.com/ukma-fin-ssdm-2026/reserve-flow/blob/main/docs/requirements/requirements.md
-- *user-stories.md* з 8 історіями: https://github.com/ukma-fin-ssdm-2026/reserve-flow/blob/main/docs/requirements/user-stories.md
-- *rtm.md* таблиця простежуваності: https://github.com/ukma-fin-ssdm-2026/reserve-flow/blob/main/docs/requirements/rtm.md
-- *use-cases.md* варіанти використання: https://github.com/ukma-fin-ssdm-2026/reserve-flow/blob/main/docs/requirements/use-cases.md
 
 ----------
 Використання ШІ: Структурування документа та базовий текст згенеровані за допомогою ШІ Claude на основі ідей команди. Увесь текст вичитано, відредаговано та затверджено учасниками команди для відповідності реальним планам проєкту
