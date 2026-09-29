@@ -1,0 +1,71 @@
+@startuml
+skinparam componentStyle uml2
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+' --- Налаштування чистої ортогональної сітки ---
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 50
+
+title Система бронювання приміщень НаУКМА — Компонентна діаграма
+
+package "Клієнтський шар" {
+    [Web SPA] as UI
+}
+
+package "Серверний шар (Monolith)" {
+    
+    package "API & Security Layer" {
+        [Auth REST Controller] as AuthCtrl
+        [Room REST Controller] as RoomCtrl
+        [Booking REST Controller] as BookCtrl
+        [Admin REST Controller] as AdminCtrl
+    }
+    
+    package "Business Domain Services" {
+        [User & Auth Service] as UserService
+        [Room Management Service] as RoomService
+        [Booking Engine Service] as BookService
+        [Audit Log Service] as AuditService
+    }
+    
+    package "Background Processing" {
+        [Notification Scheduler] as NotifyWorker
+    }
+}
+
+database "PostgreSQL / MySQL" as DB
+cloud "External Email Gateway" as SMTP
+
+' --- Взаємодія з веб-клієнтом ---
+UI -down-> AuthCtrl : HTTPS / REST
+UI -down-> RoomCtrl
+UI -down-> BookCtrl
+UI -down-> AdminCtrl
+
+' --- Прямі вертикальні виклики (Controller -> Service) ---
+AuthCtrl -down-> UserService : FR-001, FR-002
+RoomCtrl -down-> RoomService : FR-003, FR-008
+BookCtrl -down-> BookService : FR-005, FR-007..010
+AdminCtrl -down-> AuditService : FR-013
+
+' --- Додаткові адмінські зв'язки ---
+AdminCtrl -down-> UserService : FR-012
+AdminCtrl -down-> RoomService : FR-011, FR-012
+
+' --- Аудит логування ---
+BookService ..> AuditService : Log
+RoomService ..> AuditService : Log
+
+' --- Зв'язки із базою даних ---
+UserService -down-> DB
+RoomService -down-> DB
+BookService -down-> DB : JPA (Pessimistic Lock) [FR-006]
+AuditService -down-> DB
+
+' --- Фоновий сервіс сповіщень ---
+NotifyWorker -down-> DB : Cron check (FR-014)
+NotifyWorker -right-> SMTP : SMTPS / Retry (FR-015)
+
+@enduml
