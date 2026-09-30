@@ -1,0 +1,32 @@
+@startuml
+skinparam shadowing false
+
+title Reserve Flow — Алгоритм бронювання
+
+start
+:Студент надсилає запит на бронювання;
+:Перевірка JWT токена (Auth APIRouter);
+
+if (Користувач авторизований?) then (Так)
+  :Пошук перетинів часу в PostgreSQL;
+  if (Слот вільний?) then (Так)
+    :Блокування слоту (with_for_update);
+    :Збереження запису бронювання;
+    
+    fork
+      :Відповідь 201 Created;
+      :Оновлення інтерфейсу Web SPA;
+    fork again
+      :Запис задачі в SQLAlchemyJobStore;
+      :Notification Scheduler планує Email;
+    end fork
+  else (Ні)
+    :Відповідь 409 Conflict;
+    :Повідомлення "Аудиторія зайнята";
+  endif
+else (Ні)
+  :Відповідь 401 Unauthorized;
+endif
+
+stop
+@enduml
