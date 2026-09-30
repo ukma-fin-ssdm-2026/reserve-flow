@@ -1,0 +1,39 @@
+@startuml
+skinparam componentStyle uml2
+skinparam shadowing false
+autonumber
+
+title Reserve Flow — Діаграма послідовності (Створення бронювання)
+
+actor "Студент" as User
+participant "Web SPA" as UI
+participant "Booking APIRouter" as API
+participant "Booking Engine Service" as BookSvc
+participant "Room Management Service" as RoomSvc
+database "PostgreSQL" as DB
+
+User -> UI: Вибір кімнати та часу 
+UI -> API: POST /api/bookings
+
+activate API
+API -> BookSvc: create_booking(data)
+
+activate BookSvc
+BookSvc -> RoomSvc: check_availability(room_id, time)
+
+activate RoomSvc
+RoomSvc -> DB: SELECT з перевіркою перетинів
+DB --> RoomSvc: Слот вільний
+RoomSvc --> BookSvc: True
+deactivate RoomSvc
+
+BookSvc -> DB: INSERT booking (з with_for_update)
+DB --> BookSvc: Транзакція підтверджена
+BookSvc --> API: Об'єкт бронювання (Booking)
+deactivate BookSvc
+
+API --> UI: 201 Created
+deactivate API
+
+UI --> User: Відображення статусу "Успішно"
+@enduml

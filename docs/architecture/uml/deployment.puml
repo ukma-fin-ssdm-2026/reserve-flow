@@ -1,0 +1,36 @@
+@startuml
+skinparam componentStyle uml2
+skinparam shadowing false
+skinparam nodesep 50
+skinparam ranksep 50
+
+title Reserve Flow — Діаграма розгортання (Deployment)
+
+node "Пристрій користувача" as ClientNode <<Client>> {
+    node "Веб-браузер" as Browser {
+        artifact "Web SPA (HTML/JS)" as SPA
+    }
+}
+
+node "Хмарний сервер (Ubuntu / Docker)" as AppServer <<Server>> {
+    node "Uvicorn (ASGI Server)" {
+        component "FastAPI Monolith" as FastAPI
+    }
+    node "Background Process" {
+        component "APScheduler Worker" as Worker
+    }
+}
+
+node "Сервер Бази Даних" as DBServer <<Database>> {
+    database "PostgreSQL" as Postgres
+}
+
+cloud "Зовнішній поштовий шлюз" as SMTPServer <<External>>
+
+' Зв'язки та межі довіри (Trust Boundaries)
+Browser -right-> FastAPI : HTTPS / REST\n[Trust Boundary: Client-Server]
+FastAPI -down-> Postgres : TCP / 5432\n[Trust Boundary: App-DB]
+Worker -up-> Postgres : TCP / 5432
+Worker -right-> SMTPServer : SMTPS\n[Trust Boundary: App-External]
+
+@enduml
