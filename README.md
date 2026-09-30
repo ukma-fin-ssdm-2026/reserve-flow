@@ -26,6 +26,16 @@
 * [Матриця простежуваності (Requirements Traceability Matrix)](docs/requirements/rtm.md)
 * [Варіанти використання (Use Cases)](docs/requirements/use-cases.md)
 
+## Архітектурні артефакти (Architecture Artifacts)
+
+Усі архітектурні рішення, діаграми та моделі зберігаються в каталозі `docs/architecture/`. Ключові документи проєкту:
+
+* [Високорівневий дизайн (High-Level Design)](docs/architecture/high-level-design.md) — опис архітектурного стилю (модульний моноліт + SPA), компонентна архітектура та зведені UML-діаграми.
+* [Матриця простежуваності (Traceability Matrix)](docs/architecture/traceability-matrix.md) — відображення функціональних та нефункціональних вимог на конкретні архітектурні компоненти.
+* [Модель даних (Data Model)](docs/architecture/data-model.md) — ER-модель бази даних із позначеними чутливими даними.
+* [Модель загроз (Threat Model)](docs/architecture/threat-model.md) — аналіз безпекових ризиків за методологією STRIDE на основі діаграми розгортання.
+* [Журнал архітектурних рішень (ADR)](docs/architecture/decisions/) — реєстр ключових технічних рішень (вибір стилю, перехід на FastAPI тощо).
+
 ## Робочий процес
 
 Команда відстежує всю роботу через GitHub Issues і дошку Project з чотирма колонками:
