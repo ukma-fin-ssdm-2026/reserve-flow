@@ -1,0 +1,52 @@
+@startuml
+skinparam componentStyle uml2
+autonumber
+
+title Reserve Flow — Створення бронювання з перевіркою конфлікту
+
+actor "Студент" as User
+participant "Web SPA" as UI
+participant "Auth APIRouter" as Auth
+participant "Booking APIRouter" as BookAPI
+participant "Booking Engine Service" as BookSvc
+participant "Room Management Service" as RoomSvc
+database "PostgreSQL" as DB
+
+User -> UI: Запит на бронювання (кімната, час)
+UI -> Auth: Перевірка JWT токена
+activate Auth
+Auth --> UI: Авторизацію пройдено
+deactivate Auth
+
+UI -> BookAPI: POST /api/bookings
+activate BookAPI
+
+BookAPI -> BookSvc: create_booking(user_id, room_id, time)
+activate BookSvc
+
+BookSvc -> RoomSvc: check_availability(room_id, time)
+activate RoomSvc
+RoomSvc -> DB: SELECT з блокуванням (FOR UPDATE)
+activate DB
+DB --> RoomSvc: Результат перевірки перетинів
+deactivate DB
+RoomSvc --> BookSvc: Статус доступності
+deactivate RoomSvc
+
+alt Слот вільний
+    BookSvc -> DB: INSERT INTO bookings
+    activate DB
+    DB --> BookSvc: Транзакція успішна
+    deactivate DB
+    BookSvc --> BookAPI: Об'єкт бронювання
+    BookAPI --> UI: 201 Created
+    UI --> User: Бронювання успішне
+else Слот зайнятий (Конфлікт часу)
+    BookSvc --> BookAPI: Помилка (Слот недоступний)
+    BookAPI --> UI: 409 Conflict
+    UI --> User: Помилка "Аудиторія вже зайнята"
+end
+
+deactivate BookSvc
+deactivate BookAPI
+@enduml

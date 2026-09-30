@@ -1,23 +1,25 @@
 @startuml
 skinparam componentStyle uml2
-skinparam shadowing false
 skinparam nodesep 50
 skinparam ranksep 50
 
-title Reserve Flow — Діаграма розгортання (Deployment)
+title Reserve Flow — Діаграма розгортання
 
 node "Пристрій користувача" as ClientNode <<Client>> {
     node "Веб-браузер" as Browser {
-        artifact "Web SPA (HTML/JS)" as SPA
+        component "Web SPA" as SPA
     }
 }
 
-node "Хмарний сервер (Ubuntu / Docker)" as AppServer <<Server>> {
-    node "Uvicorn (ASGI Server)" {
-        component "FastAPI Monolith" as FastAPI
+node "Сервер додатку (Ubuntu / Docker)" as AppServer <<Server>> {
+    node "Uvicorn (ASGI)" {
+        component "FastAPI Monolith" as FastAPI {
+            artifact "API & Security Layer"
+            artifact "Business Domain Services"
+        }
     }
-    node "Background Process" {
-        component "APScheduler Worker" as Worker
+    node "Окремий процес" {
+        component "Notification Scheduler" as Worker
     }
 }
 
@@ -27,10 +29,14 @@ node "Сервер Бази Даних" as DBServer <<Database>> {
 
 cloud "Зовнішній поштовий шлюз" as SMTPServer <<External>>
 
-' Зв'язки та межі довіри (Trust Boundaries)
-Browser -right-> FastAPI : HTTPS / REST\n[Trust Boundary: Client-Server]
-FastAPI -down-> Postgres : TCP / 5432\n[Trust Boundary: App-DB]
+' Зв'язки та протоколи
+Browser -right-> FastAPI : HTTPS / REST
+FastAPI -down-> Postgres : TCP / 5432
 Worker -up-> Postgres : TCP / 5432
-Worker -right-> SMTPServer : SMTPS\n[Trust Boundary: App-External]
+Worker -right-> SMTPServer : SMTPS
 
+note right of Browser
+  Маріє, для таски L3-15 познач 
+  тут межі довіри (Trust Boundaries)
+end note
 @enduml
