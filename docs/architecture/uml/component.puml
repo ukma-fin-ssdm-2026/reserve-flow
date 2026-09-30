@@ -2,70 +2,69 @@
 skinparam componentStyle uml2
 skinparam packageStyle rectangle
 skinparam shadowing false
-
-' --- Налаштування чистої ортогональної сітки ---
-skinparam linetype ortho
 skinparam nodesep 60
 skinparam ranksep 50
 
-title Система бронювання приміщень НаУКМА — Компонентна діаграма
+title Система бронювання приміщень НаУКМА — Компонентна діаграма (FastAPI + SQLModel)
 
 package "Клієнтський шар" {
-    [Web SPA] as UI
+    [Web SPA\n(HTML+CSS+JS, i18n UA/EN — FR-004)] as UI
 }
 
-package "Серверний шар (Monolith)" {
-    
-    package "API & Security Layer" {
-        [Auth REST Controller] as AuthCtrl
-        [Room REST Controller] as RoomCtrl
-        [Booking REST Controller] as BookCtrl
-        [Admin REST Controller] as AdminCtrl
+package "Серверний шар (FastAPI Monolith)" {
+
+    package "API & Security Layer (FastAPI)" {
+        [Auth APIRouter\n(PyJWT / pwdlib / bcrypt)] as AuthCtrl
+        [Room APIRouter] as RoomCtrl
+        [Booking APIRouter] as BookCtrl
+        [Admin APIRouter] as AdminCtrl
     }
-    
+
     package "Business Domain Services" {
         [User & Auth Service] as UserService
         [Room Management Service] as RoomService
         [Booking Engine Service] as BookService
         [Audit Log Service] as AuditService
     }
-    
-    package "Background Processing" {
-        [Notification Scheduler] as NotifyWorker
+
+    package "Background Processing (Standalone Process)" {
+        [Notification Scheduler\n(APScheduler + SQLAlchemyJobStore)] as NotifyWorker
     }
 }
 
-database "PostgreSQL / MySQL" as DB
+database "PostgreSQL" as DB
 cloud "External Email Gateway" as SMTP
 
-' --- Взаємодія з веб-клієнтом ---
+' --- Frontend -> API ---
 UI -down-> AuthCtrl : HTTPS / REST
 UI -down-> RoomCtrl
 UI -down-> BookCtrl
 UI -down-> AdminCtrl
 
-' --- Прямі вертикальні виклики (Controller -> Service) ---
+' --- API -> Domain Services ---
 AuthCtrl -down-> UserService : FR-001, FR-002
-RoomCtrl -down-> RoomService : FR-003, FR-008
-BookCtrl -down-> BookService : FR-005, FR-007..010
+RoomCtrl -down-> RoomService : FR-003, FR-008, FR-009, FR-011
+BookCtrl -down-> BookService : FR-005, FR-007, FR-010
 AdminCtrl -down-> AuditService : FR-013
-
-' --- Додаткові адмінські зв'язки ---
 AdminCtrl -down-> UserService : FR-012
 AdminCtrl -down-> RoomService : FR-011, FR-012
 
-' --- Аудит логування ---
+' --- Внутрішні зв'язки сервісів ---
+BookService -left-> RoomService : перевірка слота
 BookService ..> AuditService : Log
 RoomService ..> AuditService : Log
 
-' --- Зв'язки із базою даних ---
+' --- Domain Services -> PostgreSQL ---
 UserService -down-> DB
 RoomService -down-> DB
-BookService -down-> DB : JPA (Pessimistic Lock) [FR-006]
+BookService -down-> DB : SQLModel / SQLAlchemy\n(with_for_update) [FR-006]
 AuditService -down-> DB
 
-' --- Фоновий сервіс сповіщень ---
-NotifyWorker -down-> DB : Cron check (FR-014)
-NotifyWorker -right-> SMTP : SMTPS / Retry (FR-015)
+' --- Background Worker ---
+NotifyWorker -down-> DB : кожні 30 с / стан задач (FR-014, PERF-002, REL-002)
+NotifyWorker ..> AuditService : помилки доставки (FR-015)
+NotifyWorker -right-> SMTP : SMTPS, ≥ 3 retry (REL-002)
+
+' --- Використання ШІ: у структуруванні документа та при додатковій перевірці відповідності стандартам завдання було використано ШІ Gemini (відповідно до  ідей команди). Документ перевірено, відредаговано та затверджено учасниками команди ---
 
 @enduml
