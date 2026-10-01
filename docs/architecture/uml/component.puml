@@ -50,14 +50,15 @@ AdminCtrl -down-> UserService : FR-012
 AdminCtrl -down-> RoomService : FR-011, FR-012
 
 ' --- Внутрішні зв'язки сервісів ---
-BookService -left-> RoomService : перевірка слота
+BookService -left-> RoomService : перевірка доступності слота
+RoomService -right-> BookService : перевірка активних бронювань (FR-008, FR-009)
 BookService ..> AuditService : Log
 RoomService ..> AuditService : Log
 
 ' --- Domain Services -> PostgreSQL ---
 UserService -down-> DB
 RoomService -down-> DB
-BookService -down-> DB : SQLModel / SQLAlchemy\n(with_for_update) [FR-006]
+BookService -down-> DB : SQLModel / SQLAlchemy\n(with_for_update + запис notification у тій же транзакції) [FR-006, FR-014]
 AuditService -down-> DB
 
 ' --- Background Worker ---
@@ -65,6 +66,6 @@ NotifyWorker -down-> DB : кожні 30 с / стан задач (FR-014, PERF-0
 NotifyWorker ..> AuditService : помилки доставки (FR-015)
 NotifyWorker -right-> SMTP : SMTPS, ≥ 3 retry (REL-002)
 
-' --- Використання ШІ: у структуруванні документа та при додатковій перевірці відповідності стандартам завдання було використано ШІ Gemini (відповідно до  ідей команди). Документ перевірено, відредаговано та затверджено учасниками команди ---
+' --- Використання ШІ: у структуруванні документа та при додатковій перевірці відповідності стандартам завдання було використано ШІ Gemini (відповідно до ідей команди). Документ перевірено, відредаговано та затверджено учасниками команди ---
 
 @enduml
