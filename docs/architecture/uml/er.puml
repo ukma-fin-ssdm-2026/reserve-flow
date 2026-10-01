@@ -32,7 +32,9 @@ entity "Room" as room {
   * building_ua : Enum
   * building_en : Enum
   * room_number : String
-  * is_approved : Boolean
+  * moderation_status: Enum
+  * approved_by : UUID <<FK -> User.id, nullable>>
+  * is_blocked: Boolean
 }
 
 entity "TimeSlot" as timeslot {
@@ -42,6 +44,7 @@ entity "TimeSlot" as timeslot {
   * start_time : Timestamp
   * end_time : Timestamp
   * is_available : Boolean
+  closure_reason : String
 }
 
 entity "Booking" as booking {
@@ -50,6 +53,7 @@ entity "Booking" as booking {
   * client_id : UUID <<FK>>
   * slot_id : UUID <<FK>>
   * status : Enum
+  * rejection_reason : String
   * created_at : Timestamp
 }
 
@@ -73,7 +77,8 @@ entity "AuditLog" as auditlog {
 }
 
 ' Зв'язки (Кардинальність)
-user ||--o{ room : "керує (Provider)"
+user ||--o{ room : "створює / володіє (Provider/Admin)" 
+user ||--o{ room : "модерує / погоджує (Admin)" 
 room ||--o{ timeslot : "містить"
 user ||--o{ booking : "створює (Client)"
 timeslot ||--o{ booking : "резервується в"

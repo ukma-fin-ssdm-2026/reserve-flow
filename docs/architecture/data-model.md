@@ -30,6 +30,8 @@
 
         notifications_enabled: Boolean
 
+        is_blocked: Boolean
+
     Room (Приміщення)
 
         id: UUID (PK)
@@ -53,7 +55,9 @@
 
         room_number : String
 
-        is_approved: Boolean (статус модерації адміном)
+        moderation_status: Enum (Pending, Approved, Rejected)
+
+        approved_by: UUID (FK -> User.id, Nullable)
 
     TimeSlot (Часовий слот)
 
@@ -67,6 +71,8 @@
 
         is_available: Boolean (контролюється постачальником)
 
+        closure_reason: String (Nullable)
+
     Booking (Бронювання)
 
         id: UUID (PK)
@@ -76,6 +82,8 @@
         slot_id: UUID (FK -> TimeSlot.id)
 
         status: Enum (Pending, Confirmed, Cancelled, Rejected)
+
+        rejection_reason: String 
 
         created_at: Timestamp
 
@@ -107,7 +115,9 @@
 
 3. Зв'язки та кардинальність:
 
-    User (Provider) ||--o{ Room: Один постачальник може керувати багатьма приміщеннями, кожне приміщення належить одному постачальнику.
+    User ||--o{ Room (через provider_id): Один постачальник або адміністратор може створювати та володіти багатьма приміщеннями; кожне приміщення закріплене за одним відповідальним користувачем (адміністратор, якщо постачальника ще не знайдено).
+
+    User ||--o{ Room (через approved_by): Один адміністратор може розглядати та погоджувати/відхиляти запити на публікацію багатьох приміщень; для кожного приміщення фіксується адміністратор, який провів модерацію (або значення відсутнє, якщо приміщення ще на розгляді).
 
     Room ||--o{ TimeSlot: Одне приміщення має багато часових слотів, слот належить одному приміщенню.
 
