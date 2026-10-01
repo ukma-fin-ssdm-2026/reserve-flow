@@ -1,0 +1,89 @@
+@startuml
+' Налаштування стилю для кращої читабельності 
+skinparam roundcorner 5
+skinparam linetype ortho
+skinparam shadowing false
+skinparam class {
+    BackgroundColor White
+    ArrowColor #2688d4
+    BorderColor #2688d4
+}
+
+' Сутності
+entity "User" as user {
+  * id : UUID <<PK>>
+  --
+  * email : String <<unique>> <<чутливі дані / зашифровано>>
+  * full_name : String <<персональні дані / зашифровано>>
+  * password_hash : String <<чутливі дані>>
+  * role : Enum <<чутливі дані>>
+  * notifications_enabled : Boolean
+}
+
+entity "Room" as room {
+  * id : UUID <<PK>>
+  --
+  * provider_id : UUID <<FK>>
+  * name_ua : String
+  * name_en : String
+  * capacity : Integer
+  * has_projector : Boolean
+  * is_shelter : Boolean
+  * building_ua : Enum
+  * building_en : Enum
+  * room_number : String
+  * moderation_status: Enum
+  * approved_by : UUID <<FK -> User.id, nullable>>
+  * is_blocked: Boolean
+}
+
+entity "TimeSlot" as timeslot {
+  * id : UUID <<PK>>
+  --
+  * room_id : UUID <<FK>>
+  * start_time : Timestamp
+  * end_time : Timestamp
+  * is_available : Boolean
+  closure_reason : String
+}
+
+entity "Booking" as booking {
+  * id : UUID <<PK>>
+  --
+  * client_id : UUID <<FK>>
+  * slot_id : UUID <<FK>>
+  * status : Enum
+  * rejection_reason : String
+  * created_at : Timestamp
+}
+
+entity "Notification" as notification {
+  * id : UUID <<PK>>
+  --
+  * booking_id : UUID <<FK>>
+  * scheduled_time : Timestamp
+  * status : Enum
+  * retry_count : Integer
+}
+
+entity "AuditLog" as auditlog {
+  * id : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>>
+  * action : String
+  * entity_type : Enum
+  * entity_id : UUID
+  * timestamp : Timestamp
+}
+
+' Зв'язки (Кардинальність)
+user ||--o{ room : "створює / володіє (Provider/Admin)" 
+user ||--o{ room : "модерує / погоджує (Admin)" 
+room ||--o{ timeslot : "містить"
+user ||--o{ booking : "створює (Client)"
+timeslot ||--o{ booking : "резервується в"
+booking ||--o| notification : "має нагадування"
+user ||--o{ auditlog : "виконує дії (Admin)"
+
+' --- Використання ШІ: Gemini для налаштування стилю документа. Документ перевірено, відредаговано та затверджено учасниками команди ---
+@enduml
