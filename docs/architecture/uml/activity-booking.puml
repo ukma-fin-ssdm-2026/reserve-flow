@@ -1,32 +1,50 @@
 @startuml
 skinparam shadowing false
 
-title Reserve Flow — Алгоритм бронювання
+title Reserve Flow — Алгоритм бронювання (FR-005, FR-006, REL-001)
 
+|Web SPA|
 start
-:Студент надсилає запит на бронювання;
-:Перевірка JWT токена (Auth APIRouter);
+:Клієнт обирає слот і надсилає запит на бронювання;
 
-if (Користувач авторизований?) then (Так)
-  :Пошук перетинів часу в PostgreSQL;
-  if (Слот вільний?) then (Так)
-    :Блокування слоту (with_for_update);
-    :Збереження запису бронювання;
-    
-    fork
-      :Відповідь 201 Created;
-      :Оновлення інтерфейсу Web SPA;
-    fork again
-      :Запис задачі в SQLAlchemyJobStore;
-      :Notification Scheduler планує Email;
-    end fork
-  else (Ні)
-    :Відповідь 409 Conflict;
-    :Повідомлення "Аудиторія зайнята";
-  endif
+|Booking APIRouter|
+:Перевірка JWT і ролі (Depends, FR-002);
+if (Токен дійсний і роль «Клієнт»?) then (Так)
 else (Ні)
-  :Відповідь 401 Unauthorized;
+  :Відповідь 401 / 403;
+  |Web SPA|
+  :Повідомлення про відсутність доступу;
+  stop
 endif
 
-stop
+|Booking Engine Service|
+:Початок транзакції;
+:Блокування рядка слота\n(SELECT ... FOR UPDATE);
+note right
+  Спочатку блокування, потім перевірка:
+  паралельний запит чекає тут,
+  доки транзакція не завершиться (REL-001)
+end note
+:Перевірка: слот доступний\nі не має активного бронювання;
+
+if (Слот вільний?) then (Так)
+  :Запис бронювання (status = Pending);
+  :Запис нагадування (Notification);
+  :COMMIT;
+  |Booking APIRouter|
+  :Відповідь 201 Created;
+  |Web SPA|
+  :«Заявку створено, очікує підтвердження»;
+  stop
+else (Ні)
+  |Booking Engine Service|
+  :ROLLBACK;
+  |Booking APIRouter|
+  :Відповідь 409 Conflict;
+  |Web SPA|
+  :«Обраний час уже зайнято»;
+  stop
+endif
+
+' --- Використання ШІ: виправлену версію підготовлено за допомогою ШІ Claude на основі попередньої діаграми команди, HLD і моделі даних. Перевірено і затверджено командою ---
 @enduml

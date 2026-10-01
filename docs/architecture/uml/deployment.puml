@@ -24,6 +24,9 @@ rectangle "TB1: Public Internet (Недовірена зона)" <<Trust Boundar
 
 rectangle "TB2: Application Zone (Внутрішня довірена мережа)" <<Trust Boundary>> {
     node "Сервер додатку (Ubuntu / Docker)" as AppServer <<Server>> {
+        node "Reverse Proxy (Nginx)" as Proxy {
+            component "Термінація HTTPS (TLS)" as TLS
+        }
         node "Uvicorn (ASGI)" {
             component "FastAPI Monolith" as FastAPI {
                 artifact "API & Security Layer"
@@ -47,7 +50,8 @@ rectangle "TB4: Third-Party Services (Зовнішня зона)" <<Trust Bounda
 }
 
 ' Зв'язки та протоколи
-Browser -right-> FastAPI : HTTPS / REST\n[Перетин TB1 - TB2]
+Browser -right-> Proxy : HTTPS / REST\n[Перетин TB1 - TB2]
+Proxy -right-> FastAPI : HTTP (localhost)
 FastAPI -down-> Postgres : TCP / 5432\n[Перетин TB2 - TB3]
 Worker -up-> Postgres : TCP / 5432 \n[Перетин TB2 - TB3]
 Worker -right-> SMTPServer : SMTPS\n[Перетин TB2 - TB4]
@@ -57,4 +61,5 @@ note right of Browser
 end note
 
 ' --- Використання ШІ: Gemini для налаштування стилю для меж довіри. Документ перевірено, відредаговано та затверджено учасниками команди ---
+' --- Reverse proxy (SEC-001) додано за допомогою ШІ Claude. Перевірено і затверджено учасниками команди ---
 @enduml
