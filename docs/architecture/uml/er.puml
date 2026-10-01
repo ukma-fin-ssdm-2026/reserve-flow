@@ -18,6 +18,7 @@ entity "User" as user {
   * password_hash : String <<чутливі дані>>
   * role : Enum <<чутливі дані>>
   * notifications_enabled : Boolean
+  * is_blocked: Boolean
 }
 
 entity "Room" as room {
@@ -34,7 +35,6 @@ entity "Room" as room {
   * room_number : String
   * moderation_status: Enum
   * approved_by : UUID <<FK -> User.id, nullable>>
-  * is_blocked: Boolean
 }
 
 entity "TimeSlot" as timeslot {
