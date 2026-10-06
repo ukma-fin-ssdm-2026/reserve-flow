@@ -14,7 +14,7 @@ package "Клієнтський шар" {
 package "Серверний шар (FastAPI Monolith)" {
 
     package "API & Security Layer (FastAPI)" {
-        [Auth APIRouter\n(PyJWT / pwdlib / bcrypt)] as AuthCtrl
+        [Auth APIRouter\n(PyJWT / pwdlib (bcrypt))] as AuthCtrl
         [Room APIRouter] as RoomCtrl
         [Booking APIRouter] as BookCtrl
         [Admin APIRouter] as AdminCtrl
@@ -42,30 +42,36 @@ UI -down-> BookCtrl
 UI -down-> AdminCtrl
 
 ' --- API -> Domain Services ---
-AuthCtrl -down-> UserService : FR-001, FR-002
-RoomCtrl -down-> RoomService : FR-003, FR-008, FR-009, FR-011
-BookCtrl -down-> BookService : FR-005, FR-007, FR-010
-AdminCtrl -down-> AuditService : FR-013
-AdminCtrl -down-> UserService : FR-012
-AdminCtrl -down-> RoomService : FR-011, FR-012
+AuthCtrl -down-> UserService : register / authenticate /\nget_current_user (FR-001, FR-002)
+RoomCtrl -down-> RoomService : search_available / set_slot_status /\nsubmit_room_request (FR-003, FR-008, FR-009, FR-011)
+BookCtrl -down-> BookService : create_booking / cancel_booking /\ndecide_booking (FR-005, FR-007, FR-010)
+AdminCtrl -down-> AuditService : query (FR-013)
+AdminCtrl -down-> UserService : set_blocked (FR-012)
+AdminCtrl -down-> RoomService : moderate_room (FR-011, FR-012)
 
 ' --- Внутрішні зв'язки сервісів ---
-BookService -left-> RoomService : перевірка доступності слота
-RoomService -right-> BookService : перевірка активних бронювань (FR-008, FR-009)
-BookService ..> AuditService : Log
-RoomService ..> AuditService : Log
+BookService -left-> RoomService : lock_slot (FOR UPDATE)
+BookService ..> AuditService : log
+RoomService ..> AuditService : log
 
 ' --- Domain Services -> PostgreSQL ---
 UserService -down-> DB
-RoomService -down-> DB
+RoomService -down-> DB : у т.ч. читання активних бронювань\nслота, лише читання (FR-009)
 BookService -down-> DB : SQLModel / SQLAlchemy\n(with_for_update + запис notification у тій же транзакції) [FR-006, FR-014]
 AuditService -down-> DB
 
 ' --- Background Worker ---
 NotifyWorker -down-> DB : кожні 30 с / стан задач (FR-014, PERF-002, REL-002)
-NotifyWorker ..> AuditService : помилки доставки (FR-015)
+NotifyWorker ..> AuditService : log — помилки доставки (FR-015)
 NotifyWorker -right-> SMTP : SMTPS, ≥ 3 retry (REL-002)
 
 ' --- Використання ШІ: у структуруванні документа та при додатковій перевірці відповідності стандартам завдання було використано ШІ Gemini (відповідно до ідей команди). Документ перевірено, відредаговано та затверджено учасниками команди ---
 
+note bottom of RoomService
+  Залежність між сервісами одностороння:
+  Booking Engine → Room Management (lock_slot).
+  Операції описано в HLD, розділ 4.2.
+end note
+
+' --- Підписи операцій і прибирання циклічної залежності: ШІ Claude, перевірено командою ---
 @enduml
