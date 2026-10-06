@@ -1,52 +1,68 @@
 @startuml
-skinparam componentStyle uml2
 autonumber
 
-title Reserve Flow — Створення бронювання з перевіркою конфлікту
+title Reserve Flow — Створення бронювання з перевіркою конфлікту (FR-005, FR-006, REL-001)
 
-actor "Студент" as User
+actor "Клієнт" as User
 participant "Web SPA" as UI
-participant "Auth APIRouter" as Auth
 participant "Booking APIRouter" as BookAPI
 participant "Booking Engine Service" as BookSvc
 participant "Room Management Service" as RoomSvc
 database "PostgreSQL" as DB
 
-User -> UI: Запит на бронювання (кімната, час)
-UI -> Auth: Перевірка JWT токена
-activate Auth
-Auth --> UI: Авторизацію пройдено
-deactivate Auth
-
-UI -> BookAPI: POST /api/bookings
+User -> UI: Обирає слот і натискає «Забронювати»
+UI -> BookAPI: POST /api/bookings (slot_id)\nAuthorization: Bearer JWT
 activate BookAPI
 
-BookAPI -> BookSvc: create_booking(user_id, room_id, time)
-activate BookSvc
+BookAPI -> BookAPI: Depends: перевірка JWT і ролі «Клієнт» (FR-002)
 
-BookSvc -> RoomSvc: check_availability(room_id, time)
-activate RoomSvc
-RoomSvc -> DB: SELECT з блокуванням (FOR UPDATE)
-activate DB
-DB --> RoomSvc: Результат перевірки перетинів
-deactivate DB
-RoomSvc --> BookSvc: Статус доступності
-deactivate RoomSvc
+alt Токен недійсний або роль не підходить
+    BookAPI --> UI: 401 Unauthorized / 403 Forbidden
+    UI --> User: Повідомлення про відсутність доступу
+else Доступ дозволено
+    BookAPI -> BookSvc: create_booking(client_id, slot_id)
+    activate BookSvc
 
-alt Слот вільний
-    BookSvc -> DB: INSERT INTO bookings
-    activate DB
-    DB --> BookSvc: Транзакція успішна
-    deactivate DB
-    BookSvc --> BookAPI: Об'єкт бронювання
-    BookAPI --> UI: 201 Created
-    UI --> User: Бронювання успішне
-else Слот зайнятий (Конфлікт часу)
-    BookSvc --> BookAPI: Помилка (Слот недоступний)
-    BookAPI --> UI: 409 Conflict
-    UI --> User: Помилка "Аудиторія вже зайнята"
+    group Одна транзакція БД (FR-006)
+        BookSvc -> RoomSvc: lock_slot(slot_id)
+        activate RoomSvc
+        RoomSvc -> DB: SELECT ... FROM timeslot\nWHERE id = slot_id FOR UPDATE
+        activate DB
+        DB --> RoomSvc: Рядок слота (заблоковано до кінця транзакції)
+        deactivate DB
+        RoomSvc --> BookSvc: Слот + is_available
+        deactivate RoomSvc
+
+        BookSvc -> DB: SELECT активні бронювання слота\n(status IN Pending, Confirmed)
+        activate DB
+        DB --> BookSvc: Результат
+        deactivate DB
+
+        alt Слот доступний і не має активного бронювання
+            BookSvc -> DB: INSERT INTO booking (status = Pending)
+            BookSvc -> DB: INSERT INTO notification (scheduled_time)
+            BookSvc -> DB: COMMIT
+            BookSvc --> BookAPI: Бронювання (Pending)
+            BookAPI --> UI: 201 Created
+            UI --> User: «Заявку створено, очікує підтвердження»
+        else Слот зайнятий або недоступний
+            BookSvc -> DB: ROLLBACK
+            BookSvc --> BookAPI: SlotUnavailable
+            BookAPI --> UI: 409 Conflict
+            UI --> User: «Обраний час уже зайнято»
+        end
+    end
+
+    deactivate BookSvc
 end
 
-deactivate BookSvc
 deactivate BookAPI
+
+note over BookSvc, DB
+Паралельний запит на той самий слот чекає на
+SELECT ... FOR UPDATE, доки перша транзакція не завершиться,
+і потім бачить уже створене бронювання (REL-001).
+end note
+
+' --- Використання ШІ: виправлену версію підготовлено за допомогою ШІ Claude на основі попередньої діаграми команди, HLD і моделі даних. Перевірено і затверджено командою ---
 @enduml

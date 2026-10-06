@@ -22,23 +22,27 @@ rectangle "TB1: Public Internet (Недовірена зона)" <<Trust Boundar
     }
 }
 
-rectangle "TB2: Application Zone (Внутрішня довірена мережа)" <<Trust Boundary>> {
-    node "Сервер додатку (Ubuntu / Docker)" as AppServer <<Server>> {
-        node "Uvicorn (ASGI)" {
+node "Хост застосунку (Ubuntu, Docker Compose)" as Host <<Server>> {
+
+    rectangle "TB2: Application Zone — Docker-мережа app_net" <<Trust Boundary>> {
+        node "Контейнер nginx\n(єдиний опублікований порт 443)" as Proxy <<Container>> {
+            component "Reverse Proxy (Nginx)\nтермінація HTTPS, limit_req" as TLS
+        }
+        node "Контейнер api\n(Uvicorn, ASGI)" as ApiNode <<Container>> {
             component "FastAPI Monolith" as FastAPI {
                 artifact "API & Security Layer"
                 artifact "Business Domain Services"
             }
         }
-        node "Окремий процес" {
+        node "Контейнер scheduler\n(окремий процес)" as WorkerNode <<Container>> {
             component "Notification Scheduler" as Worker
         }
     }
-}
 
-rectangle "TB3: Data Zone (Високодовірена ізольована мережа)" <<Trust Boundary>> {
-    node "Сервер Бази Даних" as DBServer <<Database>> {
-        database "PostgreSQL" as Postgres
+    rectangle "TB3: Data Zone — внутрішня Docker-мережа db_net (internal: true)" <<Trust Boundary>> {
+        node "Контейнер postgres\n(порт 5432 не опубліковано)" as DBNode <<Container>> {
+            database "PostgreSQL" as Postgres
+        }
     }
 }
 
@@ -47,14 +51,23 @@ rectangle "TB4: Third-Party Services (Зовнішня зона)" <<Trust Bounda
 }
 
 ' Зв'язки та протоколи
-Browser -right-> FastAPI : HTTPS / REST\n[Перетин TB1 - TB2]
+Browser -right-> Proxy : HTTPS / REST\n[Перетин TB1 - TB2]
+Proxy -right-> FastAPI : HTTP (app_net)
 FastAPI -down-> Postgres : TCP / 5432\n[Перетин TB2 - TB3]
-Worker -up-> Postgres : TCP / 5432 \n[Перетин TB2 - TB3]
+Worker -down-> Postgres : TCP / 5432\n[Перетин TB2 - TB3]
 Worker -right-> SMTPServer : SMTPS\n[Перетин TB2 - TB4]
 
 note right of Browser
 Кожен перетин (TB1-TB2, TB2-TB3, TB2-TB4) є місцем загрози.
 end note
 
+note bottom of DBNode
+Та сама фізична машина, що й api / scheduler,
+але окрема ізольована мережа: доступ до PostgreSQL
+мають лише контейнери api і scheduler (див. HLD, розділ 6).
+end note
+
 ' --- Використання ШІ: Gemini для налаштування стилю для меж довіри. Документ перевірено, відредаговано та затверджено учасниками команди ---
+' --- Reverse proxy (SEC-001) додано за допомогою ШІ Claude. Перевірено і затверджено учасниками команди ---
+' --- Розміщення БД узгоджено з HLD (один хост, ізольована мережа db_net) за допомогою ШІ Claude; Перевірено і затверджено учасниками команди ---
 @enduml
