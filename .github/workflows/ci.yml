@@ -16,3 +16,37 @@ jobs:
 
       - name: Run passing test
         run: echo "Hello World"
+
+  # Перевірка синтаксису та рендер UML-діаграм (задача #90 / L3-17)
+  uml:
+    runs-on: ubuntu-latest
+    env:
+      PLANTUML_VERSION: "1.2024.7"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Graphviz
+        run: sudo apt-get update && sudo apt-get install -y graphviz
+
+      - name: Download PlantUML
+        run: curl -sSL -o plantuml.jar "https://repo1.maven.org/maven2/net/sourceforge/plantuml/plantuml/${PLANTUML_VERSION}/plantuml-${PLANTUML_VERSION}.jar"
+
+      - name: Check .puml syntax
+        run: java -jar plantuml.jar -checkonly -failfast2 docs/architecture/uml/*.puml
+
+      - name: Render diagrams to SVG
+        run: java -jar plantuml.jar -tsvg -charset UTF-8 -o "$GITHUB_WORKSPACE/build/uml" docs/architecture/uml/*.puml
+
+      - name: Upload rendered diagrams
+        uses: actions/upload-artifact@v4
+        with:
+          name: uml-diagrams
+          path: build/uml/
