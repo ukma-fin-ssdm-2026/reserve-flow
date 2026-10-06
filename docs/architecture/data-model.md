@@ -83,7 +83,7 @@
 
         status: Enum (Pending, Confirmed, Cancelled, Rejected)
 
-        rejection_reason: String 
+        rejection_reason: String (Nullable) — обов'язкове лише для status = Rejected (FR-010)
 
         created_at: Timestamp
 
@@ -103,15 +103,23 @@
 
         id: UUID (PK)
 
-        user_id: UUID (FK -> User.id)
+        actor_type: Enum (User, System) — хто виконав дію: користувач чи системний процес (Notification Scheduler)
 
-        action: String
+        user_id: UUID (FK -> User.id, Nullable) — <<персональні дані>>; порожнє, якщо actor_type = System
 
-        entity_type: Enum (Room, Booking, TimeSlot)
+        action: Enum (BookingCreated, BookingCancelled, BookingConfirmed, BookingRejected, SlotStatusChanged, RoomRequestSubmitted, RoomApproved, RoomRejected, UserBlocked, UserUnblocked, NotificationFailed)
 
-        entity_id: UUID
+        entity_type: Enum (User, Room, TimeSlot, Booking, Notification)
+
+        entity_id: UUID — ідентифікатор об'єкта дії (без FK, бо тип об'єкта різний)
+
+        details: String (Nullable) — причина або текст помилки; без персональних даних
 
         timestamp: Timestamp
+
+        Інваріанти:
+        - actor_type = User  ⇔  user_id заповнене;
+        - записи лише додаються, не змінюються й не видаляються (захист від Repudiation, threat-model.md).
 
 3. Зв'язки та кардинальність:
 
@@ -127,6 +135,6 @@
 
     Booking ||--o| Notification: Одне бронювання може мати одне заплановане сповіщення.
 
-    User ||--o{ AuditLog: Один користувач може згенерувати багато записів аудиту.
+    User |o--o{ AuditLog: Один користувач може згенерувати багато записів аудиту; запис належить щонайбільше одному користувачу (для дій системи user_id порожнє).
 
 Використання ШІ: у структуруванні документа та при додатковій перевірці відповідності стандартам завдання було використано ШІ Gemini (відповідно до ідей команди). Документ було перевірено, доповнено, відредаговано та затверджено учасниками команди.
