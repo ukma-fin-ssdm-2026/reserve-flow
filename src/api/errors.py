@@ -109,3 +109,6 @@ async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONR
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content=ErrorResponse(error=body).model_dump(),
     )
+
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini. 
+    # Код вичитано, відредаговано та затверджено учасниками команди
