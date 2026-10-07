@@ -1,0 +1,84 @@
+import logging
+import uuid
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+
+from config import API_DESCRIPTION, API_TITLE, API_VERSION
+from errors import register_error_handlers
+from routes.health import router as health_router
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """L4-08: Життєвий цикл застосунку. Експорт OpenAPI при старті."""
+    try:
+        from export_openapi import export_openapi
+        export_openapi(app)
+        logging.info("OpenAPI специфікацію успішно експортовано.")
+    except ImportError:
+        logging.warning("Модуль export_openapi не знайдено. Експорт пропущено.")
+    except Exception as e:
+        logging.error(f"Помилка експорту OpenAPI: {e}")
+    
+    yield  # Сервер працює
+
+
+# Опис груп кінцевих точок у Swagger UI. Додавайте сюди тег свого роутера.
+OPENAPI_TAGS = [
+    {"name": "system", "description": "Службові кінцеві точки"},
+    # {"name": "auth", "description": "Отримання тестового токена (заглушка JWT)"},
+    # {"name": "slots", "description": "Пошук вільних слотів і керування їхньою доступністю"},
+    # {"name": "rooms", "description": "Приміщення"},
+    # {"name": "bookings", "description": "Бронювання слотів"},
+]
+
+app = FastAPI(
+    title=API_TITLE,
+    description=API_DESCRIPTION,
+    version=API_VERSION,
+    openapi_tags=OPENAPI_TAGS,
+    docs_url="/api-docs",
+    redoc_url="/redoc",
+    lifespan=lifespan, # Підключено lifespan (L4-08)
+)
+
+
+# --- Middleware ------------------------------------------------------------
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.middleware("http")
+async def correlation_id_middleware(request: Request, call_next):
+    """Генерує або приймає Correlation ID для кожного запиту (рішення D-04)."""
+    correlation_id = request.headers.get("X-Correlation-ID", str(uuid.uuid4()))
+    request.state.correlation_id = correlation_id
+    
+    response = await call_next(request)
+    
+    response.headers["X-Correlation-ID"] = correlation_id
+    return response
+
+
+# --- Обробники помилок -----------------------------------------------------
+register_error_handlers(app)
+
+
+# --- Роутери ---------------------------------------------------------------
+app.include_router(health_router)
+# L4-05: app.include_router(auth_router)
+# L4-06: app.include_router(bookings_router)
+# L4-07: app.include_router(slots_router); app.include_router(rooms_router)
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=3000)
