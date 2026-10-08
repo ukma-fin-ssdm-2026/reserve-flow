@@ -83,9 +83,11 @@ SPA звертається до API через HTTPS/REST з використа�
 
 #### 4.2.1 Зовнішній REST API (Web SPA → APIRouter)
 
+Посилання на [api-design.md](https://github.com/ukma-fin-ssdm-2026/reserve-flow/tree/main/docs/api)
+
 Загальні правила:
 
-- Усі кінцеві точки починаються з префіксу `/api/v1` (D-01).
+<!-- - Усі кінцеві точки починаються з префіксу `/api/v1` (D-01). NEEDS A CHANGE -->
 - Права перевіряє залежність FastAPI `Depends(get_current_user)` у кожному роутері (FR-002, D-06); роль береться лише з JWT-токена.
 - Помилки повертаються в єдиному форматі `ErrorResponse` (D-04) з обов'язковими полями `code`, `message`, `details` та `correlation_id`:
   - `401` — `UNAUTHORIZED` (немає або недійсний токен);
