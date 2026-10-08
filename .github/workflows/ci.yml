@@ -50,3 +50,40 @@ jobs:
         with:
           name: uml-diagrams
           path: build/uml/
+
+  # Тести API і перевірка, що docs/api/openapi-generated.yaml актуальний (L4-10, #143).
+  # Специфікацію генерує код (D-07), тому ручні зміни в YAML або забутий
+  # перегенерований файл роблять цю job червоною.
+  api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run API tests
+        run: pytest tests -q
+
+      - name: Regenerate OpenAPI
+        run: python src/api/export_openapi.py
+
+      - name: Check OpenAPI is up to date
+        run: |
+          # git status бачить і змінений, і ще не закомічений файл (git diff — лише перше)
+          changes=$(git status --porcelain -- docs/api/openapi-generated.yaml docs/api/openapi-generated.json)
+          if [ -n "$changes" ]; then
+            echo "::error file=docs/api/openapi-generated.yaml::OpenAPI застарів. Запустіть 'python src/api/export_openapi.py' і закомітьте docs/api/openapi-generated.*"
+            echo "$changes"
+            git --no-pager diff --stat -- docs/api/
+            exit 1
+          fi
+          echo "OpenAPI актуальний"

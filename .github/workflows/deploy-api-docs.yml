@@ -1,0 +1,87 @@
+# Публікація документації API на GitHub Pages (L4-11, #144).
+# Swagger UI (docs/api/index.html) + специфікація, згенерована з коду (D-07) + приклади mocks/.
+# Налаштування репо: Settings → Pages → Source: GitHub Actions.
+# Сайт Pages публічний навіть для приватного репо: у docs/api не має бути секретів.
+name: Deploy API docs
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "src/api/**"
+      - "docs/api/**"
+      - "requirements.txt"
+      - ".github/workflows/deploy-api-docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Один деплой за раз; новий push не перериває вже запущений деплой.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate OpenAPI from code
+        run: python src/api/export_openapi.py
+
+      # Swagger UI публікується за адресою /reserve-flow/api/ (посилання в README),
+      # а корінь сайту перенаправляє туди.
+      - name: Assemble site
+        run: |
+          mkdir -p _site/api
+          cp docs/api/index.html _site/api/
+          cp docs/api/openapi-generated.yaml _site/api/
+          if [ -f docs/api/openapi-generated.json ]; then cp docs/api/openapi-generated.json _site/api/; fi
+          if [ -d docs/api/mocks ]; then cp -r docs/api/mocks _site/api/; fi
+          cat > _site/index.html <<'HTML'
+          <!DOCTYPE html>
+          <html lang="uk">
+          <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="refresh" content="0; url=./api/">
+            <title>Reserve Flow API</title>
+          </head>
+          <body><a href="./api/">Reserve Flow API Documentation</a></body>
+          </html>
+          HTML
+          ls -R _site
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
