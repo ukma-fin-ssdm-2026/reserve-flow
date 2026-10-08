@@ -33,7 +33,7 @@ _SLOT_WITH_ACTIVE_BOOKING = "b2000000-0000-4000-8000-000000000002"
 )
 async def search_slots(
     # Фільтри
-    search_date: date | None = Query(None, description="Дата для пошуку (YYYY-MM-DD)"),
+    search_date: date | None = Query(None, alias="date", description="Дата для пошуку (YYYY-MM-DD)"),
     start: time | None = Query(None, description="Початок інтервалу (HH:MM:SS)"),
     end: time | None = Query(None, description="Кінець інтервалу (HH:MM:SS)"),
     capacity: int | None = Query(None, ge=1, le=500, description="Мінімальна місткість (1-500)"),

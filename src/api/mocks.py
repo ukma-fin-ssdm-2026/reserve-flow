@@ -81,6 +81,7 @@ BOOKINGS: list[dict] = [
         "client_id": USER_CLIENT_ID,
         "slot_id": SLOT_2_ID,
         "status": "Pending",
+        "purpose": "Зустріч студентського самоврядування",
         "rejection_reason": None,
         "created_at": datetime(2026, 10, 7, 10, 0, tzinfo=KYIV),
     },
