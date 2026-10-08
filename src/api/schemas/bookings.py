@@ -9,11 +9,12 @@ from pydantic import BaseModel, Field, model_validator
 
 
 class BookingStatus(str, Enum):
-    """Статуси бронювання (згідно з D-03)."""
+    """Статуси бронювання (D-03). Значення збігаються з Booking.status у data-model.md."""
 
-    ACTIVE = "ACTIVE"
-    CANCELLED = "CANCELLED"
-    COMPLETED = "COMPLETED"
+    PENDING = "Pending"
+    CONFIRMED = "Confirmed"
+    REJECTED = "Rejected"
+    CANCELLED = "Cancelled"
 
 
 class BookingCreate(BaseModel):
@@ -38,20 +39,23 @@ class BookingUpdate(BaseModel):
 
     status: BookingStatus = Field(
         ...,
-        description="Новий статус бронювання. Дозволені переходи: ACTIVE -> CANCELLED.",
-        examples=["CANCELLED"],
+        description="Новий статус бронювання. Дозволені переходи — в описі PATCH (D-03).",
+        examples=["Rejected"],
     )
     reason: str | None = Field(
         None,
-        description="Причина скасування. Обов'язкова при зміні статусу на CANCELLED.",
-        examples=["Змінився розклад пар"],
+        description=(
+            "Причина. Обов'язкова при відхиленні (`Rejected`, FR-010); "
+            "при скасуванні (`Cancelled`) — за бажанням."
+        ),
+        examples=["Аудиторія на ремонті"],
     )
 
     @model_validator(mode="after")
-    def check_reason_for_cancellation(self) -> Self:
-        """Перевірка наявності причини при скасуванні (викличе 422, якщо reason відсутній)."""
-        if self.status == BookingStatus.CANCELLED and not self.reason:
-            raise ValueError("Поле 'reason' є обов'язковим при скасуванні бронювання.")
+    def check_reason_for_rejection(self) -> Self:
+        """Відхилення без причини -> 422 VALIDATION_ERROR (FR-010)."""
+        if self.status == BookingStatus.REJECTED and not (self.reason and self.reason.strip()):
+            raise ValueError("Поле 'reason' є обов'язковим при відхиленні бронювання")
         return self
 
 
@@ -76,7 +80,7 @@ class BookingOut(BaseModel):
     status: BookingStatus = Field(
         ...,
         description="Поточний статус",
-        examples=["ACTIVE"],
+        examples=["Pending"],
     )
     purpose: str = Field(
         ...,
@@ -85,7 +89,7 @@ class BookingOut(BaseModel):
     )
     reason: str | None = Field(
         None,
-        description="Причина скасування, якщо статус CANCELLED",
+        description="Причина відхилення (`Rejected`) або скасування (`Cancelled`)",
         examples=["Змінився розклад пар"],
     )
     created_at: datetime = Field(
