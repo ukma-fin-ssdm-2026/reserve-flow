@@ -1,12 +1,13 @@
 """Кінцеві точки для роботи з часовими слотами."""
 from datetime import date, time
-from fastapi import APIRouter, Depends, Path, Query, status
+from fastapi import APIRouter, Depends, Path, Query, status, Body
 
 from config import API_PREFIX
 from errors import AppError, error_responses
 from mocks import SLOTS, find_by_id
 from schemas.common import Page, PaginationParams, paginate, pagination_params
-from schemas.slots import BuildingEnum, SlotOut, SlotPatchIn
+from schemas.slots import SlotOut, SlotPatchIn
+from schemas.rooms import BuildingEnumEn, BuildingEnum
 from deps import CurrentUser, get_current_user
 
 router = APIRouter(prefix=f"{API_PREFIX}/slots", tags=["slots"])
@@ -52,9 +53,9 @@ async def search_slots(
     responses=error_responses(401, 403, 404, 409, 422, 500),
 )
 async def patch_slot(
+    current_user: CurrentUser,
     slot_id: str = Path(..., description="ID слота"),
-    payload: SlotPatchIn = None,
-    current_user: CurrentUser = Depends(get_current_user)
+    payload: SlotPatchIn = Body(...),
 ) -> SlotOut:
     """Оновлення статусу слота (тільки для постачальника)."""
     # 1. Перевірка ролі (403)
