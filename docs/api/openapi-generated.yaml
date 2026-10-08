@@ -1,0 +1,686 @@
+openapi: 3.1.0
+info:
+  title: Reserve Flow API
+  description: 'REST API системи онлайн-бронювання приміщень НаУКМА.
+
+
+    Лабораторна 4: усі кінцеві точки повертають дані-заглушки. Специфікація OpenAPI
+    генерується автоматично з коду.'
+  version: 1.0.0
+paths:
+  /api/v1/health:
+    get:
+      tags:
+      - system
+      summary: Перевірити стан API
+      description: Повертає `ok`, якщо сервер запущено. Не потребує автентифікації.
+      operationId: get_health_api_v1_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthOut'
+        '500':
+          description: Внутрішня помилка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/auth/token:
+    post:
+      tags:
+      - auth
+      summary: Отримати тестовий токен
+      description: 'Lab 4: заглушка замість справжнього JWT. Повертає фіксований токен
+        тестового користувача, який далі передається в заголовку `Authorization: Bearer
+        <токен>` (кнопка **Authorize** у Swagger UI).
+
+
+        | email | Роль | Токен |
+
+        |---|---|---|
+
+        | `client@ukma.edu.ua` | Client | `mock-client-token` |
+
+        | `provider@ukma.edu.ua` | Provider | `mock-provider-token` |
+
+        | `admin@ukma.edu.ua` | Admin | `mock-admin-token` |
+
+
+        Пароль для всіх: `lab4-demo`. Невірні email або пароль → `401`.'
+      operationId: issue_token_api_v1_auth_token_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenOut'
+        '401':
+          description: Немає токена або токен недійсний
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Помилка валідації вхідних даних
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/auth/me:
+    get:
+      tags:
+      - auth
+      summary: Хто я
+      description: Повертає користувача, якому належить токен. Зручно перевірити,
+        чи працює **Authorize**.
+      operationId: read_me_api_v1_auth_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOut'
+        '401':
+          description: Немає токена або токен недійсний
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/bookings:
+    post:
+      tags:
+      - bookings
+      summary: Створити нове бронювання
+      description: Бронює вільний слот. У разі успіху повертає 201 та заголовок `Location`.
+      operationId: create_booking_api_v1_bookings_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingOut'
+        '401':
+          description: Немає токена або токен недійсний
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостатньо прав або ресурс належить іншому користувачу
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ресурс не знайдено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Конфлікт стану ресурсу
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Помилка валідації вхідних даних
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+      - bookings
+      summary: Отримати список бронювань
+      description: Повертає сторінку бронювань. Підтримує пагінацію та фільтрацію
+        за статусом.
+      operationId: get_bookings_api_v1_bookings_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/BookingStatus'
+          - type: 'null'
+          description: Фільтр за статусом
+          title: Status
+        description: Фільтр за статусом
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Page_BookingOut_'
+        '401':
+          description: Немає токена або токен недійсний
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Помилка валідації вхідних даних
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/bookings/{booking_id}:
+    get:
+      tags:
+      - bookings
+      summary: Отримати бронювання за ID
+      description: Повертає деталі конкретного бронювання.
+      operationId: get_booking_api_v1_bookings__booking_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: booking_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: ID бронювання
+          title: Booking Id
+        description: ID бронювання
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingOut'
+        '401':
+          description: Немає токена або токен недійсний
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостатньо прав або ресурс належить іншому користувачу
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ресурс не знайдено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Помилка валідації вхідних даних
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      tags:
+      - bookings
+      summary: Змінити статус бронювання
+      description: Дозволяє скасувати активне бронювання (D-03). Помилка `409`, якщо
+        скасування запізніле або неможливе.
+      operationId: update_booking_api_v1_bookings__booking_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: booking_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: ID бронювання
+          title: Booking Id
+        description: ID бронювання
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingOut'
+        '401':
+          description: Немає токена або токен недійсний
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Недостатньо прав або ресурс належить іншому користувачу
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ресурс не знайдено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Конфлікт стану ресурсу
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Помилка валідації вхідних даних
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    BookingCreate:
+      properties:
+        slot_id:
+          type: string
+          format: uuid
+          title: Slot Id
+          description: Унікальний ідентифікатор слоту, який бронюється
+          examples:
+          - 123e4567-e89b-12d3-a456-426614174000
+        purpose:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Purpose
+          description: Мета бронювання приміщення
+          examples:
+          - Зустріч студентського самоврядування
+      type: object
+      required:
+      - slot_id
+      - purpose
+      title: BookingCreate
+      description: Модель створення нового бронювання.
+    BookingOut:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: Унікальний ідентифікатор бронювання
+          examples:
+          - 987fcdeb-51a2-43d7-9012-3456789abcde
+        slot_id:
+          type: string
+          format: uuid
+          title: Slot Id
+          description: Унікальний ідентифікатор заброньованого слоту
+          examples:
+          - 123e4567-e89b-12d3-a456-426614174000
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+          description: Ідентифікатор користувача, який створив бронювання
+          examples:
+          - 550e8400-e29b-41d4-a716-446655440000
+        status:
+          $ref: '#/components/schemas/BookingStatus'
+          description: Поточний статус
+          examples:
+          - ACTIVE
+        purpose:
+          type: string
+          title: Purpose
+          description: Мета бронювання
+          examples:
+          - Зустріч студентського самоврядування
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+          description: Причина скасування, якщо статус CANCELLED
+          examples:
+          - Змінився розклад пар
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Час створення запису
+          examples:
+          - '2025-10-24T14:30:00Z'
+      type: object
+      required:
+      - slot_id
+      - user_id
+      - status
+      - purpose
+      title: BookingOut
+      description: Модель віддачі даних про бронювання.
+    BookingStatus:
+      type: string
+      enum:
+      - ACTIVE
+      - CANCELLED
+      - COMPLETED
+      title: BookingStatus
+      description: Статуси бронювання (згідно з D-03).
+    BookingUpdate:
+      properties:
+        status:
+          $ref: '#/components/schemas/BookingStatus'
+          description: 'Новий статус бронювання. Дозволені переходи: ACTIVE -> CANCELLED.'
+          examples:
+          - CANCELLED
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+          description: Причина скасування. Обов'язкова при зміні статусу на CANCELLED.
+          examples:
+          - Змінився розклад пар
+      type: object
+      required:
+      - status
+      title: BookingUpdate
+      description: Модель оновлення бронювання (переходи статусів).
+    ErrorBody:
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: Машинозчитуваний код помилки
+        message:
+          type: string
+          title: Message
+          description: Повідомлення для користувача, без внутрішніх деталей
+          examples:
+          - Обраний час уже зайнято
+        details:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+          title: Details
+          description: Деталі, зокрема список некоректних полів
+        correlation_id:
+          type: string
+          title: Correlation Id
+          description: Ідентифікатор для звернення в підтримку; той самий записано
+            в лог
+          examples:
+          - 6f1c2a3e-8b7d-4e0a-9f21-3c4d5e6f7a8b
+      type: object
+      required:
+      - code
+      - message
+      - correlation_id
+      title: ErrorBody
+      description: Тіло помилки.
+    ErrorCode:
+      type: string
+      enum:
+      - UNAUTHORIZED
+      - FORBIDDEN
+      - NOT_FOUND
+      - METHOD_NOT_ALLOWED
+      - SLOT_UNAVAILABLE
+      - CANCELLATION_TOO_LATE
+      - INVALID_STATUS_TRANSITION
+      - ACTIVE_BOOKING_NEEDS_CONFIRMATION
+      - VALIDATION_ERROR
+      - INTERNAL_ERROR
+      title: ErrorCode
+      description: Фіксований перелік кодів помилок API.
+    ErrorDetail:
+      properties:
+        field:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Field
+          description: Поле запиту, у якому помилка (для помилок валідації)
+          examples:
+          - end
+        issue:
+          type: string
+          title: Issue
+          description: Що саме не так
+          examples:
+          - Час закінчення має бути пізніше за час початку
+      type: object
+      required:
+      - issue
+      title: ErrorDetail
+      description: Одна конкретна проблема у запиті.
+    ErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorBody'
+      type: object
+      required:
+      - error
+      title: ErrorResponse
+      description: Єдиний формат відповіді з помилкою.
+    HealthOut:
+      properties:
+        status:
+          type: string
+          title: Status
+          description: Стан сервісу
+          examples:
+          - ok
+        version:
+          type: string
+          title: Version
+          description: Версія API (документа OpenAPI)
+          examples:
+          - 1.0.0
+      type: object
+      required:
+      - status
+      - version
+      title: HealthOut
+      description: Стан API.
+    Page_BookingOut_:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/BookingOut'
+          type: array
+          title: Items
+          description: Елементи поточної сторінки
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+      type: object
+      required:
+      - items
+      - pagination
+      title: Page[BookingOut]
+    PaginationInfo:
+      properties:
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: Розмір сторінки
+          examples:
+          - 20
+        offset:
+          type: integer
+          minimum: 0.0
+          title: Offset
+          description: Скільки елементів пропущено
+          examples:
+          - 0
+        total:
+          type: integer
+          minimum: 0.0
+          title: Total
+          description: Загальна кількість елементів
+          examples:
+          - 57
+        has_more:
+          type: boolean
+          title: Has More
+          description: Чи є наступна сторінка
+          examples:
+          - true
+      type: object
+      required:
+      - limit
+      - offset
+      - total
+      - has_more
+      title: PaginationInfo
+      description: Метадані сторінки.
+    Role:
+      type: string
+      enum:
+      - Client
+      - Provider
+      - Admin
+      title: Role
+      description: Ролі користувачів (docs/architecture/data-model.md, User.role).
+    TokenOut:
+      properties:
+        access_token:
+          type: string
+          title: Access Token
+          description: 'Токен для заголовка `Authorization: Bearer <токен>`'
+          examples:
+          - mock-client-token
+        token_type:
+          type: string
+          title: Token Type
+          description: Тип токена
+          default: bearer
+          examples:
+          - bearer
+        expires_in:
+          type: integer
+          title: Expires In
+          description: Час життя токена в секундах (у заглушці не перевіряється)
+          default: 3600
+          examples:
+          - 3600
+        user:
+          $ref: '#/components/schemas/UserOut'
+      type: object
+      required:
+      - access_token
+      - user
+      title: TokenOut
+      description: Відповідь з токеном доступу.
+    TokenRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+          description: Email тестового користувача
+          examples:
+          - client@ukma.edu.ua
+        password:
+          type: string
+          minLength: 1
+          title: Password
+          description: Пароль тестового користувача (лише для Lab 4, не секрет)
+          examples:
+          - lab4-demo
+      type: object
+      required:
+      - email
+      - password
+      title: TokenRequest
+      description: Облікові дані тестового користувача.
+    UserOut:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: ID користувача
+          examples:
+          - 11111111-1111-4111-8111-111111111111
+        email:
+          type: string
+          format: email
+          title: Email
+          description: Email
+          examples:
+          - client@ukma.edu.ua
+        full_name:
+          type: string
+          title: Full Name
+          description: Ім'я
+          examples:
+          - Тестовий Клієнт
+        role:
+          $ref: '#/components/schemas/Role'
+          description: Роль
+          examples:
+          - Client
+      type: object
+      required:
+      - id
+      - email
+      - full_name
+      - role
+      title: UserOut
+      description: Публічні дані поточного користувача.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      description: Тестовий токен з `POST /api/v1/auth/token`, напр. `mock-client-token`
+      scheme: bearer
+tags:
+- name: system
+  description: Службові кінцеві точки
+- name: auth
+  description: Отримання тестового токена (заглушка JWT, D-06)
+- name: bookings
+  description: Бронювання слотів
