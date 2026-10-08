@@ -23,6 +23,18 @@
 ```bash
 pip install -r requirements.txt
 uvicorn src.api.main:app --app-dir . --reload --port 3000
+```
+
+Адреса Swagger UI після запуску: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+
+**Команда генерації OpenAPI:**
+```bash
+python src/api/export_openapi.py
+```
+Файли специфікації зберігаються у: [`docs/api/`](docs/api/)
+
+**Документація API (GitHub Pages):** 
+[Reserve Flow API Reference](https://ukma-fin-ssdm-2026.github.io/reserve-flow/api/)
 
 ## Артефакти вимог (Requirements Artifacts)
 
