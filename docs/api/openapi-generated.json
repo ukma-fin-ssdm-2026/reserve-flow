@@ -387,7 +387,7 @@
           "bookings"
         ],
         "summary": "Змінити статус бронювання",
-        "description": "Дозволяє скасувати активне бронювання (D-03). Помилка `409`, якщо скасування запізніле або неможливе.",
+        "description": "Змінює статус бронювання (D-03). Замість окремих `/cancel`, `/confirm`, `/decision`.\n\n| З | В | Хто | Умова | Помилка |\n|---|---|---|---|---|\n| `Pending` | `Confirmed` | Постачальник цієї кімнати | — | `403` чужа кімната або інша роль |\n| `Pending` | `Rejected` | Постачальник цієї кімнати | `reason` обов'язковий (FR-010) | `422` без причини |\n| `Pending`, `Confirmed` | `Cancelled` | Клієнт-власник | до початку ≥ 2 год (FR-007) | `409 CANCELLATION_TOO_LATE` |\n\nБудь-який інший перехід (зокрема в `Pending` або з `Rejected` / `Cancelled`) → `409 INVALID_STATUS_TRANSITION`.\n\nLab 4: перевіряється роль і правило для `reason`; власник ресурсу й 2 години перевірятимуться, коли з'явиться БД.",
         "operationId": "update_booking_api_v1_bookings__booking_id__patch",
         "security": [
           {
@@ -481,6 +481,413 @@
           }
         }
       }
+    },
+    "/api/v1/slots": {
+      "get": {
+        "tags": [
+          "slots"
+        ],
+        "summary": "Пошук вільних слотів",
+        "description": "Повертає список слотів за фільтрами з пагінацією. Якщо end <= start, повертається статус 422.",
+        "operationId": "search_slots_api_v1_slots_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "search_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Дата для пошуку (YYYY-MM-DD)",
+              "title": "Search Date"
+            },
+            "description": "Дата для пошуку (YYYY-MM-DD)"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Початок інтервалу (HH:MM:SS)",
+              "title": "Start"
+            },
+            "description": "Початок інтервалу (HH:MM:SS)"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Кінець інтервалу (HH:MM:SS)",
+              "title": "End"
+            },
+            "description": "Кінець інтервалу (HH:MM:SS)"
+          },
+          {
+            "name": "capacity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 500,
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Мінімальна місткість (1-500)",
+              "title": "Capacity"
+            },
+            "description": "Мінімальна місткість (1-500)"
+          },
+          {
+            "name": "has_projector",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Чи потрібен проєктор",
+              "title": "Has Projector"
+            },
+            "description": "Чи потрібен проєктор"
+          },
+          {
+            "name": "is_shelter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Чи потрібне укриття",
+              "title": "Is Shelter"
+            },
+            "description": "Чи потрібне укриття"
+          },
+          {
+            "name": "building",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/BuildingEnum"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Корпус",
+              "title": "Building"
+            },
+            "description": "Корпус"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "Скільки елементів повернути (1–100)",
+              "default": 20,
+              "title": "Limit"
+            },
+            "description": "Скільки елементів повернути (1–100)"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Скільки елементів пропустити від початку",
+              "default": 0,
+              "title": "Offset"
+            },
+            "description": "Скільки елементів пропустити від початку"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_SlotOut_"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Немає токена або токен недійсний",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Помилка валідації вхідних даних",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутрішня помилка сервера",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/slots/{slot_id}": {
+      "patch": {
+        "tags": [
+          "slots"
+        ],
+        "summary": "Змінити статус слота",
+        "description": "Дозволяє постачальнику закрити або відкрити слот (FR-008, FR-009). Під час закриття `closure_reason` обов'язковий, інакше `422`. Повертає `409`, якщо на слоті є активне бронювання.",
+        "operationId": "patch_slot_api_v1_slots__slot_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "slot_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID слота",
+              "title": "Slot Id"
+            },
+            "description": "ID слота"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SlotPatchIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SlotOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Немає токена або токен недійсний",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Недостатньо прав або ресурс належить іншому користувачу",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ресурс не знайдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфлікт стану ресурсу",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Помилка валідації вхідних даних",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутрішня помилка сервера",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{room_id}": {
+      "get": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Деталі кімнати",
+        "description": "Повертає детальну інформацію про кімнату за її ідентифікатором.",
+        "operationId": "get_room_api_v1_rooms__room_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID кімнати",
+              "title": "Room Id"
+            },
+            "description": "ID кімнати"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Немає токена або токен недійсний",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ресурс не знайдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Помилка валідації вхідних даних",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутрішня помилка сервера",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -548,7 +955,7 @@
             "$ref": "#/components/schemas/BookingStatus",
             "description": "Поточний статус",
             "examples": [
-              "ACTIVE"
+              "Pending"
             ]
           },
           "purpose": {
@@ -569,7 +976,7 @@
               }
             ],
             "title": "Reason",
-            "description": "Причина скасування, якщо статус CANCELLED",
+            "description": "Причина відхилення (`Rejected`) або скасування (`Cancelled`)",
             "examples": [
               "Змінився розклад пар"
             ]
@@ -597,20 +1004,21 @@
       "BookingStatus": {
         "type": "string",
         "enum": [
-          "ACTIVE",
-          "CANCELLED",
-          "COMPLETED"
+          "Pending",
+          "Confirmed",
+          "Rejected",
+          "Cancelled"
         ],
         "title": "BookingStatus",
-        "description": "Статуси бронювання (згідно з D-03)."
+        "description": "Статуси бронювання (D-03). Значення збігаються з Booking.status у data-model.md."
       },
       "BookingUpdate": {
         "properties": {
           "status": {
             "$ref": "#/components/schemas/BookingStatus",
-            "description": "Новий статус бронювання. Дозволені переходи: ACTIVE -> CANCELLED.",
+            "description": "Новий статус бронювання. Дозволені переходи — в описі PATCH (D-03).",
             "examples": [
-              "CANCELLED"
+              "Rejected"
             ]
           },
           "reason": {
@@ -623,9 +1031,9 @@
               }
             ],
             "title": "Reason",
-            "description": "Причина скасування. Обов'язкова при зміні статусу на CANCELLED.",
+            "description": "Причина. Обов'язкова при відхиленні (`Rejected`, FR-010); при скасуванні (`Cancelled`) — за бажанням.",
             "examples": [
-              "Змінився розклад пар"
+              "Аудиторія на ремонті"
             ]
           }
         },
@@ -635,6 +1043,44 @@
         ],
         "title": "BookingUpdate",
         "description": "Модель оновлення бронювання (переходи статусів)."
+      },
+      "BuildingEnum": {
+        "type": "string",
+        "enum": [
+          "Корпус 1",
+          "Корпус 2",
+          "Корпус 3",
+          "Корпус 4",
+          "Корпус 5",
+          "Корпус 6",
+          "Корпус 7",
+          "Корпус 8",
+          "Корпус 9",
+          "Корпус 10",
+          "КМЦ",
+          "Наукова бібліотека",
+          "Історико-музейний комплекс НаУКМА"
+        ],
+        "title": "BuildingEnum"
+      },
+      "BuildingEnumEn": {
+        "type": "string",
+        "enum": [
+          "Building 1",
+          "Building 2",
+          "Building 3",
+          "Building 4",
+          "Building 5",
+          "Building 6",
+          "Building 7",
+          "Building 8",
+          "Building 9",
+          "Building 10",
+          "Cultural and Art Center (KMC)",
+          "Research Library",
+          "Historical and Museum Complex of NaUKMA"
+        ],
+        "title": "BuildingEnumEn"
       },
       "ErrorBody": {
         "properties": {
@@ -766,6 +1212,15 @@
         "title": "HealthOut",
         "description": "Стан API."
       },
+      "ModerationStatusEnum": {
+        "type": "string",
+        "enum": [
+          "Pending",
+          "Approved",
+          "Rejected"
+        ],
+        "title": "ModerationStatusEnum"
+      },
       "Page_BookingOut_": {
         "properties": {
           "items": {
@@ -786,6 +1241,27 @@
           "pagination"
         ],
         "title": "Page[BookingOut]"
+      },
+      "Page_SlotOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SlotOut"
+            },
+            "type": "array",
+            "title": "Items",
+            "description": "Елементи поточної сторінки"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationInfo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "pagination"
+        ],
+        "title": "Page[SlotOut]"
       },
       "PaginationInfo": {
         "properties": {
@@ -845,6 +1321,168 @@
         ],
         "title": "Role",
         "description": "Ролі користувачів (docs/architecture/data-model.md, User.role)."
+      },
+      "RoomOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "UUID приміщення"
+          },
+          "provider_id": {
+            "type": "string",
+            "title": "Provider Id",
+            "description": "UUID постачальника (відповідального)"
+          },
+          "name_ua": {
+            "type": "string",
+            "title": "Name Ua",
+            "examples": [
+              "Аудиторія 1-225"
+            ]
+          },
+          "name_en": {
+            "type": "string",
+            "title": "Name En",
+            "examples": [
+              "Room 1-225"
+            ]
+          },
+          "building_ua": {
+            "$ref": "#/components/schemas/BuildingEnum",
+            "description": "Корпус (українською)"
+          },
+          "building_en": {
+            "$ref": "#/components/schemas/BuildingEnumEn",
+            "description": "Building (English)"
+          },
+          "room_number": {
+            "type": "string",
+            "title": "Room Number",
+            "examples": [
+              "225"
+            ]
+          },
+          "capacity": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Capacity",
+            "examples": [
+              40
+            ]
+          },
+          "has_projector": {
+            "type": "boolean",
+            "title": "Has Projector",
+            "description": "Наявність проєктора"
+          },
+          "is_shelter": {
+            "type": "boolean",
+            "title": "Is Shelter",
+            "description": "Чи є укриттям"
+          },
+          "moderation_status": {
+            "$ref": "#/components/schemas/ModerationStatusEnum",
+            "description": "Статус модерації"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "provider_id",
+          "name_ua",
+          "name_en",
+          "building_ua",
+          "building_en",
+          "room_number",
+          "capacity",
+          "has_projector",
+          "is_shelter",
+          "moderation_status"
+        ],
+        "title": "RoomOut",
+        "description": "Схема виводу для приміщення."
+      },
+      "SlotOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "UUID слота"
+          },
+          "room_id": {
+            "type": "string",
+            "title": "Room Id",
+            "description": "UUID приміщення"
+          },
+          "start_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Start Time",
+            "description": "Початок у форматі ISO 8601 (з часовою зоною)"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "End Time",
+            "description": "Кінець у форматі ISO 8601 (з часовою зоною)"
+          },
+          "is_available": {
+            "type": "boolean",
+            "title": "Is Available",
+            "description": "Чи доступний слот для бронювання"
+          },
+          "closure_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Closure Reason",
+            "description": "Причина закриття слота (якщо is_available=False)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "room_id",
+          "start_time",
+          "end_time",
+          "is_available"
+        ],
+        "title": "SlotOut",
+        "description": "Схема виводу для часового слота."
+      },
+      "SlotPatchIn": {
+        "properties": {
+          "is_available": {
+            "type": "boolean",
+            "title": "Is Available",
+            "description": "Новий статус доступності слота"
+          },
+          "closure_reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Closure Reason",
+            "description": "Причина закриття (обов'язково, якщо слот закривається)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_available"
+        ],
+        "title": "SlotPatchIn",
+        "description": "Схема для оновлення статусу слота постачальником."
       },
       "TokenOut": {
         "properties": {
@@ -977,6 +1615,14 @@
     {
       "name": "auth",
       "description": "Отримання тестового токена (заглушка JWT, D-06)"
+    },
+    {
+      "name": "slots",
+      "description": "Пошук вільних слотів і керування їхньою доступністю"
+    },
+    {
+      "name": "rooms",
+      "description": "Приміщення"
     },
     {
       "name": "bookings",
