@@ -36,6 +36,42 @@ python src/api/export_openapi.py
 **Документація API (GitHub Pages):** 
 [Reserve Flow API Reference](https://ukma-fin-ssdm-2026.github.io/reserve-flow/)
 
+## MCP-сервер (бонус)
+
+[`src/api/mcp_server.py`](src/api/mcp_server.py) генерує MCP-сервер з нашого FastAPI-застосунку через `FastMCP.from_fastapi`: кожна кінцева точка стає інструментом агента з тими самими назвою, описом і схемою параметрів, що й у Swagger UI. Окремо запускати API не потрібно.
+
+**Встановлення і запуск** (з кореня репозиторію):
+```bash
+pip install -r requirements-mcp.txt
+python src/api/mcp_server.py
+```
+
+**Перевірка в MCP Inspector** (потрібен Node.js):
+```bash
+npx @modelcontextprotocol/inspector python src/api/mcp_server.py
+```
+
+**Інструменти:** `search_slots`, `get_room`, `create_booking`, `list_bookings`, `get_booking`, `change_booking_status`, `update_slot_availability`, `who_am_i`, `issue_test_token`, `check_health`.
+
+**Роль агента.** Агент викликає API від імені тестового користувача (заглушка автентифікації D-06). За замовчуванням це клієнт; іншу роль задає змінна середовища:
+```bash
+RESERVE_FLOW_TOKEN=mock-provider-token python src/api/mcp_server.py
+```
+
+**Підключення до агента** (Claude Desktop, Cursor та інші). Додайте сервер у конфігурацію MCP агента, вказавши абсолютні шляхи:
+```json
+{
+  "mcpServers": {
+    "reserve-flow": {
+      "command": "/абсолютний/шлях/до/.venv/bin/python",
+      "args": ["/абсолютний/шлях/до/reserve-flow/src/api/mcp_server.py"],
+      "env": { "RESERVE_FLOW_TOKEN": "mock-client-token" }
+    }
+  }
+}
+```
+Приклад завдання для агента: «Які аудиторії вільні 15 жовтня о 14:00?» — агент має обрати `search_slots`.
+
 ## Артефакти вимог (Requirements Artifacts)
 
 Уся документація з інженерії вимог зберігається в каталозі `docs/requirements/`. Ключові документи проєкту:
