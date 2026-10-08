@@ -55,9 +55,9 @@
 * **Опис:** керування бронюваннями слотів користувачами
 * **Атрибути:**
   * `id` (uuid): унікальний ідентифікатор
-  * `status` (enum): `PENDING` | `ACTIVE` | `CANCELLED` | `CONFIRMED` | `REJECTED`
+  * `status` (enum): `Pending` | `Confirmed` | `Rejected` | `Cancelled` — значення як у `Booking.status` у `data-model.md`; переходи — D-03 (`PATCH /bookings/{booking_id}`)
   * `purpose` (string): мета бронювання
-  * `reason` (string): причина скасування або відхилення (опціонально)
+  * `reason` (string): причина відхилення (обов'язкова для `Rejected`, FR-010) або скасування (за бажанням)
 * **Зв'язки:**
   * належить користувачу (user)
   * закріплено за слотом (slot)

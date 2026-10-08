@@ -80,7 +80,7 @@ BOOKINGS: list[dict] = [
         "id": BOOKING_1_ID,
         "client_id": USER_CLIENT_ID,
         "slot_id": SLOT_2_ID,
-        "status": "pending",
+        "status": "Pending",
         "rejection_reason": None,
         "created_at": datetime(2026, 10, 7, 10, 0, tzinfo=KYIV),
     },
