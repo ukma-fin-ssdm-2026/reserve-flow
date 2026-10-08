@@ -94,3 +94,6 @@ async def patch_slot(
     updated_slot["is_available"] = payload.is_available
     updated_slot["closure_reason"] = None if payload.is_available else payload.closure_reason
     return SlotOut(**updated_slot)
+    
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude. 
+    # Код вичитано, відредаговано та затверджено учасниками команди

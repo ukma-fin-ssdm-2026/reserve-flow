@@ -24,3 +24,6 @@ class SlotPatchIn(BaseModel):
         if not self.is_available and not (self.closure_reason and self.closure_reason.strip()):
             raise ValueError("Поле 'closure_reason' є обов'язковим при закритті слота")
         return self
+
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini.
+    # Код вичитано, відредаговано та затверджено учасниками команди
