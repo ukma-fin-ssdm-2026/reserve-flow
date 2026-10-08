@@ -133,7 +133,7 @@
           "bookings"
         ],
         "summary": "Створити нове бронювання",
-        "description": "Бронює вільний слот. У разі успіху повертає 201 та заголовок `Location`.",
+        "description": "Бронює вільний слот (FR-005). Нове бронювання має статус `Pending`. У разі успіху повертає `201` та заголовок `Location`.\n\n* `404` — слота не існує;\n* `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне бронювання (FR-006).",
         "operationId": "create_booking_api_v1_bookings_post",
         "security": [
           {
@@ -218,7 +218,7 @@
           "bookings"
         ],
         "summary": "Отримати список бронювань",
-        "description": "Повертає сторінку бронювань. Підтримує пагінацію та фільтрацію за статусом.",
+        "description": "Повертає сторінку бронювань з фільтром за статусом. Клієнт бачить свої бронювання, постачальник — бронювання на свої кімнати, адміністратор — усі.",
         "operationId": "get_bookings_api_v1_bookings_get",
         "security": [
           {
@@ -252,9 +252,11 @@
               "type": "integer",
               "maximum": 100,
               "minimum": 1,
+              "description": "Скільки елементів повернути (1–100)",
               "default": 20,
               "title": "Limit"
-            }
+            },
+            "description": "Скільки елементів повернути (1–100)"
           },
           {
             "name": "offset",
@@ -263,9 +265,11 @@
             "schema": {
               "type": "integer",
               "minimum": 0,
+              "description": "Скільки елементів пропустити від початку",
               "default": 0,
               "title": "Offset"
-            }
+            },
+            "description": "Скільки елементів пропустити від початку"
           }
         ],
         "responses": {
@@ -308,7 +312,7 @@
           "bookings"
         ],
         "summary": "Отримати бронювання за ID",
-        "description": "Повертає деталі конкретного бронювання.",
+        "description": "Повертає деталі бронювання. Чуже бронювання → `403`, неіснуюче → `404`.",
         "operationId": "get_booking_api_v1_bookings__booking_id__get",
         "security": [
           {
@@ -387,7 +391,7 @@
           "bookings"
         ],
         "summary": "Змінити статус бронювання",
-        "description": "Змінює статус бронювання (D-03). Замість окремих `/cancel`, `/confirm`, `/decision`.\n\n| З | В | Хто | Умова | Помилка |\n|---|---|---|---|---|\n| `Pending` | `Confirmed` | Постачальник цієї кімнати | — | `403` чужа кімната або інша роль |\n| `Pending` | `Rejected` | Постачальник цієї кімнати | `reason` обов'язковий (FR-010) | `422` без причини |\n| `Pending`, `Confirmed` | `Cancelled` | Клієнт-власник | до початку ≥ 2 год (FR-007) | `409 CANCELLATION_TOO_LATE` |\n\nБудь-який інший перехід (зокрема в `Pending` або з `Rejected` / `Cancelled`) → `409 INVALID_STATUS_TRANSITION`.\n\nLab 4: перевіряється роль і правило для `reason`; власник ресурсу й 2 години перевірятимуться, коли з'явиться БД.",
+        "description": "Змінює статус бронювання (D-03). Замість окремих `/cancel`, `/confirm`, `/decision`.\n\n| З | В | Хто | Умова | Помилка |\n|---|---|---|---|---|\n| `Pending` | `Confirmed` | Постачальник цієї кімнати | — | `403` чужа кімната або інша роль |\n| `Pending` | `Rejected` | Постачальник цієї кімнати | `reason` обов'язковий (FR-010) | `422` без причини |\n| `Pending`, `Confirmed` | `Cancelled` | Клієнт-власник | до початку ≥ 2 год (FR-007) | `409 CANCELLATION_TOO_LATE` |\n\nБудь-який інший перехід (зокрема в `Pending` або з `Rejected` / `Cancelled`) → `409 INVALID_STATUS_TRANSITION`.\nНеіснуюче бронювання → `404`.",
         "operationId": "update_booking_api_v1_bookings__booking_id__patch",
         "security": [
           {
@@ -497,7 +501,7 @@
         ],
         "parameters": [
           {
-            "name": "search_date",
+            "name": "date",
             "in": "query",
             "required": false,
             "schema": {
@@ -511,7 +515,7 @@
                 }
               ],
               "description": "Дата для пошуку (YYYY-MM-DD)",
-              "title": "Search Date"
+              "title": "Date"
             },
             "description": "Дата для пошуку (YYYY-MM-DD)"
           },

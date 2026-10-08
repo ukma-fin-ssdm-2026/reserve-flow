@@ -1,5 +1,11 @@
-"""Кінцеві точки для роботи з бронюваннями."""
+"""Кінцеві точки для роботи з бронюваннями.
 
+Дані беруться зі спільних заглушок mocks.py (BOOKINGS, SLOTS, ROOMS), тому
+404, 403 (чужий ресурс) і 409 повертаються так само, як повертатимуться з БД.
+Заглушки не змінюються між запитами: створення і PATCH лише повертають результат.
+"""
+
+from datetime import datetime, timedelta
 from typing import Annotated
 from uuid import UUID, uuid4
 
@@ -8,9 +14,10 @@ from fastapi import APIRouter, Depends, Path, Query, Response, status
 from config import API_PREFIX
 from deps import get_current_user, require_role
 from errors import AppError, ErrorCode, error_responses
+from mocks import BOOKINGS, KYIV, ROOMS, SLOTS, find_by_id
 from schemas.auth import Role, UserOut
 from schemas.bookings import BookingCreate, BookingOut, BookingStatus, BookingUpdate
-from schemas.common import Page, PaginationParams, paginate
+from schemas.common import Page, PaginationParams, paginate, pagination_params
 
 # Усі кінцеві точки bookings потребують токена (D-06): без нього -> 401.
 router = APIRouter(
@@ -19,18 +26,51 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)],
 )
 
-# --- Заглушки (Mocks) ---
-MOCK_USER_ID = uuid4()
-MOCK_SLOT_ID = uuid4()
-MOCK_BOOKING_ID = uuid4()
+# Статуси, за яких бронювання займає слот.
+_ACTIVE_STATUSES = {BookingStatus.PENDING.value, BookingStatus.CONFIRMED.value}
 
-MOCK_BOOKING = BookingOut(
-    id=MOCK_BOOKING_ID,
-    slot_id=MOCK_SLOT_ID,
-    user_id=MOCK_USER_ID,
-    status=BookingStatus.PENDING,
-    purpose="Зустріч клубу настільних ігор",
-)
+# FR-007: скасувати можна не пізніше ніж за 2 години до початку.
+_CANCELLATION_DEADLINE = timedelta(hours=2)
+
+
+def _now() -> datetime:
+    """Поточний час у часовій зоні Києва (окрема функція, щоб підміняти в тестах)."""
+    return datetime.now(KYIV)
+
+
+def _to_out(booking: dict) -> BookingOut:
+    return BookingOut(
+        id=booking["id"],
+        slot_id=booking["slot_id"],
+        user_id=booking["client_id"],
+        status=booking["status"],
+        purpose=booking["purpose"],
+        reason=booking["rejection_reason"],
+        created_at=booking["created_at"],
+    )
+
+
+def _room_provider_id(slot_id: str) -> str | None:
+    """Постачальник кімнати, до якої належить слот."""
+    slot = find_by_id(SLOTS, slot_id)
+    room = find_by_id(ROOMS, slot["room_id"]) if slot else None
+    return room["provider_id"] if room else None
+
+
+def _can_view(user: UserOut, booking: dict) -> bool:
+    """Клієнт бачить свої бронювання, постачальник — на свої кімнати, адмін — усі."""
+    if user.role == Role.ADMIN:
+        return True
+    if user.role == Role.CLIENT:
+        return booking["client_id"] == user.id
+    return _room_provider_id(booking["slot_id"]) == user.id
+
+
+def _get_booking_or_404(booking_id: UUID) -> dict:
+    booking = find_by_id(BOOKINGS, str(booking_id))
+    if booking is None:
+        raise AppError(status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Бронювання не знайдено")
+    return booking
 
 
 @router.post(
@@ -38,7 +78,12 @@ MOCK_BOOKING = BookingOut(
     status_code=status.HTTP_201_CREATED,
     response_model=BookingOut,
     summary="Створити нове бронювання",
-    description="Бронює вільний слот. У разі успіху повертає 201 та заголовок `Location`.",
+    description=(
+        "Бронює вільний слот (FR-005). Нове бронювання має статус `Pending`. "
+        "У разі успіху повертає `201` та заголовок `Location`.\n\n"
+        "* `404` — слота не існує;\n"
+        "* `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне бронювання (FR-006)."
+    ),
     responses=error_responses(401, 403, 404, 409, 422),
 )
 async def create_booking(
@@ -47,7 +92,15 @@ async def create_booking(
     # Бронювати може лише клієнт; постачальник чи адмін -> 403.
     current_user: Annotated[UserOut, Depends(require_role(Role.CLIENT))],
 ) -> BookingOut:
-    # Формуємо заглушку-відповідь на основі вхідних даних
+    slot_id = str(booking_in.slot_id)
+    slot = find_by_id(SLOTS, slot_id)
+    if slot is None:
+        raise AppError(status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Слот не знайдено")
+
+    slot_taken = any(b["slot_id"] == slot_id and b["status"] in _ACTIVE_STATUSES for b in BOOKINGS)
+    if not slot["is_available"] or slot_taken:
+        raise AppError(status.HTTP_409_CONFLICT, ErrorCode.SLOT_UNAVAILABLE, "Обраний час уже зайнято")
+
     new_booking = BookingOut(
         id=uuid4(),
         slot_id=booking_in.slot_id,
@@ -55,8 +108,6 @@ async def create_booking(
         status=BookingStatus.PENDING,
         purpose=booking_in.purpose,
     )
-    
-    # Додаємо Location header
     response.headers["Location"] = f"{API_PREFIX}/bookings/{new_booking.id}"
     return new_booking
 
@@ -65,23 +116,23 @@ async def create_booking(
     "",
     response_model=Page[BookingOut],
     summary="Отримати список бронювань",
-    description="Повертає сторінку бронювань. Підтримує пагінацію та фільтрацію за статусом.",
+    description=(
+        "Повертає сторінку бронювань з фільтром за статусом. Клієнт бачить свої бронювання, "
+        "постачальник — бронювання на свої кімнати, адміністратор — усі."
+    ),
     responses=error_responses(401, 422),
 )
 async def get_bookings(
-    params: Annotated[PaginationParams, Depends()],
+    current_user: Annotated[UserOut, Depends(get_current_user)],
+    params: Annotated[PaginationParams, Depends(pagination_params)],
     status_filter: Annotated[
-        BookingStatus | None, 
-        Query(alias="status", description="Фільтр за статусом")
+        BookingStatus | None,
+        Query(alias="status", description="Фільтр за статусом"),
     ] = None,
 ) -> Page[BookingOut]:
-    # Заглушка: генеруємо масив з 3 елементів
-    items = [MOCK_BOOKING, MOCK_BOOKING.model_copy(update={"id": uuid4()}), MOCK_BOOKING.model_copy(update={"id": uuid4()})]
-    
-    # Імітація фільтрації (якщо б статуси відрізнялись)
+    items = [_to_out(b) for b in BOOKINGS if _can_view(current_user, b)]
     if status_filter:
         items = [b for b in items if b.status == status_filter]
-        
     return paginate(items, params)
 
 
@@ -89,21 +140,30 @@ async def get_bookings(
     "/{booking_id}",
     response_model=BookingOut,
     summary="Отримати бронювання за ID",
-    description="Повертає деталі конкретного бронювання.",
+    description="Повертає деталі бронювання. Чуже бронювання → `403`, неіснуюче → `404`.",
     responses=error_responses(401, 403, 404, 422),
 )
 async def get_booking(
     booking_id: Annotated[UUID, Path(description="ID бронювання")],
+    current_user: Annotated[UserOut, Depends(get_current_user)],
 ) -> BookingOut:
-    return MOCK_BOOKING.model_copy(update={"id": booking_id})
+    booking = _get_booking_or_404(booking_id)
+    if not _can_view(current_user, booking):
+        raise AppError(status.HTTP_403_FORBIDDEN, ErrorCode.FORBIDDEN, "Немає доступу до цього бронювання")
+    return _to_out(booking)
 
 
-# Хто може перевести бронювання в кожен зі статусів (D-03).
+# Хто може перевести бронювання в кожен зі статусів і з яких статусів (D-03).
 # Pending — лише початковий статус, перейти в нього не можна.
 _ALLOWED_ROLE_FOR_STATUS: dict[BookingStatus, Role] = {
     BookingStatus.CONFIRMED: Role.PROVIDER,
     BookingStatus.REJECTED: Role.PROVIDER,
     BookingStatus.CANCELLED: Role.CLIENT,
+}
+_ALLOWED_FROM: dict[BookingStatus, set[str]] = {
+    BookingStatus.CONFIRMED: {BookingStatus.PENDING.value},
+    BookingStatus.REJECTED: {BookingStatus.PENDING.value},
+    BookingStatus.CANCELLED: {BookingStatus.PENDING.value, BookingStatus.CONFIRMED.value},
 }
 
 PATCH_DESCRIPTION = """Змінює статус бронювання (D-03). Замість окремих `/cancel`, `/confirm`, `/decision`.
@@ -115,8 +175,7 @@ PATCH_DESCRIPTION = """Змінює статус бронювання (D-03). З
 | `Pending`, `Confirmed` | `Cancelled` | Клієнт-власник | до початку ≥ 2 год (FR-007) | `409 CANCELLATION_TOO_LATE` |
 
 Будь-який інший перехід (зокрема в `Pending` або з `Rejected` / `Cancelled`) → `409 INVALID_STATUS_TRANSITION`.
-
-Lab 4: перевіряється роль і правило для `reason`; власник ресурсу й 2 години перевірятимуться, коли з'явиться БД.
+Неіснуюче бронювання → `404`.
 """
 
 
@@ -132,6 +191,8 @@ async def update_booking(
     booking_in: BookingUpdate,
     current_user: Annotated[UserOut, Depends(get_current_user)],
 ) -> BookingOut:
+    booking = _get_booking_or_404(booking_id)
+
     allowed_role = _ALLOWED_ROLE_FOR_STATUS.get(booking_in.status)
     if allowed_role is None:
         raise AppError(
@@ -139,21 +200,33 @@ async def update_booking(
             ErrorCode.INVALID_STATUS_TRANSITION,
             f"Неможливо перевести бронювання в статус {booking_in.status.value}",
         )
-    if current_user.role != allowed_role:
+    # Роль не та або бронювання/кімната чужі -> 403
+    if current_user.role != allowed_role or not _can_view(current_user, booking):
         raise AppError(
             status.HTTP_403_FORBIDDEN,
             ErrorCode.FORBIDDEN,
             "Недостатньо прав для цієї зміни статусу",
         )
-    # Повертаємо заглушку з оновленими даними
-    return MOCK_BOOKING.model_copy(
-        update={
-            "id": booking_id,
-            "status": booking_in.status,
-            "reason": booking_in.reason,
-        }
+    if booking["status"] not in _ALLOWED_FROM[booking_in.status]:
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            ErrorCode.INVALID_STATUS_TRANSITION,
+            f"Перехід {booking['status']} → {booking_in.status.value} не дозволений",
+        )
+    if booking_in.status == BookingStatus.CANCELLED:
+        slot = find_by_id(SLOTS, booking["slot_id"])
+        if slot and slot["start_time"] - _now() < _CANCELLATION_DEADLINE:
+            raise AppError(
+                status.HTTP_409_CONFLICT,
+                ErrorCode.CANCELLATION_TOO_LATE,
+                "Скасувати можна не пізніше ніж за 2 години до початку",
+            )
+
+    # Заглушка: повертаємо бронювання з новим статусом, не змінюючи mocks.py
+    return _to_out(booking).model_copy(
+        update={"status": booking_in.status, "reason": booking_in.reason}
     )
 
 
-    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini. 
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.
     # Код вичитано, відредаговано та затверджено учасниками команди
