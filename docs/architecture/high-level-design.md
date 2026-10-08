@@ -87,27 +87,27 @@ SPA звертається до API через HTTPS/REST з використа�
 
 Загальні правила:
 
-<!-- - Усі кінцеві точки починаються з префіксу `/api/v1` (D-01). NEEDS A CHANGE -->
+- Усі кінцеві точки починаються з префіксу `/api/v1` (D-01); правила зміни версії — у `api-design.md`.
 - Права перевіряє залежність FastAPI `Depends(get_current_user)` у кожному роутері (FR-002, D-06); роль береться лише з JWT-токена.
 - Помилки повертаються в єдиному форматі `ErrorResponse` (D-04) з обов'язковими полями `code`, `message`, `details` та `correlation_id`:
   - `401` — `UNAUTHORIZED` (немає або недійсний токен);
   - `403` — `FORBIDDEN` (недостатньо прав, чужий ресурс або акаунт заблоковано);
   - `404` — `NOT_FOUND` (об'єкт не знайдено);
   - `409` — `SLOT_UNAVAILABLE` / `CANCELLATION_TOO_LATE` / `INVALID_STATUS_TRANSITION` / `ACTIVE_BOOKING_NEEDS_CONFIRMATION` (конфлікт стану);
-  - `422` — `VALIDATION_ERROR` (некоректні вхідні дані чи відсутність причини відхилення/скасування).
+  - `422` — `VALIDATION_ERROR` (некоректні вхідні дані, зокрема відхилення бронювання без причини чи закриття слота без `closure_reason`).
 
 | Роутер | Операція | Роль | Вхід | Успіх | Помилки | Вимоги |
 |---|---|---|---|---|---|---|
 | Auth | `POST /api/v1/auth/token` <!-- раніше: POST /api/auth/login --> | — | `email`, `password` | `200` + `access_token` (JWT) | `401` невірні дані, `403` акаунт заблоковано | FR-001, FR-012, D-06 |
 <!-- | Auth | POST /api/auth/register | — | email, full_name, password, role | 201 + профіль | 409 email зайнятий, 422 | FR-001 | -->
-| Room | `GET /api/v1/slots` <!-- раніше: GET /api/rooms/search --> | Клієнт | `date`, `start`, `end`, `capacity`, `has_projector`, `is_shelter`, `building`, `limit`, `offset` | `200` + `Page[SlotOut]` (список вільних слотів) | `422` (напр., кінець раніше за початок) | FR-003, PERF-001, D-02, D-05 |
-| Room | `GET /api/v1/rooms/{room_id}` | Клієнт | `room_id` (Path) | `200` + `RoomOut` (деталі приміщення) | `404` приміщення не знайдено | FR-003, D-02 |
-| Room | `PATCH /api/v1/slots/{slot_id}` <!-- раніше: PATCH /api/slots/{slot_id} --> | Постачальник | `is_available`, `closure_reason`, `confirm` | `200` + `SlotOut` | `403` чужа кімната, `409` ACTIVE_BOOKING_NEEDS_CONFIRMATION (у слота є активне бронювання і `confirm` не передано) | FR-008, FR-009, D-02 |
+| Room | `GET /api/v1/slots` <!-- раніше: GET /api/rooms/search --> | Будь-яка (з токеном) | `date`, `start`, `end`, `capacity`, `has_projector`, `is_shelter`, `building`, `limit`, `offset` | `200` + `Page[SlotOut]` (список вільних слотів) | `401`, `422` (напр., кінець раніше за початок) | FR-003, PERF-001, D-02, D-05 |
+| Room | `GET /api/v1/rooms/{room_id}` | Будь-яка (з токеном) | `room_id` (Path) | `200` + `RoomOut` (деталі приміщення) | `401`, `404` приміщення не знайдено | FR-003, D-02 |
+| Room | `PATCH /api/v1/slots/{slot_id}` <!-- раніше: PATCH /api/slots/{slot_id} --> | Постачальник | `is_available`, `closure_reason` (обов'язкова при закритті) | `200` + `SlotOut` | `401`, `403` інша роль, `404` слот не знайдено, `409` ACTIVE_BOOKING_NEEDS_CONFIRMATION (на слоті є активне бронювання), `422` закриття без причини | FR-008, FR-009, D-02 |
 <!-- | Room | POST /api/rooms/requests | Постачальник | дані приміщення | 201 + запит (Pending) | 422 | FR-011 | -->
-| Booking | `POST /api/v1/bookings` <!-- раніше: POST /api/bookings --> | Клієнт | `slot_id`, `purpose` | `201` + `BookingOut` (`ACTIVE`) + заголовок `Location` | `401`, `403`, `404`, `409` SLOT_UNAVAILABLE, `422` | FR-005, FR-006, REL-001, D-02 |
-| Booking | `GET /api/v1/bookings` <!-- раніше: GET /api/bookings/my --> | Клієнт / Постачальник | `status`, `limit`, `offset` | `200` + `Page[BookingOut]` (список своїх бронювань або бронювань на свої кімнати) | `401`, `422` | FR-005, D-02, D-05 |
+| Booking | `POST /api/v1/bookings` <!-- раніше: POST /api/bookings --> | Клієнт | `slot_id`, `purpose` | `201` + `BookingOut` (`Pending`) + заголовок `Location` | `401`, `403` не клієнт, `404` слот не знайдено, `409` SLOT_UNAVAILABLE (слот закрито або вже заброньовано), `422` | FR-005, FR-006, REL-001, D-02 |
+| Booking | `GET /api/v1/bookings` <!-- раніше: GET /api/bookings/my --> | Клієнт / Постачальник / Адмін | `status`, `limit`, `offset` | `200` + `Page[BookingOut]` (свої бронювання, бронювання на свої кімнати або всі — для адміністратора) | `401`, `422` | FR-005, D-02, D-05 |
 | Booking | `GET /api/v1/bookings/{booking_id}` | Клієнт / Постачальник | `booking_id` (Path) | `200` + `BookingOut` | `401`, `403` чуже бронювання, `404` не знайдено | FR-005, D-02 |
-| Booking | `PATCH /api/v1/bookings/{booking_id}` <!-- раніше: POST /api/bookings/{id}/cancel та POST /api/bookings/{id}/decision --> | Клієнт / Постачальник | `status` (`CANCELLED` / `CONFIRMED` / `REJECTED`), `reason` | `200` + `BookingOut` з оновленим статусом | `401`, `403` чуже бронювання чи кімната, `404`, `409` CANCELLATION_TOO_LATE (до початку менше 2 год), `409` INVALID_STATUS_TRANSITION, `422` скасування/відхилення без причини | FR-007, FR-010, D-03 |
+| Booking | `PATCH /api/v1/bookings/{booking_id}` <!-- раніше: POST /api/bookings/{id}/cancel та POST /api/bookings/{id}/decision --> | Клієнт / Постачальник | `status` (`Cancelled` / `Confirmed` / `Rejected`), `reason` | `200` + `BookingOut` з оновленим статусом | `401`, `403` чуже бронювання чи кімната, `404`, `409` CANCELLATION_TOO_LATE (до початку менше 2 год), `409` INVALID_STATUS_TRANSITION, `422` відхилення без причини | FR-007, FR-010, D-03 |
 <!-- | Admin | POST /api/admin/rooms/requests/{id}/decision | Адмін | decision, reason | 200 + приміщення | 403, 404 | FR-011 | -->
 <!-- | Admin | PATCH /api/admin/users/{id} | Адмін | is_blocked | 200 + профіль | 403 спроба заблокувати адміністратора | FR-012 | -->
 <!-- | Admin | GET /api/admin/bookings | Адмін | фільтри (дата, кімната, статус) | 200 + список | 403 | FR-012 | -->
