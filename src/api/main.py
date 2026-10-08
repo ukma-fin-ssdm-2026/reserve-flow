@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from config import API_DESCRIPTION, API_TITLE, API_VERSION
 from errors import register_error_handlers
+from routes.auth import router as auth_router
 from routes.health import router as health_router
 from routes.bookings import router as bookings_router
 
@@ -34,10 +35,10 @@ async def lifespan(app: FastAPI):
 # Опис груп кінцевих точок у Swagger UI. Додавайте сюди тег свого роутера.
 OPENAPI_TAGS = [
     {"name": "system", "description": "Службові кінцеві точки"},
-    # {"name": "auth", "description": "Отримання тестового токена (заглушка JWT)"},
+    {"name": "auth", "description": "Отримання тестового токена (заглушка JWT, D-06)"},
     # {"name": "slots", "description": "Пошук вільних слотів і керування їхньою доступністю"},
     # {"name": "rooms", "description": "Приміщення"},
-    # {"name": "bookings", "description": "Бронювання слотів"},
+    {"name": "bookings", "description": "Бронювання слотів"},
 ]
 
 app = FastAPI(
@@ -78,9 +79,8 @@ register_error_handlers(app)
 
 # --- Роутери (manage as needed)---------------------------------------------------------------
 app.include_router(health_router) #default (L4-02(?))
+app.include_router(auth_router)  # L4-05
 app.include_router(bookings_router)
-# L4-05: app.include_router(auth_router)
-# L4-06: app.include_router(bookings_router)
 # L4-07: app.include_router(slots_router); app.include_router(rooms_router)
 
 
