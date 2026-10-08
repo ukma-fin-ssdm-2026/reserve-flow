@@ -31,3 +31,6 @@ async def get_room(
         raise AppError(status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Кімнату не знайдено")
 
     return RoomOut(**room)
+
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude. 
+    # Код вичитано, відредаговано та затверджено учасниками команди

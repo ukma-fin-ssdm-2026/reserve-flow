@@ -50,3 +50,6 @@ class RoomOut(BaseModel):
     has_projector: bool = Field(..., description="Наявність проєктора")
     is_shelter: bool = Field(..., description="Чи є укриттям")
     moderation_status: ModerationStatusEnum = Field(..., description="Статус модерації")
+
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini. 
+    # Код вичитано, відредаговано та затверджено учасниками команди
