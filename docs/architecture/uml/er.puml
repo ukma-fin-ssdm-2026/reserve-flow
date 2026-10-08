@@ -53,7 +53,7 @@ entity "Booking" as booking {
   * client_id : UUID <<FK>>
   * slot_id : UUID <<FK>>
   * status : Enum
-  * rejection_reason : String
+  rejection_reason : String <<nullable, лише для Rejected>>
   * created_at : Timestamp
 }
 
@@ -69,10 +69,12 @@ entity "Notification" as notification {
 entity "AuditLog" as auditlog {
   * id : UUID <<PK>>
   --
-  * user_id : UUID <<FK>>
-  * action : String
-  * entity_type : Enum
+  * actor_type : Enum (User, System)
+  user_id : UUID <<FK, nullable>> <<персональні дані>>
+  * action : Enum
+  * entity_type : Enum (User, Room, TimeSlot, Booking, Notification)
   * entity_id : UUID
+  details : String <<без персональних даних>>
   * timestamp : Timestamp
 }
 
@@ -83,7 +85,7 @@ room ||--o{ timeslot : "містить"
 user ||--o{ booking : "створює (Client)"
 timeslot ||--o{ booking : "резервується в"
 booking ||--o| notification : "має нагадування"
-user ||--o{ auditlog : "виконує дії (Admin)"
+user |o--o{ auditlog : "виконує дії\n(порожньо для дій системи)"
 
 ' --- Використання ШІ: Gemini для налаштування стилю документа. Документ перевірено, відредаговано та затверджено учасниками команди ---
 @enduml
