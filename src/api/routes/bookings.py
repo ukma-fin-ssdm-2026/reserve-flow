@@ -6,11 +6,18 @@ from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, Path, Query, Response, status
 
 from config import API_PREFIX
+from deps import get_current_user, require_role
 from errors import error_responses
+from schemas.auth import Role, UserOut
 from schemas.bookings import BookingCreate, BookingOut, BookingStatus, BookingUpdate
 from schemas.common import Page, PaginationParams, paginate
 
-router = APIRouter(prefix=f"{API_PREFIX}/bookings", tags=["bookings"])
+# Усі кінцеві точки bookings потребують токена (D-06): без нього -> 401.
+router = APIRouter(
+    prefix=f"{API_PREFIX}/bookings",
+    tags=["bookings"],
+    dependencies=[Depends(get_current_user)],
+)
 
 # --- Заглушки (Mocks) ---
 MOCK_USER_ID = uuid4()
@@ -32,17 +39,19 @@ MOCK_BOOKING = BookingOut(
     response_model=BookingOut,
     summary="Створити нове бронювання",
     description="Бронює вільний слот. У разі успіху повертає 201 та заголовок `Location`.",
-    responses=error_responses(404, 409, 422),
+    responses=error_responses(401, 403, 404, 409, 422),
 )
 async def create_booking(
     booking_in: BookingCreate,
     response: Response,
+    # Бронювати може лише клієнт; постачальник чи адмін -> 403.
+    current_user: Annotated[UserOut, Depends(require_role(Role.CLIENT))],
 ) -> BookingOut:
     # Формуємо заглушку-відповідь на основі вхідних даних
     new_booking = BookingOut(
         id=uuid4(),
         slot_id=booking_in.slot_id,
-        user_id=MOCK_USER_ID,
+        user_id=current_user.id,
         status=BookingStatus.ACTIVE,
         purpose=booking_in.purpose,
     )
