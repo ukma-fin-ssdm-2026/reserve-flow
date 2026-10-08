@@ -126,3 +126,38 @@ def test_search_slots_date_filter_param(client):
     assert "date" in names
     r = client.get("/api/v1/slots?date=bad", headers=CLIENT)
     assert r.status_code == 422
+
+
+# --- Фільтрація GET /slots ----------------------------------------------------
+
+FREE_1 = "b2000000-0000-4000-8000-000000000001"
+FREE_4 = "b2000000-0000-4000-8000-000000000004"
+FREE_5 = "b2000000-0000-4000-8000-000000000005"
+
+
+def _ids(client, query=""):
+    r = client.get(f"/api/v1/slots{query}", headers=CLIENT)
+    assert r.status_code == 200
+    return [s["id"] for s in r.json()["items"]]
+
+
+def test_only_free_slots_returned(client):
+    # SLOT_2 заброньовано (BOOKING_1), SLOT_3 закрито постачальником
+    assert _ids(client) == [FREE_1, FREE_4, FREE_5]
+
+
+def test_filter_by_date(client):
+    assert _ids(client, "?date=2026-10-16") == [FREE_5]
+    assert _ids(client, "?date=2026-10-20") == []
+
+
+def test_filter_by_time_interval(client):
+    assert _ids(client, "?date=2026-10-15&start=14:00:00&end=15:30:00") == [FREE_1]
+    assert _ids(client, "?date=2026-10-15&start=15:00:00") == [FREE_4]
+
+
+def test_filter_by_room_properties(client):
+    assert _ids(client, "?is_shelter=true") == [FREE_4]
+    assert _ids(client, "?has_projector=true") == [FREE_1, FREE_5]
+    assert _ids(client, "?capacity=30") == [FREE_1, FREE_5]
+    assert _ids(client, "?building=Корпус 3") == [FREE_4]
