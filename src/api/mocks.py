@@ -44,6 +44,8 @@ ROOMS: list[dict] = [
 SLOT_1_ID = "b2000000-0000-4000-8000-000000000001"
 SLOT_2_ID = "b2000000-0000-4000-8000-000000000002"
 SLOT_3_ID = "b2000000-0000-4000-8000-000000000003"
+SLOT_4_ID = "b2000000-0000-4000-8000-000000000004"
+SLOT_5_ID = "b2000000-0000-4000-8000-000000000005"
 
 SLOTS: list[dict] = [
     {
@@ -69,6 +71,22 @@ SLOTS: list[dict] = [
         "end_time": datetime(2026, 10, 15, 15, 20, tzinfo=KYIV),
         "is_available": False,
         "closure_reason": "Ремонт проєктора",
+    },
+    {
+        "id": SLOT_4_ID,
+        "room_id": ROOM_2_ID,
+        "start_time": datetime(2026, 10, 15, 15, 40, tzinfo=KYIV),
+        "end_time": datetime(2026, 10, 15, 17, 0, tzinfo=KYIV),
+        "is_available": True,
+        "closure_reason": None,
+    },
+    {
+        "id": SLOT_5_ID,
+        "room_id": ROOM_1_ID,
+        "start_time": datetime(2026, 10, 16, 10, 0, tzinfo=KYIV),
+        "end_time": datetime(2026, 10, 16, 11, 20, tzinfo=KYIV),
+        "is_available": True,
+        "closure_reason": None,
     },
 ]
 

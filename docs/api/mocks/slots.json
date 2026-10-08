@@ -9,18 +9,26 @@
       "closure_reason": null
     },
     {
-      "id": "b2000000-0000-4000-8000-000000000003",
+      "id": "b2000000-0000-4000-8000-000000000004",
       "room_id": "a1000000-0000-4000-8000-000000000002",
-      "start_time": "2026-10-15T14:00:00+03:00",
-      "end_time": "2026-10-15T15:20:00+03:00",
-      "is_available": false,
-      "closure_reason": "Ремонт проєктора"
+      "start_time": "2026-10-15T15:40:00+03:00",
+      "end_time": "2026-10-15T17:00:00+03:00",
+      "is_available": true,
+      "closure_reason": null
+    },
+    {
+      "id": "b2000000-0000-4000-8000-000000000005",
+      "room_id": "a1000000-0000-4000-8000-000000000001",
+      "start_time": "2026-10-16T10:00:00+03:00",
+      "end_time": "2026-10-16T11:20:00+03:00",
+      "is_available": true,
+      "closure_reason": null
     }
   ],
   "pagination": {
     "limit": 20,
     "offset": 0,
-    "total": 2,
+    "total": 3,
     "has_more": false
   }
 }

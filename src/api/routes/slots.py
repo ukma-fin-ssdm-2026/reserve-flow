@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, Path, Query, status
 from config import API_PREFIX
 from deps import get_current_user, require_role
 from errors import AppError, ErrorCode, ErrorDetail, error_responses
-from mocks import SLOTS, find_by_id
+from mocks import BOOKINGS, KYIV, ROOMS, SLOTS, find_by_id
 from schemas.auth import Role, UserOut
 from schemas.common import Page, PaginationParams, paginate, pagination_params
 from schemas.rooms import BuildingEnum
@@ -28,7 +28,15 @@ _SLOT_WITH_ACTIVE_BOOKING = "b2000000-0000-4000-8000-000000000002"
     "",
     response_model=Page[SlotOut],
     summary="Пошук вільних слотів",
-    description="Повертає список слотів за фільтрами з пагінацією. Якщо end <= start, повертається статус 422.",
+    description=(
+        "Повертає вільні слоти (FR-003): слот не закритий постачальником і не має активного "
+        "бронювання (`Pending` / `Confirmed`). Усі фільтри необов'язкові й поєднуються через «і»:\n\n"
+        "* `date` — слот у цей день;\n"
+        "* `start` / `end` — слот повністю в інтервалі: починається не раніше `start` і закінчується не пізніше `end`;\n"
+        "* `capacity` — місткість приміщення не менша;\n"
+        "* `has_projector`, `is_shelter`, `building` — властивості приміщення.\n\n"
+        "Час — за Києвом. Якщо `end <= start`, повертається `422`."
+    ),
     responses=error_responses(401, 422, 500),
 )
 async def search_slots(
@@ -53,8 +61,33 @@ async def search_slots(
             [ErrorDetail(field="end", issue="Час закінчення має бути строго пізніше за час початку")],
         )
 
-    # Заглушка: повертаємо всі слоти без фільтрації
-    slots_out = [SlotOut(**slot) for slot in SLOTS]
+    booked = {b["slot_id"] for b in BOOKINGS if b["status"] in ("Pending", "Confirmed")}
+
+    def matches(slot: dict) -> bool:
+        if not slot["is_available"] or slot["id"] in booked:
+            return False
+        starts = slot["start_time"].astimezone(KYIV)
+        ends = slot["end_time"].astimezone(KYIV)
+        if search_date and starts.date() != search_date:
+            return False
+        if start and starts.time() < start:
+            return False
+        if end and ends.time() > end:
+            return False
+        room = find_by_id(ROOMS, slot["room_id"])
+        if room is None:
+            return False
+        if capacity and room["capacity"] < capacity:
+            return False
+        if has_projector is not None and room["has_projector"] != has_projector:
+            return False
+        if is_shelter is not None and room["is_shelter"] != is_shelter:
+            return False
+        if building and room["building_ua"] != building.value:
+            return False
+        return True
+
+    slots_out = [SlotOut(**slot) for slot in SLOTS if matches(slot)]
     return paginate(slots_out, params)
 
 
