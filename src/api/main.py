@@ -12,6 +12,8 @@ from config import API_DESCRIPTION, API_TITLE, API_VERSION
 from errors import register_error_handlers
 from routes.health import router as health_router
 from routes.bookings import router as bookings_router
+from routes.slots import router as slots_router
+from routes.rooms import router as rooms_router
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
@@ -81,7 +83,7 @@ app.include_router(health_router) #default (L4-02(?))
 app.include_router(bookings_router)
 # L4-05: app.include_router(auth_router)
 # L4-06: app.include_router(bookings_router)
-# L4-07: app.include_router(slots_router); app.include_router(rooms_router)
+app.include_router(slots_router); app.include_router(rooms_router)
 
 
 if __name__ == "__main__":

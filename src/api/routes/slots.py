@@ -6,7 +6,8 @@ from config import API_PREFIX
 from errors import AppError, error_responses
 from mocks import SLOTS, find_by_id
 from schemas.common import Page, PaginationParams, paginate, pagination_params
-from schemas.slots import BuildingEnum, SlotOut, SlotPatchIn
+from schemas.slots import SlotOut, SlotPatchIn
+from schemas.rooms import BuildingEnumEn, BuildingEnum
 from deps import CurrentUser, get_current_user
 
 router = APIRouter(prefix=f"{API_PREFIX}/slots", tags=["slots"])
@@ -88,3 +89,6 @@ async def patch_slot(
     updated_slot["is_available"] = payload.is_available
     updated_slot["closure_reason"] = payload.closure_reason
     return SlotOut(**updated_slot)
+
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini. 
+    # Код вичитано, відредаговано та затверджено учасниками команди
