@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Віртуальні середовища
+.venv/
+venv/
+env/
+
+# Локальні налаштування і секрети
+.env
+.env.*
+
+# IDE та ОС
+.vscode/
+.idea/
+.DS_Store
+
+# Артефакти збірки (CI, PlantUML, Pages)
+build/
+_site/
+plantuml.jar
