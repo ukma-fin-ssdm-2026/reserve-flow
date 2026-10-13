@@ -161,3 +161,19 @@ def test_filter_by_room_properties(client):
     assert _ids(client, "?has_projector=true") == [FREE_1, FREE_5]
     assert _ids(client, "?capacity=30") == [FREE_1, FREE_5]
     assert _ids(client, "?building=Корпус 3") == [FREE_4]
+
+
+def test_filter_by_room_id(client):
+    # D-02: GET /slots?room_id={id} замість вкладеного /rooms/{id}/slots
+    room_1 = "a1000000-0000-4000-8000-000000000001"
+    room_2 = "a1000000-0000-4000-8000-000000000002"
+    assert _ids(client, f"?room_id={room_1}") == [FREE_1, FREE_5]
+    assert _ids(client, f"?room_id={room_2}") == [FREE_4]
+    assert _ids(client, f"?room_id={room_1}&date=2026-10-15") == [FREE_1]
+    assert _ids(client, "?room_id=00000000-0000-4000-8000-000000000000") == []
+
+
+def test_filter_by_room_id_invalid_returns_422(client):
+    r = client.get("/api/v1/slots?room_id=abc", headers=CLIENT)
+    assert r.status_code == 422
+    assert r.json()["error"]["details"][0]["field"] == "room_id"

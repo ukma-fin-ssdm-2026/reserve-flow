@@ -1,6 +1,7 @@
 """Кінцеві точки для роботи з часовими слотами."""
 from datetime import date, time
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Path, Query, status
 
@@ -31,6 +32,7 @@ _SLOT_WITH_ACTIVE_BOOKING = "b2000000-0000-4000-8000-000000000002"
     description=(
         "Повертає вільні слоти (FR-003): слот не закритий постачальником і не має активного "
         "бронювання (`Pending` / `Confirmed`). Усі фільтри необов'язкові й поєднуються через «і»:\n\n"
+        "* `room_id` — слоти конкретного приміщення (D-02: плоска структура замість `/rooms/{id}/slots`);\n"
         "* `date` — слот у цей день;\n"
         "* `start` / `end` — слот повністю в інтервалі: починається не раніше `start` і закінчується не пізніше `end`;\n"
         "* `capacity` — місткість приміщення не менша;\n"
@@ -41,6 +43,7 @@ _SLOT_WITH_ACTIVE_BOOKING = "b2000000-0000-4000-8000-000000000002"
 )
 async def search_slots(
     # Фільтри
+    room_id: UUID | None = Query(None, description="ID приміщення: лише слоти цієї кімнати (D-02)"),
     search_date: date | None = Query(None, alias="date", description="Дата для пошуку (YYYY-MM-DD)"),
     start: time | None = Query(None, description="Початок інтервалу (HH:MM:SS)"),
     end: time | None = Query(None, description="Кінець інтервалу (HH:MM:SS)"),
@@ -65,6 +68,8 @@ async def search_slots(
 
     def matches(slot: dict) -> bool:
         if not slot["is_available"] or slot["id"] in booked:
+            return False
+        if room_id and slot["room_id"] != str(room_id):
             return False
         starts = slot["start_time"].astimezone(KYIV)
         ends = slot["end_time"].astimezone(KYIV)

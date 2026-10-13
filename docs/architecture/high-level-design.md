@@ -100,7 +100,7 @@ SPA звертається до API через HTTPS/REST з використа�
 |---|---|---|---|---|---|---|
 | Auth | `POST /api/v1/auth/token` <!-- раніше: POST /api/auth/login --> | — | `email`, `password` | `200` + `access_token` (JWT) | `401` невірні дані, `403` акаунт заблоковано | FR-001, FR-012, D-06 |
 <!-- | Auth | POST /api/auth/register | — | email, full_name, password, role | 201 + профіль | 409 email зайнятий, 422 | FR-001 | -->
-| Room | `GET /api/v1/slots` <!-- раніше: GET /api/rooms/search --> | Будь-яка (з токеном) | `date`, `start`, `end`, `capacity`, `has_projector`, `is_shelter`, `building`, `limit`, `offset` | `200` + `Page[SlotOut]` (список вільних слотів) | `401`, `422` (напр., кінець раніше за початок) | FR-003, PERF-001, D-02, D-05 |
+| Room | `GET /api/v1/slots` <!-- раніше: GET /api/rooms/search --> | Будь-яка (з токеном) | `room_id`, `date`, `start`, `end`, `capacity`, `has_projector`, `is_shelter`, `building`, `limit`, `offset` | `200` + `Page[SlotOut]` (список вільних слотів) | `401`, `422` (напр., кінець раніше за початок) | FR-003, PERF-001, D-02, D-05 |
 | Room | `GET /api/v1/rooms/{room_id}` | Будь-яка (з токеном) | `room_id` (Path) | `200` + `RoomOut` (деталі приміщення) | `401`, `404` приміщення не знайдено | FR-003, D-02 |
 | Room | `PATCH /api/v1/slots/{slot_id}` <!-- раніше: PATCH /api/slots/{slot_id} --> | Постачальник | `is_available`, `closure_reason` (обов'язкова при закритті) | `200` + `SlotOut` | `401`, `403` інша роль, `404` слот не знайдено, `409` ACTIVE_BOOKING_NEEDS_CONFIRMATION (на слоті є активне бронювання), `422` закриття без причини | FR-008, FR-009, D-02 |
 <!-- | Room | POST /api/rooms/requests | Постачальник | дані приміщення | 201 + запит (Pending) | 422 | FR-011 | -->
