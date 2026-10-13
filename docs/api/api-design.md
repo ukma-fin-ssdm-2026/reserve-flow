@@ -49,7 +49,7 @@
   * `start_time`, `end_time` (datetime, ISO 8601 з часовою зоною, напр. `2026-10-15T14:00:00+03:00`): початок і кінець слота
   * `is_available` (boolean): чи доступний слот для нових бронювань
   * `closure_reason` (string, необов'язковий): причина закриття; обов'язкова, коли постачальник закриває слот
-* **Фільтри пошуку `GET /slots`:** `date`, `start`, `end`, `capacity`, `has_projector`, `is_shelter`, `building`, а також `limit` / `offset`
+* **Фільтри пошуку `GET /slots`:** `room_id`, `date`, `start`, `end`, `capacity`, `has_projector`, `is_shelter`, `building`, а також `limit` / `offset`
 * **Зв'язки:**
   * належить до приміщення (room)
   * має пов'язані бронювання (bookings)

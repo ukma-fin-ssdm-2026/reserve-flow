@@ -362,6 +362,9 @@ paths:
         й поєднуються через «і»:
 
 
+        * `room_id` — слоти конкретного приміщення (D-02: плоска структура замість
+        `/rooms/{id}/slots`);
+
         * `date` — слот у цей день;
 
         * `start` / `end` — слот повністю в інтервалі: починається не раніше `start`
@@ -377,6 +380,17 @@ paths:
       security:
       - HTTPBearer: []
       parameters:
+      - name: room_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: 'ID приміщення: лише слоти цієї кімнати (D-02)'
+          title: Room Id
+        description: 'ID приміщення: лише слоти цієї кімнати (D-02)'
       - name: date
         in: query
         required: false
