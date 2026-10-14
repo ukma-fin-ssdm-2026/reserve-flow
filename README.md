@@ -33,6 +33,47 @@ python src/api/export_openapi.py
 ```
 Файли специфікації зберігаються у: [`docs/api/`](docs/api/)
 
+## Перевірка якості коду та статичний аналіз
+
+Для підтримки стандартів кодування (PEP 8) та безпеки в проєкті використовуються `black`, `flake8`, `bandit` та `pip-audit`.
+
+**Встановлення залежностей**
+```bash
+pip install -r requirements-dev.txt
+```
+
+**Команди запуску**
+
+1. **Форматування коду (Black):**
+   * Перевірка без внесення змін:
+     ```bash
+     python -m black --check src/ tests/
+     ```
+   * Автоматичне форматування:
+     ```bash
+     python -m black src/ tests/
+     ```
+
+2. **Перевірка стилю та конвенцій (Flake8):**
+   ```bash
+   python -m flake8 src/ tests/
+   ```
+
+3. **Статичний аналіз безпеки (Bandit):**
+   * Повне сканування вихідного коду:
+     ```bash
+     python -m bandit -c pyproject.toml -r src/
+     ```
+   * Сканування лише на вразливості середнього та високого рівня:
+     ```bash
+     python -m bandit -c pyproject.toml -r src/ -ll
+     ```
+
+4. **Аудит вразливостей у залежностях (pip-audit):**
+   ```bash
+   python -m pip_audit -r requirements.txt
+   ```
+
 **Документація API (GitHub Pages):** 
 [Reserve Flow API Reference](https://ukma-fin-ssdm-2026.github.io/reserve-flow/)
 
