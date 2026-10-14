@@ -1,0 +1,6 @@
+[tool.black]
+line-length = 100
+target-version = ["py311", "py312", "py313"]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv", ".pytest_cache"]
