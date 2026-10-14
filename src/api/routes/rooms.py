@@ -1,4 +1,5 @@
 """Кінцеві точки для роботи з приміщеннями."""
+
 from fastapi import APIRouter, Depends, Path, status
 
 from config import API_PREFIX
@@ -32,5 +33,5 @@ async def get_room(
 
     return RoomOut(**room)
 
-    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude. 
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.
     # Код вичитано, відредаговано та затверджено учасниками команди

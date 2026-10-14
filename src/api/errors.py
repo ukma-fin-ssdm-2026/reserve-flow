@@ -147,7 +147,9 @@ def _error_json(
             correlation_id=correlation_id,
         )
     )
-    return JSONResponse(status_code=status_code, content=body.model_dump(mode="json"), headers=headers)
+    return JSONResponse(
+        status_code=status_code, content=body.model_dump(mode="json"), headers=headers
+    )
 
 
 async def _app_error_handler(request: Request, exc: AppError) -> JSONResponse:
@@ -175,7 +177,9 @@ async def _http_exception_handler(request: Request, exc: StarletteHTTPException)
     code, default_message = _DEFAULT_ERRORS.get(
         exc.status_code, (ErrorCode.INTERNAL_ERROR, "Помилка обробки запиту")
     )
-    message = exc.detail if isinstance(exc.detail, str) and exc.status_code != 404 else default_message
+    message = (
+        exc.detail if isinstance(exc.detail, str) and exc.status_code != 404 else default_message
+    )
     return _error_json(
         status_code=exc.status_code,
         code=code,
@@ -229,5 +233,5 @@ def register_error_handlers(app: FastAPI) -> None:
     app.add_exception_handler(RequestValidationError, _validation_error_handler)
     app.add_exception_handler(Exception, _unhandled_error_handler)
 
-    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude. 
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.
     # Код вичитано, відредаговано та затверджено учасниками команди

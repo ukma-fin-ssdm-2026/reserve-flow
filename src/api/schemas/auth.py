@@ -32,7 +32,9 @@ class TokenRequest(BaseModel):
 class UserOut(BaseModel):
     """Публічні дані поточного користувача."""
 
-    id: str = Field(..., description="ID користувача", examples=["11111111-1111-4111-8111-111111111111"])
+    id: str = Field(
+        ..., description="ID користувача", examples=["11111111-1111-4111-8111-111111111111"]
+    )
     email: EmailStr = Field(..., description="Email", examples=["client@ukma.edu.ua"])
     full_name: str = Field(..., description="Ім'я", examples=["Тестовий Клієнт"])
     role: Role = Field(..., description="Роль", examples=["Client"])

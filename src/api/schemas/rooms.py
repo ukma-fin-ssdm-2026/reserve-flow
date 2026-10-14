@@ -1,6 +1,8 @@
 """Схеми для приміщень."""
+
 from enum import Enum
 from pydantic import BaseModel, Field
+
 
 class BuildingEnum(str, Enum):
     CORP_1 = "Корпус 1"
@@ -17,6 +19,7 @@ class BuildingEnum(str, Enum):
     CORP_LIBRARY = "Наукова бібліотека"
     CORP_MUSEUM = "Історико-музейний комплекс НаУКМА"
 
+
 class BuildingEnumEn(str, Enum):
     CORP_1 = "Building 1"
     CORP_2 = "Building 2"
@@ -32,13 +35,16 @@ class BuildingEnumEn(str, Enum):
     CORP_LIBRARY = "Research Library"
     CORP_MUSEUM = "Historical and Museum Complex of NaUKMA"
 
+
 class ModerationStatusEnum(str, Enum):
     PENDING = "Pending"
     APPROVED = "Approved"
     REJECTED = "Rejected"
 
+
 class RoomOut(BaseModel):
     """Схема виводу для приміщення."""
+
     id: str = Field(..., description="UUID приміщення")
     provider_id: str = Field(..., description="UUID постачальника (відповідального)")
     name_ua: str = Field(..., examples=["Аудиторія 1-225"])
@@ -51,5 +57,5 @@ class RoomOut(BaseModel):
     is_shelter: bool = Field(..., description="Чи є укриттям")
     moderation_status: ModerationStatusEnum = Field(..., description="Статус модерації")
 
-    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini. 
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini.
     # Код вичитано, відредаговано та затверджено учасниками команди

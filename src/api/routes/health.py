@@ -30,6 +30,5 @@ class HealthOut(BaseModel):
 async def get_health() -> HealthOut:
     return HealthOut(status="ok", version=API_VERSION)
 
-
-    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude. 
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.
     # Код вичитано, відредаговано та затверджено учасниками команди
