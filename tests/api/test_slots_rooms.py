@@ -114,7 +114,9 @@ def test_unknown_slot_returns_404(client):
 
 def test_close_slot_with_active_booking_returns_409(client):
     r = client.patch(
-        SLOT_WITH_BOOKING, headers=PROVIDER, json={"is_available": False, "closure_reason": "Ремонт"}
+        SLOT_WITH_BOOKING,
+        headers=PROVIDER,
+        json={"is_available": False, "closure_reason": "Ремонт"},
     )
     assert r.status_code == 409
     assert r.json()["error"]["code"] == "ACTIVE_BOOKING_NEEDS_CONFIRMATION"

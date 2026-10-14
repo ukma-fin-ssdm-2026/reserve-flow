@@ -99,7 +99,9 @@ async def create_booking(
 
     slot_taken = any(b["slot_id"] == slot_id and b["status"] in _ACTIVE_STATUSES for b in BOOKINGS)
     if not slot["is_available"] or slot_taken:
-        raise AppError(status.HTTP_409_CONFLICT, ErrorCode.SLOT_UNAVAILABLE, "Обраний час уже зайнято")
+        raise AppError(
+            status.HTTP_409_CONFLICT, ErrorCode.SLOT_UNAVAILABLE, "Обраний час уже зайнято"
+        )
 
     new_booking = BookingOut(
         id=uuid4(),
@@ -149,7 +151,9 @@ async def get_booking(
 ) -> BookingOut:
     booking = _get_booking_or_404(booking_id)
     if not _can_view(current_user, booking):
-        raise AppError(status.HTTP_403_FORBIDDEN, ErrorCode.FORBIDDEN, "Немає доступу до цього бронювання")
+        raise AppError(
+            status.HTTP_403_FORBIDDEN, ErrorCode.FORBIDDEN, "Немає доступу до цього бронювання"
+        )
     return _to_out(booking)
 
 
@@ -226,7 +230,6 @@ async def update_booking(
     return _to_out(booking).model_copy(
         update={"status": booking_in.status, "reason": booking_in.reason}
     )
-
 
     # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.
     # Код вичитано, відредаговано та затверджено учасниками команди

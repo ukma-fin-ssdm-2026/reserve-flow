@@ -1,4 +1,5 @@
 """Кінцеві точки для роботи з часовими слотами."""
+
 from datetime import date, time
 from typing import Annotated
 from uuid import UUID
@@ -44,7 +45,9 @@ _SLOT_WITH_ACTIVE_BOOKING = "b2000000-0000-4000-8000-000000000002"
 async def search_slots(
     # Фільтри
     room_id: UUID | None = Query(None, description="ID приміщення: лише слоти цієї кімнати (D-02)"),
-    search_date: date | None = Query(None, alias="date", description="Дата для пошуку (YYYY-MM-DD)"),
+    search_date: date | None = Query(
+        None, alias="date", description="Дата для пошуку (YYYY-MM-DD)"
+    ),
     start: time | None = Query(None, description="Початок інтервалу (HH:MM:SS)"),
     end: time | None = Query(None, description="Кінець інтервалу (HH:MM:SS)"),
     capacity: int | None = Query(None, ge=1, le=500, description="Мінімальна місткість (1-500)"),
@@ -61,7 +64,11 @@ async def search_slots(
             422,  # HTTP_422_UNPROCESSABLE_CONTENT (назва константи різна у версіях Starlette)
             ErrorCode.VALIDATION_ERROR,
             "Некоректні дані запиту",
-            [ErrorDetail(field="end", issue="Час закінчення має бути строго пізніше за час початку")],
+            [
+                ErrorDetail(
+                    field="end", issue="Час закінчення має бути строго пізніше за час початку"
+                )
+            ],
         )
 
     booked = {b["slot_id"] for b in BOOKINGS if b["status"] in ("Pending", "Confirmed")}
@@ -132,6 +139,6 @@ async def patch_slot(
     updated_slot["is_available"] = payload.is_available
     updated_slot["closure_reason"] = None if payload.is_available else payload.closure_reason
     return SlotOut(**updated_slot)
-    
-    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude. 
+
+    # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.
     # Код вичитано, відредаговано та затверджено учасниками команди

@@ -17,7 +17,9 @@ SLOT_CLOSED = "b2000000-0000-4000-8000-000000000003"
 
 
 def _post(client, slot_id, headers=CLIENT):
-    return client.post("/api/v1/bookings", headers=headers, json={"slot_id": slot_id, "purpose": "Семінар"})
+    return client.post(
+        "/api/v1/bookings", headers=headers, json={"slot_id": slot_id, "purpose": "Семінар"}
+    )
 
 
 # --- POST ----------------------------------------------------------------------
