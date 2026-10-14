@@ -82,7 +82,7 @@ def _get_booking_or_404(booking_id: UUID) -> dict:
         "Бронює вільний слот (FR-005). Нове бронювання має статус `Pending`. "
         "У разі успіху повертає `201` та заголовок `Location`.\n\n"
         "* `404` — слота не існує;\n"
-        "* `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне бронювання (FR-006)."
+        "* `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне бронювання (FR-006)."  # noqa: E501
     ),
     responses=error_responses(401, 403, 404, 409, 422),
 )
@@ -170,16 +170,18 @@ _ALLOWED_FROM: dict[BookingStatus, set[str]] = {
     BookingStatus.CANCELLED: {BookingStatus.PENDING.value, BookingStatus.CONFIRMED.value},
 }
 
-PATCH_DESCRIPTION = """Змінює статус бронювання (D-03). Замість окремих `/cancel`, `/confirm`, `/decision`.
+PATCH_DESCRIPTION = """Змінює статус бронювання (D-03).
+Замість окремих `/cancel`, `/confirm`, `/decision`.
 
 | З | В | Хто | Умова | Помилка |
 |---|---|---|---|---|
-| `Pending` | `Confirmed` | Постачальник цієї кімнати | — | `403` чужа кімната або інша роль |
-| `Pending` | `Rejected` | Постачальник цієї кімнати | `reason` обов'язковий (FR-010) | `422` без причини |
-| `Pending`, `Confirmed` | `Cancelled` | Клієнт-власник | до початку ≥ 2 год (FR-007) | `409 CANCELLATION_TOO_LATE` |
+| `Pending` | `Confirmed` | Постачальник | — | `403` чужа кімната або інша роль |
+| `Pending` | `Rejected` | Постачальник | `reason` обов'язковий (FR-010) | `422` без причини |
+| `Pending`, `Confirmed` | `Cancelled` | Клієнт-власник | за ≥ 2 год | `409` CANCELLATION_TOO_LATE |
 
-Будь-який інший перехід (зокрема в `Pending` або з `Rejected` / `Cancelled`) → `409 INVALID_STATUS_TRANSITION`.
-Неіснуюче бронювання → `404`.
+Будь-який інший перехід (зокрема в `Pending` або з `Rejected` / `Cancelled`)
+-> `409 INVALID_STATUS_TRANSITION`.
+Неіснуюче бронювання -> `404`.
 """
 
 
