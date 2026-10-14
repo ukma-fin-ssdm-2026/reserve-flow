@@ -1,6 +1,7 @@
 import sys
 
 import logging
+import os
 import uuid
 from contextlib import asynccontextmanager
 
@@ -95,7 +96,13 @@ app.include_router(rooms_router)  # L4-07
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=3000)
+    # bandit B104: за замовчуванням слухаємо лише локальний інтерфейс.
+    # У Docker / на сервері адресу задають явно: API_HOST=0.0.0.0
+    uvicorn.run(
+        app,
+        host=os.getenv("API_HOST", "127.0.0.1"),
+        port=int(os.getenv("API_PORT", "3000")),
+    )
 
     # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.
     # Код вичитано, відредаговано та затверджено учасниками команди

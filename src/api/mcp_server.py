@@ -33,7 +33,8 @@ TOKEN = os.environ.get("RESERVE_FLOW_TOKEN", "mock-client-token")
 # (напр. search_slots_api_v1_slots_get): агенту легше обрати потрібний.
 TOOL_NAMES = {
     "get_health_api_v1_health_get": "check_health",
-    "issue_token_api_v1_auth_token_post": "issue_test_token",
+    # bandit B105 — хибне спрацювання: ключ містить «token», а значення — назва інструмента
+    "issue_token_api_v1_auth_token_post": "issue_test_token",  # nosec B105
     "read_me_api_v1_auth_me_get": "who_am_i",
     "search_slots_api_v1_slots_get": "search_slots",
     "patch_slot_api_v1_slots__slot_id__patch": "update_slot_availability",
