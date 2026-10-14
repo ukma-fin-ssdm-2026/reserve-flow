@@ -1,5 +1,5 @@
 import sys
-
+# Це дуже довгий тестовий коментар для перевірки GitHub Actions, який має гарантовано викликати помилку E501 у нашому лінтері Flake8.
 import logging
 import uuid
 from contextlib import asynccontextmanager
