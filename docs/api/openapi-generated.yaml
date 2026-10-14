@@ -274,28 +274,30 @@ paths:
       tags:
       - bookings
       summary: Змінити статус бронювання
-      description: 'Змінює статус бронювання (D-03). Замість окремих `/cancel`, `/confirm`,
-        `/decision`.
+      description: 'Змінює статус бронювання (D-03).
+
+        Замість окремих `/cancel`, `/confirm`, `/decision`.
 
 
         | З | В | Хто | Умова | Помилка |
 
         |---|---|---|---|---|
 
-        | `Pending` | `Confirmed` | Постачальник цієї кімнати | — | `403` чужа кімната
-        або інша роль |
+        | `Pending` | `Confirmed` | Постачальник | — | `403` чужа кімната або інша
+        роль |
 
-        | `Pending` | `Rejected` | Постачальник цієї кімнати | `reason` обов''язковий
-        (FR-010) | `422` без причини |
+        | `Pending` | `Rejected` | Постачальник | `reason` обов''язковий (FR-010)
+        | `422` без причини |
 
-        | `Pending`, `Confirmed` | `Cancelled` | Клієнт-власник | до початку ≥ 2 год
-        (FR-007) | `409 CANCELLATION_TOO_LATE` |
+        | `Pending`, `Confirmed` | `Cancelled` | Клієнт-власник | за ≥ 2 год | `409`
+        CANCELLATION_TOO_LATE |
 
 
         Будь-який інший перехід (зокрема в `Pending` або з `Rejected` / `Cancelled`)
-        → `409 INVALID_STATUS_TRANSITION`.
 
-        Неіснуюче бронювання → `404`.'
+        -> `409 INVALID_STATUS_TRANSITION`.
+
+        Неіснуюче бронювання -> `404`.'
       operationId: update_booking_api_v1_bookings__booking_id__patch
       security:
       - HTTPBearer: []

@@ -46,7 +46,8 @@ async def issue_token(credentials: TokenRequest) -> TokenOut:
     "/me",
     response_model=UserOut,
     summary="Хто я",
-    description="Повертає користувача, якому належить токен. Зручно перевірити, чи працює **Authorize**.",
+    description="Повертає користувача, якому належить токен. "
+    "Зручно перевірити, чи працює **Authorize**.",
     responses=error_responses(401),
 )
 async def read_me(current_user: CurrentUser) -> UserOut:
