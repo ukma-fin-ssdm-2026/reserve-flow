@@ -17,6 +17,7 @@ from db import get_session
 from deps import get_current_user, require_role
 from errors import AppError, ErrorCode, error_responses
 from mocks import BOOKINGS, KYIV, ROOMS, SLOTS, find_by_id
+from models import ActorType, AuditAction, AuditLog, EntityType
 from schemas.auth import Role, UserOut
 from schemas.bookings import BookingCreate, BookingOut, BookingStatus, BookingUpdate
 from schemas.common import Page, PaginationParams, paginate, pagination_params
@@ -86,7 +87,7 @@ def _get_booking_or_404(booking_id: UUID) -> dict:
         "Бронює вільний слот (FR-005). Нове бронювання має статус `Pending`. "
         "У разі успіху повертає `201` та заголовок `Location`.\n\n"
         "* `404` — слота не існує;\n"
-        "* `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне бронювання (FR-006)."  # noqa: E501
+        "* `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне бронювання."
     ),
     responses=error_responses(401, 403, 404, 409, 422),
 )
@@ -97,9 +98,6 @@ def create_booking(
     current_user: Annotated[UserOut, Depends(require_role(Role.CLIENT))],
     session: Annotated[Session, Depends(get_session)],
 ) -> BookingOut:
-    # Звичайний `def` (а не `async def`): синхронна сесія працює в пулі потоків і не
-    # блокує event loop, тож паралельні запити справді виконуються паралельно.
-    # Одна транзакція з SELECT ... FOR UPDATE на слот (FR-006, REL-001).
     try:
         booking = booking_engine.create_booking(
             session,
@@ -107,6 +105,23 @@ def create_booking(
             slot_id=booking_in.slot_id,
             purpose=booking_in.purpose,
         )
+
+        # --- AuditLog (FR-013) ---
+        audit = AuditLog(
+            actor_type=ActorType.USER,
+            user_id=UUID(str(current_user.id)),
+            action=AuditAction.BOOKING_CREATED,
+            entity_type=EntityType.BOOKING,
+            entity_id=booking.id,
+        )
+        session.add(audit)
+        session.commit()
+
+        # --- Notification Scheduler (Stub) ---
+        print(
+            f"[{_now()}] Notification Scheduler: Нагадування сплановано для бронювання {booking.id}"
+        )
+
     except SlotNotFound:
         raise AppError(status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Слот не знайдено") from None
     except SlotUnavailable:
@@ -170,7 +185,6 @@ async def get_booking(
 
 
 # Хто може перевести бронювання в кожен зі статусів і з яких статусів (D-03).
-# Pending — лише початковий статус, перейти в нього не можна.
 _ALLOWED_ROLE_FOR_STATUS: dict[BookingStatus, Role] = {
     BookingStatus.CONFIRMED: Role.PROVIDER,
     BookingStatus.REJECTED: Role.PROVIDER,
@@ -208,6 +222,7 @@ async def update_booking(
     booking_id: Annotated[UUID, Path(description="ID бронювання")],
     booking_in: BookingUpdate,
     current_user: Annotated[UserOut, Depends(get_current_user)],
+    session: Annotated[Session, Depends(get_session)],
 ) -> BookingOut:
     booking = _get_booking_or_404(booking_id)
 
@@ -239,6 +254,27 @@ async def update_booking(
                 ErrorCode.CANCELLATION_TOO_LATE,
                 "Скасувати можна не пізніше ніж за 2 години до початку",
             )
+
+    # --- AuditLog (FR-013) ---
+    audit_action = None
+    if booking_in.status == BookingStatus.CONFIRMED:
+        audit_action = AuditAction.BOOKING_CONFIRMED
+    elif booking_in.status == BookingStatus.REJECTED:
+        audit_action = AuditAction.BOOKING_REJECTED
+    elif booking_in.status == BookingStatus.CANCELLED:
+        audit_action = AuditAction.BOOKING_CANCELLED
+
+    if audit_action:
+        audit = AuditLog(
+            actor_type=ActorType.USER,
+            user_id=UUID(str(current_user.id)),
+            action=audit_action,
+            entity_type=EntityType.BOOKING,
+            entity_id=booking_id,
+            details=booking_in.reason,
+        )
+        session.add(audit)
+        session.commit()
 
     # Заглушка: повертаємо бронювання з новим статусом, не змінюючи mocks.py
     return _to_out(booking).model_copy(
