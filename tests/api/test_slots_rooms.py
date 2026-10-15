@@ -104,6 +104,17 @@ def test_client_cannot_patch_slot(client):
     assert r.json()["error"]["code"] == "FORBIDDEN"
 
 
+def test_provider_cannot_patch_foreign_room_slot(client, monkeypatch):
+    from mocks import ROOMS
+
+    monkeypatch.setitem(ROOMS[0], "provider_id", "00000000-0000-4000-8000-999999999999")
+    r = client.patch(
+        SLOT_1, headers=PROVIDER, json={"is_available": False, "closure_reason": "Ремонт"}
+    )
+    assert r.status_code == 403
+    assert r.json()["error"]["code"] == "FORBIDDEN"
+
+
 def test_unknown_slot_returns_404(client):
     r = client.patch(
         "/api/v1/slots/nope", headers=PROVIDER, json={"is_available": False, "closure_reason": "x"}
