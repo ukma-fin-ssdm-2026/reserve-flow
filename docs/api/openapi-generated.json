@@ -524,10 +524,10 @@
                   "type": "null"
                 }
               ],
-              "description": "ID приміщення: лише слоти цієї кімнати (D-02)",
+              "description": "ID приміщення",
               "title": "Room Id"
             },
-            "description": "ID приміщення: лише слоти цієї кімнати (D-02)"
+            "description": "ID приміщення"
           },
           {
             "name": "date",
@@ -543,10 +543,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Дата для пошуку (YYYY-MM-DD)",
+              "description": "Дата для пошуку",
               "title": "Date"
             },
-            "description": "Дата для пошуку (YYYY-MM-DD)"
+            "description": "Дата для пошуку"
           },
           {
             "name": "start",
@@ -562,10 +562,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Початок інтервалу (HH:MM:SS)",
+              "description": "Початок інтервалу",
               "title": "Start"
             },
-            "description": "Початок інтервалу (HH:MM:SS)"
+            "description": "Початок інтервалу"
           },
           {
             "name": "end",
@@ -581,10 +581,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Кінець інтервалу (HH:MM:SS)",
+              "description": "Кінець інтервалу",
               "title": "End"
             },
-            "description": "Кінець інтервалу (HH:MM:SS)"
+            "description": "Кінець інтервалу"
           },
           {
             "name": "capacity",
@@ -601,10 +601,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Мінімальна місткість (1-500)",
+              "description": "Мінімальна місткість",
               "title": "Capacity"
             },
-            "description": "Мінімальна місткість (1-500)"
+            "description": "Мінімальна місткість"
           },
           {
             "name": "has_projector",
@@ -619,10 +619,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Чи потрібен проєктор",
+              "description": "Проєктор",
               "title": "Has Projector"
             },
-            "description": "Чи потрібен проєктор"
+            "description": "Проєктор"
           },
           {
             "name": "is_shelter",
@@ -637,10 +637,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Чи потрібне укриття",
+              "description": "Укриття",
               "title": "Is Shelter"
             },
-            "description": "Чи потрібне укриття"
+            "description": "Укриття"
           },
           {
             "name": "building",

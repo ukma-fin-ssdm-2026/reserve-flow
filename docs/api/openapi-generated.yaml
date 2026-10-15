@@ -394,9 +394,9 @@ paths:
           - type: string
             format: uuid
           - type: 'null'
-          description: 'ID приміщення: лише слоти цієї кімнати (D-02)'
+          description: ID приміщення
           title: Room Id
-        description: 'ID приміщення: лише слоти цієї кімнати (D-02)'
+        description: ID приміщення
       - name: date
         in: query
         required: false
@@ -405,9 +405,9 @@ paths:
           - type: string
             format: date
           - type: 'null'
-          description: Дата для пошуку (YYYY-MM-DD)
+          description: Дата для пошуку
           title: Date
-        description: Дата для пошуку (YYYY-MM-DD)
+        description: Дата для пошуку
       - name: start
         in: query
         required: false
@@ -416,9 +416,9 @@ paths:
           - type: string
             format: time
           - type: 'null'
-          description: Початок інтервалу (HH:MM:SS)
+          description: Початок інтервалу
           title: Start
-        description: Початок інтервалу (HH:MM:SS)
+        description: Початок інтервалу
       - name: end
         in: query
         required: false
@@ -427,9 +427,9 @@ paths:
           - type: string
             format: time
           - type: 'null'
-          description: Кінець інтервалу (HH:MM:SS)
+          description: Кінець інтервалу
           title: End
-        description: Кінець інтервалу (HH:MM:SS)
+        description: Кінець інтервалу
       - name: capacity
         in: query
         required: false
@@ -439,9 +439,9 @@ paths:
             maximum: 500
             minimum: 1
           - type: 'null'
-          description: Мінімальна місткість (1-500)
+          description: Мінімальна місткість
           title: Capacity
-        description: Мінімальна місткість (1-500)
+        description: Мінімальна місткість
       - name: has_projector
         in: query
         required: false
@@ -449,9 +449,9 @@ paths:
           anyOf:
           - type: boolean
           - type: 'null'
-          description: Чи потрібен проєктор
+          description: Проєктор
           title: Has Projector
-        description: Чи потрібен проєктор
+        description: Проєктор
       - name: is_shelter
         in: query
         required: false
@@ -459,9 +459,9 @@ paths:
           anyOf:
           - type: boolean
           - type: 'null'
-          description: Чи потрібне укриття
+          description: Укриття
           title: Is Shelter
-        description: Чи потрібне укриття
+        description: Укриття
       - name: building
         in: query
         required: false
