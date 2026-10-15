@@ -115,7 +115,7 @@ paths:
         * `404` — слота не існує;
 
         * `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне
-        бронювання (FR-006).'
+        бронювання.'
       operationId: create_booking_api_v1_bookings_post
       security:
       - HTTPBearer: []
