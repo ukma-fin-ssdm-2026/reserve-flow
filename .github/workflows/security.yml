@@ -1,0 +1,38 @@
+# Аудит залежностей (L5-16, #209): pip-audit на кожен PR, push у main і щотижня.
+# Окремий workflow, щоб не конфліктувати з ci.yml.
+name: Security
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pip-audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Audit runtime dependencies
+        run: pip-audit -r requirements.txt --desc on
+
+      - name: Audit MCP and dev dependencies
+        run: pip-audit -r requirements-mcp.txt -r requirements-dev.txt
