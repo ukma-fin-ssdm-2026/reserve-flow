@@ -3,7 +3,7 @@
 
 Потрібна PostgreSQL: SQLite ігнорує SELECT ... FOR UPDATE, тож на ньому тест
 нічого не доводить і пропускається.
-    TEST_DATABASE_URL=postgresql+psycopg://user:pass@localhost:5432/reserveflow_test pytest
+    TEST_DATABASE_URL=postgresql+psycopg://user@localhost:5432/reserveflow_test pytest
 """
 
 import asyncio
@@ -56,7 +56,7 @@ async def _fire_parallel() -> list[httpx.Response]:
             *(
                 http.post(
                     "/api/v1/bookings",
-                    headers=auth("mock-client-token"),
+                    headers=auth("client"),
                     json={"slot_id": SLOT_FREE, "purpose": "Семінар"},
                 )
                 for _ in range(PARALLEL_REQUESTS)

@@ -5,8 +5,8 @@ import pytest
 from conftest import auth
 
 BOOKING_URL = "/api/v1/bookings/c3000000-0000-4000-8000-000000000001"
-CLIENT = auth("mock-client-token")
-PROVIDER = auth("mock-provider-token")
+CLIENT = auth("client")
+PROVIDER = auth("provider")
 
 
 def test_new_booking_is_pending(client):

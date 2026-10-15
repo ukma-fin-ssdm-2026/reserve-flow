@@ -7,7 +7,7 @@ from sqlmodel import Session, func, select
 from conftest import auth
 from models import Booking, BookingStatus, Notification, TimeSlot, AuditLog, AuditAction, EntityType
 
-CLIENT = auth("mock-client-token")
+CLIENT = auth("client")
 SLOT_FREE = "b2000000-0000-4000-8000-000000000001"
 SLOT_BOOKED = "b2000000-0000-4000-8000-000000000002"
 

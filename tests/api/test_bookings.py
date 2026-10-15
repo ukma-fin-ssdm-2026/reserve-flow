@@ -5,9 +5,9 @@ from datetime import timedelta
 import routes.bookings as bookings_module
 from conftest import auth
 
-CLIENT = auth("mock-client-token")
-PROVIDER = auth("mock-provider-token")
-ADMIN = auth("mock-admin-token")
+CLIENT = auth("client")
+PROVIDER = auth("provider")
+ADMIN = auth("admin")
 
 BOOKING_1 = "/api/v1/bookings/c3000000-0000-4000-8000-000000000001"
 UNKNOWN_BOOKING = "/api/v1/bookings/00000000-0000-4000-8000-000000000000"

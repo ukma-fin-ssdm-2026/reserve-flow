@@ -1,4 +1,4 @@
-"""Схеми для заглушки автентифікації (рішення D-06)."""
+"""Схеми автентифікації (ADR-003, L5-12)."""
 
 from enum import Enum
 
@@ -14,18 +14,19 @@ class Role(str, Enum):
 
 
 class TokenRequest(BaseModel):
-    """Облікові дані тестового користувача."""
+    """Облікові дані користувача."""
 
     email: EmailStr = Field(
         ...,
-        description="Email тестового користувача",
+        description="Email користувача",
         examples=["client@ukma.edu.ua"],
     )
     password: str = Field(
         ...,
         min_length=1,
-        description="Пароль тестового користувача (лише для Lab 4, не секрет)",
-        examples=["lab4-demo"],
+        max_length=128,
+        description="Пароль",
+        examples=["your-password"],
     )
 
 
@@ -45,13 +46,13 @@ class TokenOut(BaseModel):
 
     access_token: str = Field(
         ...,
-        description="Токен для заголовка `Authorization: Bearer <токен>`",
-        examples=["mock-client-token"],
+        description="JWT для заголовка `Authorization: Bearer <токен>`",
+        examples=["<header>.<payload>.<signature>"],
     )
     token_type: str = Field("bearer", description="Тип токена", examples=["bearer"])
     expires_in: int = Field(
-        3600,
-        description="Час життя токена в секундах (у заглушці не перевіряється)",
-        examples=[3600],
+        1800,
+        description="Час життя токена в секундах (ACCESS_TOKEN_EXPIRE_MINUTES)",
+        examples=[1800],
     )
     user: UserOut
