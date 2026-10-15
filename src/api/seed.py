@@ -7,6 +7,8 @@ cd src/api && python seed.py --reset    # спочатку drop_all
 import argparse
 import uuid
 
+from datetime import timezone
+
 from sqlmodel import Session, SQLModel
 
 import mocks
@@ -65,8 +67,8 @@ def build_objects() -> list[SQLModel]:
         TimeSlot(
             id=uuid.UUID(s["id"]),
             room_id=uuid.UUID(s["room_id"]),
-            start_time=s["start_time"],
-            end_time=s["end_time"],
+            start_time=s["start_time"].astimezone(timezone.utc),
+            end_time=s["end_time"].astimezone(timezone.utc),
             is_available=s["is_available"],
             closure_reason=s["closure_reason"],
         )

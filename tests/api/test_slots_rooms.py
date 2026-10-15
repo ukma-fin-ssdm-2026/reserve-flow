@@ -104,10 +104,27 @@ def test_client_cannot_patch_slot(client):
     assert r.json()["error"]["code"] == "FORBIDDEN"
 
 
-def test_provider_cannot_patch_foreign_room_slot(client, monkeypatch):
-    from mocks import ROOMS
+def test_provider_cannot_patch_foreign_room_slot(client, db_engine):
+    from uuid import UUID
+    from sqlmodel import Session
+    from models import Room, User
 
-    monkeypatch.setitem(ROOMS[0], "provider_id", "00000000-0000-4000-8000-999999999999")
+    with Session(db_engine) as session:
+        other_provider_id = UUID("00000000-0000-4000-8000-999999999999")
+        session.add(
+            User(
+                id=other_provider_id,
+                email="other@ukma.edu.ua",
+                full_name="Інший Постачальник",
+                password_hash="x",
+                role="Provider",
+            )
+        )
+        room = session.get(Room, UUID("a1000000-0000-4000-8000-000000000001"))
+        room.provider_id = other_provider_id
+        session.add(room)
+        session.commit()
+
     r = client.patch(
         SLOT_1, headers=PROVIDER, json={"is_available": False, "closure_reason": "Ремонт"}
     )
