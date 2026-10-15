@@ -19,11 +19,20 @@
 
 ## Запуск API (Локальна розробка)
 
-Щоб запустити бекенд локально, спочатку встановіть залежності, а потім запустіть сервер з кореня репозиторію:
+Щоб запустити бекенд локально, з кореня репозиторію:
 ```bash
 pip install -r requirements.txt
+cp env.example .env          # і заповніть POSTGRES_PASSWORD, JWT_SECRET, SEED_USER_PASSWORD
+docker compose up -d db      # PostgreSQL 16 на 127.0.0.1:5432
+python src/api/seed.py       # таблиці й тестові дані (повторний запуск безпечний)
 uvicorn main:app --app-dir src/api --reload --port 3000
 ```
+`.env` є в `.gitignore`, у git він не потрапляє. Секрет для JWT (не коротший за 32 символи) згенеруйте так:
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(48))"
+```
+
+**Вхід** (ADR-003): `POST /api/v1/auth/token` з email і паролем повертає JWT (строк дії — `ACCESS_TOKEN_EXPIRE_MINUTES`, 30 хв). Тестові користувачі після seed: `client@ukma.edu.ua`, `provider@ukma.edu.ua`, `admin@ukma.edu.ua`; пароль — ваш `SEED_USER_PASSWORD`. У Swagger UI вставте `access_token` у **Authorize**.
 
 Адреса Swagger UI після запуску: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
 
@@ -74,7 +83,7 @@ pip install -r requirements-dev.txt
    python -m pip_audit -r requirements.txt
    ```
 
-**Документація API (GitHub Pages):** 
+**Документація API (GitHub Pages):**
 [Reserve Flow API Reference](https://ukma-fin-ssdm-2026.github.io/reserve-flow/)
 
 ## MCP-сервер (бонус)
@@ -92,11 +101,11 @@ python src/api/mcp_server.py
 npx @modelcontextprotocol/inspector python src/api/mcp_server.py
 ```
 
-**Інструменти:** `search_slots`, `get_room`, `create_booking`, `list_bookings`, `get_booking`, `change_booking_status`, `update_slot_availability`, `who_am_i`, `issue_test_token`, `check_health`.
+**Інструменти:** `search_slots`, `get_room`, `create_booking`, `list_bookings`, `get_booking`, `change_booking_status`, `update_slot_availability`, `who_am_i`, `issue_token`, `check_health`.
 
-**Роль агента.** Агент викликає API від імені тестового користувача (заглушка автентифікації D-06). За замовчуванням це клієнт; іншу роль задає змінна середовища:
+**Роль агента.** Агент викликає API від імені тестового користувача з seed (потрібні запущена БД і `JWT_SECRET` у `.env`, див. «Запуск API»). Перед кожним викликом інструмента сервер видає свіжий JWT, тож сесія агента не обривається через строк дії токена. За замовчуванням це клієнт; іншу роль задає змінна середовища:
 ```bash
-RESERVE_FLOW_TOKEN=mock-provider-token python src/api/mcp_server.py
+RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 ```
 
 **Підключення до агента** (Claude Desktop, Cursor та інші). Додайте сервер у конфігурацію MCP агента, вказавши абсолютні шляхи:
@@ -106,7 +115,7 @@ RESERVE_FLOW_TOKEN=mock-provider-token python src/api/mcp_server.py
     "reserve-flow": {
       "command": "/абсолютний/шлях/до/.venv/bin/python",
       "args": ["/абсолютний/шлях/до/reserve-flow/src/api/mcp_server.py"],
-      "env": { "RESERVE_FLOW_TOKEN": "mock-client-token" }
+      "env": { "RESERVE_FLOW_ROLE": "client" }
     }
   }
 }

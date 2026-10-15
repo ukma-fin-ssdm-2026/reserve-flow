@@ -43,8 +43,8 @@
         "tags": [
           "auth"
         ],
-        "summary": "Отримати тестовий токен",
-        "description": "Lab 4: заглушка замість справжнього JWT. Повертає фіксований токен тестового користувача, який далі передається в заголовку `Authorization: Bearer <токен>` (кнопка **Authorize** у Swagger UI).\n\n| email | Роль | Токен |\n|---|---|---|\n| `client@ukma.edu.ua` | Client | `mock-client-token` |\n| `provider@ukma.edu.ua` | Provider | `mock-provider-token` |\n| `admin@ukma.edu.ua` | Admin | `mock-admin-token` |\n\nПароль для всіх: `lab4-demo`. Невірні email або пароль → `401`.",
+        "summary": "Отримати токен доступу",
+        "description": "Перевіряє email і пароль (bcrypt-хеш у БД) і повертає JWT, який далі передається в заголовку `Authorization: Bearer <токен>` (кнопка **Authorize** у Swagger UI).\n\nТокен підписано секретом сервера (HS256), у ньому — id і роль користувача; строк дії — `expires_in` секунд.\n\nТестові користувачі після `python src/api/seed.py`: `client@ukma.edu.ua`, `provider@ukma.edu.ua`, `admin@ukma.edu.ua`; пароль — значення `SEED_USER_PASSWORD` з вашого `.env`.\n\nНевірні email або пароль → `401`; заблокований користувач → `403`.",
         "operationId": "issue_token_api_v1_auth_token_post",
         "requestBody": {
           "content": {
@@ -69,6 +69,16 @@
           },
           "401": {
             "description": "Немає токена або токен недійсний",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Недостатньо прав або ресурс належить іншому користувачу",
             "content": {
               "application/json": {
                 "schema": {
@@ -1512,9 +1522,9 @@
           "access_token": {
             "type": "string",
             "title": "Access Token",
-            "description": "Токен для заголовка `Authorization: Bearer <токен>`",
+            "description": "JWT для заголовка `Authorization: Bearer <токен>`",
             "examples": [
-              "mock-client-token"
+              "<header>.<payload>.<signature>"
             ]
           },
           "token_type": {
@@ -1529,10 +1539,10 @@
           "expires_in": {
             "type": "integer",
             "title": "Expires In",
-            "description": "Час життя токена в секундах (у заглушці не перевіряється)",
-            "default": 3600,
+            "description": "Час життя токена в секундах (ACCESS_TOKEN_EXPIRE_MINUTES)",
+            "default": 1800,
             "examples": [
-              3600
+              1800
             ]
           },
           "user": {
@@ -1553,18 +1563,19 @@
             "type": "string",
             "format": "email",
             "title": "Email",
-            "description": "Email тестового користувача",
+            "description": "Email користувача",
             "examples": [
               "client@ukma.edu.ua"
             ]
           },
           "password": {
             "type": "string",
+            "maxLength": 128,
             "minLength": 1,
             "title": "Password",
-            "description": "Пароль тестового користувача (лише для Lab 4, не секрет)",
+            "description": "Пароль",
             "examples": [
-              "lab4-demo"
+              "your-password"
             ]
           }
         },
@@ -1574,7 +1585,7 @@
           "password"
         ],
         "title": "TokenRequest",
-        "description": "Облікові дані тестового користувача."
+        "description": "Облікові дані користувача."
       },
       "UserOut": {
         "properties": {
@@ -1625,7 +1636,7 @@
     "securitySchemes": {
       "HTTPBearer": {
         "type": "http",
-        "description": "Тестовий токен з `POST /api/v1/auth/token`, напр. `mock-client-token`",
+        "description": "JWT з `POST /api/v1/auth/token` (поле `access_token`)",
         "scheme": "bearer"
       }
     }
@@ -1637,7 +1648,7 @@
     },
     {
       "name": "auth",
-      "description": "Отримання тестового токена (заглушка JWT, D-06)"
+      "description": "Вхід і отримання JWT (ADR-003)"
     },
     {
       "name": "slots",

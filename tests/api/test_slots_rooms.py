@@ -4,8 +4,8 @@ import pytest
 
 from conftest import auth
 
-CLIENT = auth("mock-client-token")
-PROVIDER = auth("mock-provider-token")
+CLIENT = auth("client")
+PROVIDER = auth("provider")
 
 ROOM_1 = "/api/v1/rooms/a1000000-0000-4000-8000-000000000001"
 SLOT_1 = "/api/v1/slots/b2000000-0000-4000-8000-000000000001"

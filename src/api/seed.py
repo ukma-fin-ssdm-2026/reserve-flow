@@ -5,7 +5,9 @@ cd src/api && python seed.py --reset    # спочатку drop_all
 """
 
 import argparse
+import os
 import uuid
+from functools import lru_cache
 
 from sqlmodel import Session, SQLModel
 
@@ -22,6 +24,7 @@ from models import (
     TimeSlot,
     User,
 )
+from security import hash_password
 
 # mocks.py містить лише ID користувачів; решта — з тестів автентифікації (L4-05)
 MOCK_USERS = [
@@ -31,6 +34,22 @@ MOCK_USERS = [
 ]
 
 
+# Хеш, якого не дає жоден пароль: без SEED_USER_PASSWORD увійти неможливо.
+NO_LOGIN_HASH = "!no-login"
+
+
+@lru_cache(maxsize=None)
+def _password_hash_for(user_id: str, password: str) -> str:
+    # bcrypt навмисно повільний (~0,25 с); кеш, щоб тести не хешували заново на кожен seed
+    return hash_password(password)
+
+
+def _seed_password_hash(user_id: str) -> str:
+    """Пароль тестових користувачів — зі змінної SEED_USER_PASSWORD (.env), не з коду."""
+    password = os.getenv("SEED_USER_PASSWORD")
+    return _password_hash_for(user_id, password) if password else NO_LOGIN_HASH
+
+
 def build_objects() -> list[SQLModel]:
     objs: list[SQLModel] = [
         User(
@@ -38,7 +57,7 @@ def build_objects() -> list[SQLModel]:
             email=email,
             full_name=name,
             role=role,
-            password_hash="!mock-no-login",  # реальний bcrypt-хеш з'явиться разом з auth
+            password_hash=_seed_password_hash(uid),
         )
         for uid, email, name, role in MOCK_USERS
     ]
@@ -104,3 +123,5 @@ if __name__ == "__main__":
     with Session(engine) as session:
         seed(session)
     print("Seed виконано.")
+    if not os.getenv("SEED_USER_PASSWORD"):
+        print("УВАГА: SEED_USER_PASSWORD не задано — тестові користувачі не зможуть увійти.")

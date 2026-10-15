@@ -13,6 +13,10 @@ sqlmodel>=0.0.22
 psycopg[binary]>=3.2
 python-dotenv>=1.0
 
+# Автентифікація за ADR-003 (L5-12)
+PyJWT>=2.10
+pwdlib[bcrypt]>=0.2
+
 # тести
 httpx>=0.27
 pytest>=8.0

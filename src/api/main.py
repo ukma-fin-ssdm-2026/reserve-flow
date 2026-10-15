@@ -42,7 +42,7 @@ async def lifespan(app: FastAPI):
 # Опис груп кінцевих точок у Swagger UI. Додавайте сюди тег свого роутера.
 OPENAPI_TAGS = [
     {"name": "system", "description": "Службові кінцеві точки"},
-    {"name": "auth", "description": "Отримання тестового токена (заглушка JWT, D-06)"},
+    {"name": "auth", "description": "Вхід і отримання JWT (ADR-003)"},
     {"name": "slots", "description": "Пошук вільних слотів і керування їхньою доступністю"},
     {"name": "rooms", "description": "Приміщення"},
     {"name": "bookings", "description": "Бронювання слотів"},
