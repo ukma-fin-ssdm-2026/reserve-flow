@@ -1,0 +1,44 @@
+# pre-commit (L5-15, #208): перевірки перед кожним комітом.
+# Встановлення:  pip install -r requirements-dev.txt && pre-commit install
+# Запуск вручну: pre-commit run --all-files
+#
+# black, flake8 і bandit — локальні хуки (language: system): беруть ті самі версії
+# і ту саму конфігурацію (pyproject.toml, .flake8), що й CI, тож результат однаковий.
+# Згенеровані файли не чіпаємо: їх перевіряє job api у CI (D-07).
+exclude: ^docs/api/openapi-generated\.(yaml|json)$
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: ["--markdown-linebreak-ext=md"]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline"]
+
+  - repo: local
+    hooks:
+      - id: black
+        name: black (форматування)
+        entry: black
+        language: system
+        types: [python]
+      - id: flake8
+        name: flake8 (стиль PEP 8)
+        entry: flake8
+        language: system
+        types: [python]
+      - id: bandit
+        name: bandit (безпека)
+        entry: bandit -c pyproject.toml -ll -q
+        language: system
+        types: [python]
+        exclude: ^tests/
