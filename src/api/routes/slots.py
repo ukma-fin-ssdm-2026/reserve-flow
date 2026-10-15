@@ -1,15 +1,18 @@
 """Кінцеві точки для роботи з часовими слотами."""
 
-from datetime import date, time
+from datetime import date, datetime, time, timezone
 from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Path, Query, status
+from sqlmodel import Session, select
 
 from config import API_PREFIX
+from db import get_session
 from deps import get_current_user, require_role
 from errors import AppError, ErrorCode, ErrorDetail, error_responses
-from mocks import BOOKINGS, KYIV, ROOMS, SLOTS, find_by_id
+from mocks import KYIV
+from models import Booking, BookingStatus, Room, TimeSlot
 from schemas.auth import Role, UserOut
 from schemas.common import Page, PaginationParams, paginate, pagination_params
 from schemas.rooms import BuildingEnum
@@ -22,8 +25,23 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)],
 )
 
-# Слот із тестовим активним бронюванням (BOOKING_1_ID у mocks.py) — для демонстрації 409.
-_SLOT_WITH_ACTIVE_BOOKING = "b2000000-0000-4000-8000-000000000002"
+
+def _to_kyiv(dt: datetime) -> datetime:
+    """Конвертує datetime з БД у часовий пояс Києва (враховує naive UTC з SQLite)."""
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(KYIV)
+
+
+def _slot_to_out(slot: TimeSlot) -> SlotOut:
+    return SlotOut(
+        id=str(slot.id),
+        room_id=str(slot.room_id),
+        start_time=_to_kyiv(slot.start_time),
+        end_time=_to_kyiv(slot.end_time),
+        is_available=slot.is_available,
+        closure_reason=slot.closure_reason,
+    )
 
 
 @router.get(
@@ -46,25 +64,21 @@ _SLOT_WITH_ACTIVE_BOOKING = "b2000000-0000-4000-8000-000000000002"
     responses=error_responses(401, 422, 500),
 )
 async def search_slots(
-    # Фільтри
-    room_id: UUID | None = Query(None, description="ID приміщення: лише слоти цієї кімнати (D-02)"),
-    search_date: date | None = Query(
-        None, alias="date", description="Дата для пошуку (YYYY-MM-DD)"
-    ),
-    start: time | None = Query(None, description="Початок інтервалу (HH:MM:SS)"),
-    end: time | None = Query(None, description="Кінець інтервалу (HH:MM:SS)"),
-    capacity: int | None = Query(None, ge=1, le=500, description="Мінімальна місткість (1-500)"),
-    has_projector: bool | None = Query(None, description="Чи потрібен проєктор"),
-    is_shelter: bool | None = Query(None, description="Чи потрібне укриття"),
+    session: Annotated[Session, Depends(get_session)],
+    room_id: UUID | None = Query(None, description="ID приміщення"),
+    search_date: date | None = Query(None, alias="date", description="Дата для пошуку"),
+    start: time | None = Query(None, description="Початок інтервалу"),
+    end: time | None = Query(None, description="Кінець інтервалу"),
+    capacity: int | None = Query(None, ge=1, le=500, description="Мінімальна місткість"),
+    has_projector: bool | None = Query(None, description="Проєктор"),
+    is_shelter: bool | None = Query(None, description="Укриття"),
     building: BuildingEnum | None = Query(None, description="Корпус"),
-    # Пагінація з common.py
     params: PaginationParams = Depends(pagination_params),
 ) -> Page[SlotOut]:
-    """Фільтрує слоти та повертає результат у форматі Page."""
-    # Бізнес-валідація 422 (формат D-04: поле і що не так)
+    """Фільтрує слоти в БД та повертає результат."""
     if start and end and end <= start:
         raise AppError(
-            422,  # HTTP_422_UNPROCESSABLE_CONTENT (назва константи різна у версіях Starlette)
+            422,
             ErrorCode.VALIDATION_ERROR,
             "Некоректні дані запиту",
             [
@@ -74,35 +88,50 @@ async def search_slots(
             ],
         )
 
-    booked = {b["slot_id"] for b in BOOKINGS if b["status"] in ("Pending", "Confirmed")}
+    stmt = (
+        select(TimeSlot, Room)
+        .join(Room, TimeSlot.room_id == Room.id)
+        .where(TimeSlot.is_available.is_(True))
+    )
 
-    def matches(slot: dict) -> bool:
-        if not slot["is_available"] or slot["id"] in booked:
-            return False
-        if room_id and slot["room_id"] != str(room_id):
-            return False
-        starts = slot["start_time"].astimezone(KYIV)
-        ends = slot["end_time"].astimezone(KYIV)
+    if room_id is not None:
+        stmt = stmt.where(TimeSlot.room_id == room_id)
+    if capacity is not None:
+        stmt = stmt.where(Room.capacity >= capacity)
+    if has_projector is not None:
+        stmt = stmt.where(Room.has_projector == has_projector)
+    if is_shelter is not None:
+        stmt = stmt.where(Room.is_shelter == is_shelter)
+    if building is not None:
+        stmt = stmt.where(Room.building_ua == building.value)
+
+    rows = session.exec(stmt).all()
+
+    booked_ids = set(
+        session.exec(
+            select(Booking.slot_id).where(
+                Booking.status.in_([BookingStatus.PENDING, BookingStatus.CONFIRMED])
+            )
+        ).all()
+    )
+
+    slots_out: list[SlotOut] = []
+    for slot, _room in rows:
+        if slot.id in booked_ids:
+            continue
+
+        starts = _to_kyiv(slot.start_time)
+        ends = _to_kyiv(slot.end_time)
+
         if search_date and starts.date() != search_date:
-            return False
-        if start and starts.time() < start:
-            return False
-        if end and ends.time() > end:
-            return False
-        room = find_by_id(ROOMS, slot["room_id"])
-        if room is None:
-            return False
-        if capacity and room["capacity"] < capacity:
-            return False
-        if has_projector is not None and room["has_projector"] != has_projector:
-            return False
-        if is_shelter is not None and room["is_shelter"] != is_shelter:
-            return False
-        if building and room["building_ua"] != building.value:
-            return False
-        return True
+            continue
+        if start and starts.time().strftime("%H:%M:%S") < start.strftime("%H:%M:%S"):
+            continue
+        if end and ends.time().strftime("%H:%M:%S") > end.strftime("%H:%M:%S"):
+            continue
 
-    slots_out = [SlotOut(**slot) for slot in SLOTS if matches(slot)]
+        slots_out.append(_slot_to_out(slot))
+
     return paginate(slots_out, params)
 
 
@@ -119,38 +148,54 @@ async def search_slots(
 )
 async def patch_slot(
     payload: SlotPatchIn,
+    session: Annotated[Session, Depends(get_session)],
     # Лише постачальник; інша роль -> 403 (D-06)
     current_user: Annotated[UserOut, Depends(require_role(Role.PROVIDER))],
     slot_id: str = Path(..., description="ID слота"),
 ) -> SlotOut:
-    """Оновлення статусу слота (тільки для постачальника)."""
-    # 1. Пошук слота (404)
-    slot = find_by_id(SLOTS, slot_id)
+    """Оновлення статусу слота в БД (тільки для постачальника)."""
+    try:
+        slot_uuid = UUID(slot_id)
+    except ValueError:
+        raise AppError(status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Слот не знайдено")
+
+    # 1. Пошук слота в БД (404)
+    slot = session.get(TimeSlot, slot_uuid)
     if not slot:
         raise AppError(status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Слот не знайдено")
 
     # 2. Перевірка приналежності кімнати поточному постачальнику (403)
-    room = find_by_id(ROOMS, slot["room_id"])
-    if not room or str(room["provider_id"]) != str(current_user.id):
+    room = session.get(Room, slot.room_id)
+    if not room or str(room.provider_id) != str(current_user.id):
         raise AppError(
             status.HTTP_403_FORBIDDEN,
             ErrorCode.FORBIDDEN,
             "Немає прав для редагування слотів чужої кімнати",
         )
 
-    # 3. Імітація 409: на SLOT_2_ID є тестове бронювання BOOKING_1_ID, і ми намагаємося його закрити
-    if slot_id == _SLOT_WITH_ACTIVE_BOOKING and not payload.is_available:
-        raise AppError(
-            status.HTTP_409_CONFLICT,
-            ErrorCode.ACTIVE_BOOKING_NEEDS_CONFIRMATION,
-            "Слот має активне бронювання. Потрібне окреме підтвердження для скасування.",
-        )
+    # 3. Перевірка активних бронювань у БД (409)
+    if not payload.is_available:
+        active_booking = session.exec(
+            select(Booking).where(
+                Booking.slot_id == slot.id,
+                Booking.status.in_([BookingStatus.PENDING, BookingStatus.CONFIRMED]),
+            )
+        ).first()
+        if active_booking:
+            raise AppError(
+                status.HTTP_409_CONFLICT,
+                ErrorCode.ACTIVE_BOOKING_NEEDS_CONFIRMATION,
+                "Слот має активне бронювання. Потрібне окреме підтвердження для скасування.",
+            )
 
-    # Заглушка успіху (повертає знайдений слот зі зміненим статусом)
-    updated_slot = slot.copy()
-    updated_slot["is_available"] = payload.is_available
-    updated_slot["closure_reason"] = None if payload.is_available else payload.closure_reason
-    return SlotOut(**updated_slot)
+    # 4. Збереження змін у БД
+    slot.is_available = payload.is_available
+    slot.closure_reason = None if payload.is_available else payload.closure_reason
+    session.add(slot)
+    session.commit()
+    session.refresh(slot)
+
+    return _slot_to_out(slot)
 
     # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.
     # Код вичитано, відредаговано та затверджено учасниками команди
