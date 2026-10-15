@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
-from config import API_DESCRIPTION, API_TITLE, API_VERSION
+from config import API_DESCRIPTION, API_TITLE, API_VERSION, CORS_ORIGINS
 from errors import register_error_handlers
 from routes.auth import router as auth_router
 from routes.health import router as health_router
@@ -62,10 +62,11 @@ app = FastAPI(
 # --- Middleware ------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PATCH", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Correlation-ID"],
+    expose_headers=["Location", "X-Correlation-ID"],
 )
 
 
