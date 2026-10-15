@@ -14,7 +14,15 @@ import models  # noqa: F401
 from db import make_engine
 from mocks import BOOKINGS, ROOMS, SLOT_1_ID, SLOT_2_ID, SLOTS, USER_CLIENT_ID
 from models import (
-    ActorType, AuditAction, AuditLog, Booking, BookingStatus, EntityType, Room, TimeSlot, User,
+    ActorType,
+    AuditAction,
+    AuditLog,
+    Booking,
+    BookingStatus,
+    EntityType,
+    Room,
+    TimeSlot,
+    User,
 )
 from seed import seed
 
@@ -80,23 +88,27 @@ def test_slot_end_must_be_after_start(session):
 )
 def test_audit_log_actor_invariant(session, actor, with_user):
     seed(session)
-    session.add(AuditLog(
-        actor_type=actor,
-        user_id=uuid.UUID(USER_CLIENT_ID) if with_user else None,
-        action=AuditAction.NOTIFICATION_FAILED,
-        entity_type=EntityType.NOTIFICATION,
-        entity_id=uuid.uuid4(),
-    ))
+    session.add(
+        AuditLog(
+            actor_type=actor,
+            user_id=uuid.UUID(USER_CLIENT_ID) if with_user else None,
+            action=AuditAction.NOTIFICATION_FAILED,
+            entity_type=EntityType.NOTIFICATION,
+            entity_id=uuid.uuid4(),
+        )
+    )
     with pytest.raises(IntegrityError):
         session.commit()
 
 
 def test_system_audit_entry_without_user_is_ok(session):
     seed(session)
-    session.add(AuditLog(
-        actor_type=ActorType.SYSTEM,
-        action=AuditAction.NOTIFICATION_FAILED,
-        entity_type=EntityType.NOTIFICATION,
-        entity_id=uuid.uuid4(),
-    ))
+    session.add(
+        AuditLog(
+            actor_type=ActorType.SYSTEM,
+            action=AuditAction.NOTIFICATION_FAILED,
+            entity_type=EntityType.NOTIFICATION,
+            entity_id=uuid.uuid4(),
+        )
+    )
     session.commit()

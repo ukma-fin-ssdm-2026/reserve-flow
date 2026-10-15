@@ -71,7 +71,9 @@ def test_ten_parallel_posts_create_exactly_one_booking(
 
     codes = sorted(r.status_code for r in responses)
     assert codes == [201] + [409] * (PARALLEL_REQUESTS - 1), codes
-    assert all(r.json()["error"]["code"] == "SLOT_UNAVAILABLE" for r in responses if r.status_code == 409)
+    assert all(
+        r.json()["error"]["code"] == "SLOT_UNAVAILABLE" for r in responses if r.status_code == 409
+    )
 
     with Session(db_engine) as s:
         active = s.exec(

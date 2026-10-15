@@ -184,9 +184,7 @@ class Booking(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     client_id: uuid.UUID = Field(foreign_key="users.id", index=True)
     slot_id: uuid.UUID = Field(foreign_key="time_slots.id")
-    status: BookingStatus = Field(
-        default=BookingStatus.PENDING, sa_column=_enum(BookingStatus)
-    )
+    status: BookingStatus = Field(default=BookingStatus.PENDING, sa_column=_enum(BookingStatus))
     purpose: str | None = Field(default=None)  # немає в data-model.md, але є в API/mocks
     rejection_reason: str | None = Field(default=None)  # обов'язкове лише для Rejected (FR-010)
     created_at: datetime = Field(default_factory=_now, sa_column=_ts())
@@ -196,7 +194,9 @@ class Notification(SQLModel, table=True):
     __tablename__ = "notifications"
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    booking_id: uuid.UUID = Field(foreign_key="bookings.id", unique=True)  # Booking ||--o| Notification
+    booking_id: uuid.UUID = Field(
+        foreign_key="bookings.id", unique=True
+    )  # Booking ||--o| Notification
     scheduled_time: datetime = Field(sa_column=_ts())
     status: NotificationStatus = Field(
         default=NotificationStatus.PENDING, sa_column=_enum(NotificationStatus)

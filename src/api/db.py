@@ -1,4 +1,4 @@
-"""Engine і сесія SQLModel. Параметри беруться з .env (див. .env.example)."""
+"""Engine і сесія SQLModel. Параметри беруться з .env (див. env.example)."""
 
 import os
 from collections.abc import Iterator

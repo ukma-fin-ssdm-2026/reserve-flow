@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel
 
 # Модулі застосунку імпортуються як у uvicorn --app-dir src/api
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src" / "api"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src" / "api"))
 
 from db import get_session, make_engine  # noqa: E402
 from main import app  # noqa: E402

@@ -1,7 +1,7 @@
 """Перенос даних з mocks.py в БД. Ідемпотентний: повторний запуск оновлює ті самі рядки.
 
-    cd src/api && python seed.py            # create_all + seed
-    cd src/api && python seed.py --reset    # спочатку drop_all
+cd src/api && python seed.py            # create_all + seed
+cd src/api && python seed.py --reset    # спочатку drop_all
 """
 
 import argparse
@@ -34,7 +34,10 @@ MOCK_USERS = [
 def build_objects() -> list[SQLModel]:
     objs: list[SQLModel] = [
         User(
-            id=uuid.UUID(uid), email=email, full_name=name, role=role,
+            id=uuid.UUID(uid),
+            email=email,
+            full_name=name,
+            role=role,
             password_hash="!mock-no-login",  # реальний bcrypt-хеш з'явиться разом з auth
         )
         for uid, email, name, role in MOCK_USERS
@@ -52,9 +55,9 @@ def build_objects() -> list[SQLModel]:
             has_projector=r["has_projector"],
             is_shelter=r["is_shelter"],
             moderation_status=ModerationStatus(r["moderation_status"]),
-            approved_by=uuid.UUID(mocks.USER_ADMIN_ID)
-            if r["moderation_status"] == "Approved"
-            else None,
+            approved_by=(
+                uuid.UUID(mocks.USER_ADMIN_ID) if r["moderation_status"] == "Approved" else None
+            ),
         )
         for r in mocks.ROOMS
     ]
