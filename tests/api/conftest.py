@@ -23,7 +23,8 @@ def fixed_now(monkeypatch):
 
 
 @pytest.fixture
-def client() -> TestClient:
+def client(override_session) -> TestClient:
+    """POST /bookings працює з БД: підміняємо сесію на тестову (tests/conftest.py)."""
     return TestClient(app)
 
 

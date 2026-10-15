@@ -8,6 +8,11 @@ pydantic>=2.7,<3.0
 email-validator>=2.1
 pyyaml>=6.0
 
+# БД (L5-10)
+sqlmodel>=0.0.22
+psycopg[binary]>=3.2
+python-dotenv>=1.0
+
 # тести
 httpx>=0.27
 pytest>=8.0
