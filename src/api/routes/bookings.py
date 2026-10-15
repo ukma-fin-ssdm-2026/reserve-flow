@@ -1,23 +1,39 @@
 """Кінцеві точки для роботи з бронюваннями.
 
+<<<<<<< Updated upstream
 Дані беруться зі спільних заглушок mocks.py (BOOKINGS, SLOTS, ROOMS), тому
 404, 403 (чужий ресурс) і 409 повертаються так само, як повертатимуться з БД.
 Заглушки не змінюються між запитами: створення і PATCH лише повертають результат.
+=======
+POST створює бронювання в БД (services/bookings.py, одна транзакція з FOR UPDATE).
+GET і PATCH поки працюють із заглушками mocks.py (BOOKINGS, SLOTS, ROOMS) і
+переходять на БД в окремих задачах.
+>>>>>>> Stashed changes
 """
 
 from datetime import datetime, timedelta
 from typing import Annotated
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Path, Query, Response, status
+from sqlmodel import Session
 
 from config import API_PREFIX
+<<<<<<< Updated upstream
+=======
+from db import get_session
+>>>>>>> Stashed changes
 from deps import get_current_user, require_role
 from errors import AppError, ErrorCode, error_responses
 from mocks import BOOKINGS, KYIV, ROOMS, SLOTS, find_by_id
 from schemas.auth import Role, UserOut
 from schemas.bookings import BookingCreate, BookingOut, BookingStatus, BookingUpdate
 from schemas.common import Page, PaginationParams, paginate, pagination_params
+<<<<<<< Updated upstream
+=======
+from services import bookings as booking_engine
+from services.exceptions import SlotNotFound, SlotUnavailable
+>>>>>>> Stashed changes
 
 # Усі кінцеві точки bookings потребують токена (D-06): без нього -> 401.
 router = APIRouter(
@@ -86,11 +102,12 @@ def _get_booking_or_404(booking_id: UUID) -> dict:
     ),
     responses=error_responses(401, 403, 404, 409, 422),
 )
-async def create_booking(
+def create_booking(
     booking_in: BookingCreate,
     response: Response,
     # Бронювати може лише клієнт; постачальник чи адмін -> 403.
     current_user: Annotated[UserOut, Depends(require_role(Role.CLIENT))],
+<<<<<<< Updated upstream
 ) -> BookingOut:
     slot_id = str(booking_in.slot_id)
     slot = find_by_id(SLOTS, slot_id)
@@ -112,6 +129,39 @@ async def create_booking(
     )
     response.headers["Location"] = f"{API_PREFIX}/bookings/{new_booking.id}"
     return new_booking
+=======
+    session: Annotated[Session, Depends(get_session)],
+) -> BookingOut:
+    # Звичайний `def` (а не `async def`): синхронна сесія працює в пулі потоків і не
+    # блокує event loop, тож паралельні запити справді виконуються паралельно.
+    # Одна транзакція з SELECT ... FOR UPDATE на слот (FR-006, REL-001).
+    try:
+        booking = booking_engine.create_booking(
+            session,
+            client_id=UUID(str(current_user.id)),
+            slot_id=booking_in.slot_id,
+            purpose=booking_in.purpose,
+        )
+    except SlotNotFound:
+        raise AppError(
+            status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Слот не знайдено"
+        ) from None
+    except SlotUnavailable:
+        raise AppError(
+            status.HTTP_409_CONFLICT, ErrorCode.SLOT_UNAVAILABLE, "Обраний час уже зайнято"
+        ) from None
+
+    response.headers["Location"] = f"{API_PREFIX}/bookings/{booking.id}"
+    return BookingOut(
+        id=booking.id,
+        slot_id=booking.slot_id,
+        user_id=booking.client_id,
+        status=booking.status.value,
+        purpose=booking.purpose,
+        reason=booking.rejection_reason,
+        created_at=booking.created_at,
+    )
+>>>>>>> Stashed changes
 
 
 @router.get(
@@ -170,6 +220,7 @@ _ALLOWED_FROM: dict[BookingStatus, set[str]] = {
     BookingStatus.CANCELLED: {BookingStatus.PENDING.value, BookingStatus.CONFIRMED.value},
 }
 
+<<<<<<< Updated upstream
 PATCH_DESCRIPTION = """Змінює статус бронювання (D-03).
 Замість окремих `/cancel`, `/confirm`, `/decision`.
 
@@ -183,6 +234,9 @@ PATCH_DESCRIPTION = """Змінює статус бронювання (D-03).
 -> `409 INVALID_STATUS_TRANSITION`.
 Неіснуюче бронювання -> `404`.
 """
+=======
+PATCH_DESCRIPTION = """(опущено в пісочниці)"""
+>>>>>>> Stashed changes
 
 
 @router.patch(
@@ -232,6 +286,9 @@ async def update_booking(
     return _to_out(booking).model_copy(
         update={"status": booking_in.status, "reason": booking_in.reason}
     )
+<<<<<<< Updated upstream
 
     # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.
     # Код вичитано, відредаговано та затверджено учасниками команди
+=======
+>>>>>>> Stashed changes
