@@ -129,7 +129,16 @@ async def patch_slot(
     if not slot:
         raise AppError(status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Слот не знайдено")
 
-    # 2. Імітація 409: на SLOT_2_ID є тестове бронювання BOOKING_1_ID, і ми намагаємося його закрити
+    # 2. Перевірка приналежності кімнати поточному постачальнику (403)
+    room = find_by_id(ROOMS, slot["room_id"])
+    if not room or str(room["provider_id"]) != str(current_user.id):
+        raise AppError(
+            status.HTTP_403_FORBIDDEN,
+            ErrorCode.FORBIDDEN,
+            "Немає прав для редагування слотів чужої кімнати",
+        )
+
+    # 3. Імітація 409: на SLOT_2_ID є тестове бронювання BOOKING_1_ID, і ми намагаємося його закрити
     if slot_id == _SLOT_WITH_ACTIVE_BOOKING and not payload.is_available:
         raise AppError(
             status.HTTP_409_CONFLICT,
