@@ -207,3 +207,12 @@ def test_filter_by_room_id_invalid_returns_422(client):
     r = client.get("/api/v1/slots?room_id=abc", headers=CLIENT)
     assert r.status_code == 422
     assert r.json()["error"]["details"][0]["field"] == "room_id"
+
+
+def test_room_valid_uuid_not_found_returns_404(client):
+    """Перевірка рядка 43: валідний UUID, якого немає в БД."""
+    non_existent_uuid = "00000000-0000-4000-8000-000000000000"
+    r = client.get(f"/api/v1/rooms/{non_existent_uuid}", headers=CLIENT)
+    assert r.status_code == 404
+    assert r.json()["error"]["code"] == "NOT_FOUND"
+    assert r.json()["error"]["message"] == "Кімнату не знайдено"
