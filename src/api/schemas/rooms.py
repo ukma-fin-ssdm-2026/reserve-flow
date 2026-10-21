@@ -1,6 +1,8 @@
 """Схеми для приміщень."""
 
 from enum import Enum
+from uuid import UUID
+
 from pydantic import BaseModel, Field
 
 
@@ -45,8 +47,8 @@ class ModerationStatusEnum(str, Enum):
 class RoomOut(BaseModel):
     """Схема виводу для приміщення."""
 
-    id: str = Field(..., description="UUID приміщення")
-    provider_id: str = Field(..., description="UUID постачальника (відповідального)")
+    id: UUID = Field(..., description="UUID приміщення")
+    provider_id: UUID = Field(..., description="UUID постачальника (відповідального)")
     name_ua: str = Field(..., examples=["Аудиторія 1-225"])
     name_en: str = Field(..., examples=["Room 1-225"])
     building_ua: BuildingEnum = Field(..., description="Корпус (українською)")

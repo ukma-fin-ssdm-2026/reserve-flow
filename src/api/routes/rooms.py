@@ -43,8 +43,8 @@ async def get_room(
         raise AppError(status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Кімнату не знайдено")
 
     return RoomOut(
-        id=str(room.id),
-        provider_id=str(room.provider_id),
+        id=room.id,
+        provider_id=room.provider_id,
         name_ua=room.name_ua,
         name_en=room.name_en,
         capacity=room.capacity,

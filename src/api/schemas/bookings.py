@@ -1,6 +1,6 @@
 """Схеми для ресурсу бронювань."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Self
 from uuid import UUID, uuid4
@@ -93,7 +93,8 @@ class BookingOut(BaseModel):
         examples=["Змінився розклад пар"],
     )
     created_at: datetime = Field(
-        default_factory=datetime.utcnow,
+        # timezone-aware UTC, як і решта застосунку (зауваження ctrl-alt-defeat, #245)
+        default_factory=lambda: datetime.now(timezone.utc),
         description="Час створення запису",
         examples=["2025-10-24T14:30:00Z"],
     )

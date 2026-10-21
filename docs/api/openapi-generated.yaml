@@ -967,10 +967,12 @@ components:
       properties:
         id:
           type: string
+          format: uuid
           title: Id
           description: UUID приміщення
         provider_id:
           type: string
+          format: uuid
           title: Provider Id
           description: UUID постачальника (відповідального)
         name_ua:
@@ -1030,10 +1032,12 @@ components:
       properties:
         id:
           type: string
+          format: uuid
           title: Id
           description: UUID слота
         room_id:
           type: string
+          format: uuid
           title: Room Id
           description: UUID приміщення
         start_time:
