@@ -130,6 +130,9 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 * [Функціональні та нефункціональні вимоги (FR & NFR)](docs/requirements/requirements.md)
 * [Матриця простежуваності (Requirements Traceability Matrix)](docs/requirements/rtm.md)
 * [Варіанти використання (Use Cases)](docs/requirements/use-cases.md)
+* [Стратегія тестування (Testing Strategy)](docs/testing/testing-strategy.md)
+* [Журнал налагодження (Debugging Log)](docs/testing/debugging-log.md)
+* [Звіт про покриття тестами (Coverage Report)](htmlcov/index.html)
 
 ## Архітектурні артефакти (Architecture Artifacts)
 
