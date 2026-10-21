@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from typing import Self
+from uuid import UUID
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -9,8 +10,8 @@ from pydantic import BaseModel, Field, model_validator
 class SlotOut(BaseModel):
     """Схема виводу для часового слота."""
 
-    id: str = Field(..., description="UUID слота")
-    room_id: str = Field(..., description="UUID приміщення")
+    id: UUID = Field(..., description="UUID слота")
+    room_id: UUID = Field(..., description="UUID приміщення")
     start_time: datetime = Field(..., description="Початок у форматі ISO 8601 (з часовою зоною)")
     end_time: datetime = Field(..., description="Кінець у форматі ISO 8601 (з часовою зоною)")
     is_available: bool = Field(..., description="Чи доступний слот для бронювання")

@@ -35,8 +35,8 @@ def _to_kyiv(dt: datetime) -> datetime:
 
 def _slot_to_out(slot: TimeSlot) -> SlotOut:
     return SlotOut(
-        id=str(slot.id),
-        room_id=str(slot.room_id),
+        id=slot.id,
+        room_id=slot.room_id,
         start_time=_to_kyiv(slot.start_time),
         end_time=_to_kyiv(slot.end_time),
         is_available=slot.is_available,
