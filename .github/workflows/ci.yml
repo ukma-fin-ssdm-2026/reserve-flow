@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: windows-latest
+    runs-on: [self-hosted, linux]
 
     steps:
       - name: Checkout repository
@@ -19,7 +19,7 @@ jobs:
 
   # Перевірка синтаксису та рендер UML-діаграм (задача #90 / L3-17)
   uml:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     env:
       PLANTUML_VERSION: "1.2024.7"
 
@@ -55,7 +55,7 @@ jobs:
   # Специфікацію генерує код (D-07), тому ручні зміни в YAML або забутий
   # перегенерований файл роблять цю job червоною.
   api:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
 
     steps:
       - name: Checkout repository
@@ -90,7 +90,7 @@ jobs:
   # Перевіряє вихідний код на відповідність стандартам PEP 8 та шукає вразливості (black, flake8, bandit)
   lint:
     name: Code Quality and Security Linting
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
