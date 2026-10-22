@@ -4,7 +4,7 @@ import asyncio
 from datetime import datetime, time, timezone
 
 import pytest
-from uuid import uuid4
+from uuid import UUID, uuid4
 from unittest.mock import MagicMock
 
 from routes.slots import _to_kyiv, _slot_to_out, search_slots
@@ -13,18 +13,24 @@ from services.exceptions import SlotNotFound
 from errors import AppError
 from models import TimeSlot
 from schemas.common import PaginationParams
+from sqlmodel import Session
 
 
-# --- 1. lock_slot для неіснуючого slot_id → SlotNotFound ---
-def test_lock_slot_not_found():
-    # Arrange: мокаємо сесію БД, щоб вона повертала None
-    session_mock = MagicMock()
-    session_mock.exec.return_value.one_or_none.return_value = None
-    fake_id = uuid4()
+# --- 1. lock_slot: реальні запити до БД замість моків ---
+def test_lock_slot_returns_existing_slot(db_engine):
+    with Session(db_engine) as session:
+        # Використовуємо валідний ID слота з тестової БД (FREE_1)
+        slot_id = UUID("b2000000-0000-4000-8000-000000000001")
+        slot = lock_slot(session, slot_id)
+        assert slot is not None
+        assert slot.id == slot_id
 
-    # Act & Assert
-    with pytest.raises(SlotNotFound):
-        lock_slot(session_mock, fake_id)
+
+def test_lock_slot_not_found_raises(db_engine):
+    with Session(db_engine) as session:
+        fake_id = uuid4()
+        with pytest.raises(SlotNotFound):
+            lock_slot(session, fake_id)
 
 
 # --- 2. _to_kyiv: UTC → Київ, перехід літнього/зимового часу ---
