@@ -9,3 +9,7 @@ def test_password_shorter_than_8_chars_is_too_short():
 
 def test_password_without_digit_is_rejected():
     assert "no_digit" in validate_password_strength("password")
+
+
+def test_password_without_letter_is_rejected():
+    assert "no_letter" in validate_password_strength("12345678")
