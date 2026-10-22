@@ -17,6 +17,10 @@ omit = [
 ]
 [tool.coverage.report]
 show_missing = true
+# У src/api немає __init__.py: без цього файли, які жоден тест не імпортує, не потрапляють у звіт
+include_namespace_packages = true
+# Ворота покриття (L6-13, #260): загальний поріг; поріг для кожного файлу — у ci.yml
+fail_under = 80
 # Запуск сервера вручну (python main.py) — не код застосунку, тестами не перевіряється
 exclude_also = [
     'if __name__ == "__main__":',
