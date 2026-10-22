@@ -103,13 +103,16 @@ def decode_access_token(token: str) -> dict:
         raise InvalidToken(str(exc)) from exc
 
 
+# Правила надійності пароля: (код порушення, перевірка, що правило виконано)
+_PASSWORD_RULES = (
+    ("too_short", lambda p: len(p) >= 8),
+    ("no_digit", lambda p: any(ch.isdigit() for ch in p)),
+)
+
+
 def validate_password_strength(password: str) -> list[str]:
-    problems = []
-    if len(password) < 8:
-        problems.append("too_short")
-    if not any(ch.isdigit() for ch in password):
-        problems.append("no_digit")
-    return problems
+    """Повертає коди порушених правил; порожній список — пароль достатньо надійний."""
+    return [code for code, is_ok in _PASSWORD_RULES if not is_ok(password)]
 
 
 # Використання ШІ: при написанні коду використано допомогу ШІ Claude.
