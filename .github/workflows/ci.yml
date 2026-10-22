@@ -48,6 +48,36 @@ jobs:
           TEST_DATABASE_URL: postgresql+psycopg://reserveflow@localhost:${{ job.services.postgres.ports['5432'] }}/reserveflow_test
         run: pytest tests -q --cov --cov-report=term-missing --cov-report=html
 
+      # Ворота покриття (L6-13, #260; рішення T-03 у #248): кожен файл ≥ 80 % (рядки + гілки).
+      # Загальний поріг (fail_under у pyproject.toml) перевіряє pytest-cov у кроці вище;
+      # тут — поріг для кожного файлу, щоб слабкий модуль не ховався за середнім.
+      - name: Coverage gate (each file >= 80 %)
+        run: |
+          coverage json -q -o coverage.json
+          python - <<'EOF'
+          import json
+          import os
+
+          THRESHOLD = 80
+          files = json.load(open("coverage.json"))["files"]
+          low = {
+              name: data["summary"]["percent_covered"]
+              for name, data in files.items()
+              if data["summary"]["percent_covered"] < THRESHOLD
+          }
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+              if low:
+                  summary.write(f"### ❌ Ворота покриття: {len(low)} файл(ів) < {THRESHOLD} %\n")
+                  for name, pct in sorted(low.items()):
+                      print(f"::error file={name}::Покриття {pct:.1f} % < {THRESHOLD} %")
+                      summary.write(f"- `{name}` — {pct:.1f} %\n")
+              else:
+                  summary.write(f"### ✅ Ворота покриття: усі файли ≥ {THRESHOLD} %\n")
+          if low:
+              raise SystemExit(1)
+          print(f"Усі файли ({len(files)}) мають покриття ≥ {THRESHOLD} %")
+          EOF
+
       - name: Coverage summary
         if: always()
         run: |
@@ -76,7 +106,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "17.0.20+8" 
+          java-version: "17.0.20+8"
           # 17.0.21+9: Adoptium віддає хибне посилання (404), 22.10.2026; повернути "17", коли виправлять
 
       - name: Install Graphviz
