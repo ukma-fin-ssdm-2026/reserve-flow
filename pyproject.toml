@@ -17,3 +17,7 @@ omit = [
 ]
 [tool.coverage.report]
 show_missing = true
+# Запуск сервера вручну (python main.py) — не код застосунку, тестами не перевіряється
+exclude_also = [
+    'if __name__ == "__main__":',
+]
