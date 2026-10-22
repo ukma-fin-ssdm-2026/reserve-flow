@@ -12,7 +12,7 @@ import pytest
 import routes.bookings as bookings_module
 from conftest import auth
 
-CLIENT = auth("mock-client-token")
+CLIENT = auth("client")
 BOOKING_1 = "/api/v1/bookings/c3000000-0000-4000-8000-000000000001"
 SLOT_BOOKED = "b2000000-0000-4000-8000-000000000002"
 
