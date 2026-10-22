@@ -108,6 +108,7 @@ _PASSWORD_RULES = (
     ("too_short", lambda p: len(p) >= 8),
     ("no_digit", lambda p: any(ch.isdigit() for ch in p)),
     ("no_letter", lambda p: any(ch.isalpha() for ch in p)),
+    ("too_long", lambda p: len(p.encode()) <= BCRYPT_MAX_BYTES),
 )
 
 
