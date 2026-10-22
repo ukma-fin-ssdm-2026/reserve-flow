@@ -22,7 +22,7 @@ from services.validators import slots_overlap
             datetime(2026, 10, 15, 13, 0),
             True,
         ),
-        # 3. Граничний випадок: впритул 
+        # 3. Граничний випадок: впритул
         (
             datetime(2026, 10, 15, 14, 0),
             datetime(2026, 10, 15, 15, 20),
