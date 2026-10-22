@@ -4,10 +4,12 @@ from security import hash_password, verify_password
 
 
 @settings(max_examples=10, deadline=None)
-@given(text(max_size=72))
+# bcrypt приймає до 72 БАЙТІВ; text(max_size=72) рахує символи (кирилиця — 2 байти)
+@given(text(max_size=72).filter(lambda s: len(s.encode()) <= 72))
 def test_password_hashing_property(password):
     """
-    Властивість: Будь-який згенерований пароль після хешування має успішно верифікуватися.
+    Властивість: Будь-який згенерований пароль до 72 байтів після хешування
+    має успішно верифікуватися.
     """
     hashed = hash_password(password)
     assert verify_password(password, hashed) is True
