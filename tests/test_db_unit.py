@@ -1,10 +1,13 @@
 from sqlmodel import Session
 from db import get_database_url, make_engine, get_engine, init_db, get_session
 
+# Вигадана адреса тестової БД, не справжні облікові дані
+TEST_DB_URL = "postgresql+psycopg://test:test@localhost/db"  # pragma: allowlist secret
+
 
 def test_get_database_url_explicit(monkeypatch):
-    monkeypatch.setenv("DATABASE_URL", "postgresql+psycopg://test:test@localhost/db")
-    assert get_database_url() == "postgresql+psycopg://test:test@localhost/db"
+    monkeypatch.setenv("DATABASE_URL", TEST_DB_URL)
+    assert get_database_url() == TEST_DB_URL
 
 
 def test_get_database_url_env_fallback(monkeypatch):
@@ -19,14 +22,15 @@ def test_get_database_url_env_fallback(monkeypatch):
     assert "admin:secret@dbhost:5432/maindb" in url
 
 
-def test_make_engine_sqlite_branches():
+def test_make_engine_sqlite_branches(tmp_path):
     engine_memory = make_engine("sqlite:///:memory:")
     assert engine_memory is not None
 
     raw_conn = engine_memory.raw_connection()
     raw_conn.close()
 
-    engine_file = make_engine("sqlite:///test.db")
+    # файлова БД — у тимчасовій папці pytest, а не в корені репо
+    engine_file = make_engine(f"sqlite:///{tmp_path / 'test.db'}")
     assert engine_file is not None
     raw_file_conn = engine_file.raw_connection()
     raw_file_conn.close()

@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for src\api\routes\slots.py: 97%</title>
+    <title>Coverage for src/api/routes/slots.py: 98%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_c827f16f.png">
-    <link rel="stylesheet" href="style_cb_0853b3de.css" type="text/css">
-    <script src="coverage_html_cb_c6c441fc.js" defer></script>
+    <link rel="stylesheet" href="style_cb_4667309f.css" type="text/css">
+    <script src="coverage_html_cb_54cfdca1.js" defer></script>
 </head>
 <body class="pyfile">
 <header>
     <div class="content">
         <h1>
-            <span class="text">Coverage for </span><b>src<span class="sep">\</span>api<span class="sep">\</span>routes<span class="sep">\</span>slots.py</b>:
-            <span class="pc_cov">97%</span>
+            <span class="text">Coverage for </span><b>src<span class="sep">/</span>api<span class="sep">/</span>routes<span class="sep">/</span>slots.py</b>:
+            <span class="pc_cov">98%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -59,15 +59,15 @@
             <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">74<span class="text"> run</span></button>
             <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">1<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
-            <button type="button" class="par run show_par button_toggle_par" value="par" data-shortcut="p" title="Toggle lines partially run">2<span class="text"> partial</span></button>
+            <button type="button" class="par run show_par button_toggle_par" value="par" data-shortcut="p" title="Toggle lines partially run">1<span class="text"> partial</span></button>
         </h2>
         <p class="text">
-            <a id="prevFileLink" class="nav" href="z_bb5c8f0ee87b9c43_rooms_py.html">&#xab; prev</a> &nbsp; &nbsp;
+            <a id="prevFileLink" class="nav" href="z_6f57f923ae69d111_rooms_py.html">&#xab; prev</a> &nbsp; &nbsp;
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
-            <a id="nextFileLink" class="nav" href="z_f135fea45cbb587a_auth_py.html">&#xbb; next</a>
+            <a id="nextFileLink" class="nav" href="z_9ab2fed7f6b8459c_auth_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.16.2">coverage.py v7.16.2</a>,
-            created at 2026-10-22 16:56 +0300
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.17.0">coverage.py v7.17.0</a>,
+            created at 2026-10-22 23:55 +0300
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -112,7 +112,7 @@
     <p class="pln"><span class="n"><a id="t28" href="#t28">28</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t29" href="#t29">29</a></span><span class="t"><span class="key">def</span> <span class="nam">_to_kyiv</span><span class="op">(</span><span class="nam">dt</span><span class="op">:</span> <span class="nam">datetime</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">datetime</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t30" href="#t30">30</a></span><span class="t">    <span class="str">&quot;&quot;&quot;&#1050;&#1086;&#1085;&#1074;&#1077;&#1088;&#1090;&#1091;&#1108; datetime &#1079; &#1041;&#1044; &#1091; &#1095;&#1072;&#1089;&#1086;&#1074;&#1080;&#1081; &#1087;&#1086;&#1103;&#1089; &#1050;&#1080;&#1108;&#1074;&#1072; (&#1074;&#1088;&#1072;&#1093;&#1086;&#1074;&#1091;&#1108; naive UTC &#1079; SQLite).&quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="par run show_par"><span class="n"><a id="t31" href="#t31">31</a></span><span class="t">    <span class="key">if</span> <span class="nam">dt</span><span class="op">.</span><span class="nam">tzinfo</span> <span class="key">is</span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"><span class="annotate short">31&#x202F;&#x219B;&#x202F;33</span><span class="annotate long">line 31 didn't jump to line 33 because the condition on line 31 was always true</span></span></p>
+    <p class="run"><span class="n"><a id="t31" href="#t31">31</a></span><span class="t">    <span class="key">if</span> <span class="nam">dt</span><span class="op">.</span><span class="nam">tzinfo</span> <span class="key">is</span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t32" href="#t32">32</a></span><span class="t">        <span class="nam">dt</span> <span class="op">=</span> <span class="nam">dt</span><span class="op">.</span><span class="nam">replace</span><span class="op">(</span><span class="nam">tzinfo</span><span class="op">=</span><span class="nam">timezone</span><span class="op">.</span><span class="nam">utc</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t33" href="#t33">33</a></span><span class="t">    <span class="key">return</span> <span class="nam">dt</span><span class="op">.</span><span class="nam">astimezone</span><span class="op">(</span><span class="nam">KYIV</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t34" href="#t34">34</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -287,12 +287,12 @@
 <footer>
     <div class="content">
         <p>
-            <a class="nav" href="z_bb5c8f0ee87b9c43_rooms_py.html">&#xab; prev</a> &nbsp; &nbsp;
+            <a class="nav" href="z_6f57f923ae69d111_rooms_py.html">&#xab; prev</a> &nbsp; &nbsp;
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
-            <a class="nav" href="z_f135fea45cbb587a_auth_py.html">&#xbb; next</a>
+            <a class="nav" href="z_9ab2fed7f6b8459c_auth_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.16.2">coverage.py v7.16.2</a>,
-            created at 2026-10-22 16:56 +0300
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.17.0">coverage.py v7.17.0</a>,
+            created at 2026-10-22 23:55 +0300
         </p>
     </div>
 </footer>
