@@ -12,6 +12,8 @@ pyyaml>=6.0
 sqlmodel>=0.0.22
 psycopg[binary]>=3.2
 python-dotenv>=1.0
+# Часовий пояс Europe/Kyiv (mocks.KYIV): на Windows у Python немає бази поясів
+tzdata>=2024.1
 
 # Автентифікація за ADR-003 (L5-12)
 PyJWT>=2.10
