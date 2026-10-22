@@ -76,7 +76,8 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "17"
+          java-version: "17.0.20+8" 
+          # 17.0.21+9: Adoptium віддає хибне посилання (404), 22.10.2026; повернути "17", коли виправлять
 
       - name: Install Graphviz
         run: sudo apt-get update && sudo apt-get install -y graphviz
