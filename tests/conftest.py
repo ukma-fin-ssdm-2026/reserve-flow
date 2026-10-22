@@ -76,3 +76,16 @@ def auth(who: str) -> dict[str, str]:
     Будь-який інший рядок передається як є — для перевірки підроблених токенів."""
     token = create_access_token(*TEST_USERS[who]) if who in TEST_USERS else who
     return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture(autouse=True)
+def mock_lock_slot(monkeypatch):
+    """Дублер (мок) для lock_slot: обхід відсутності FOR UPDATE у SQLite."""
+    try:
+        import services.bookings as bs
+        from models import Slot
+
+        # Замінюємо lock_slot на звичайний session.get
+        monkeypatch.setattr(bs, "lock_slot", lambda session, slot_id: session.get(Slot, slot_id))
+    except ImportError:
+        pass
