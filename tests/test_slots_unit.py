@@ -15,15 +15,16 @@ from models import TimeSlot
 from schemas.common import PaginationParams
 from sqlmodel import Session
 
+
 # --- 1. lock_slot: реальні запити до БД замість моків ---
 def test_lock_slot_returns_existing_slot(db_engine):
     with Session(db_engine) as session:
         # Використовуємо валідний ID слота з тестової БД (FREE_1)
         slot_id = UUID("b2000000-0000-4000-8000-000000000001")
         slot = lock_slot(session, slot_id)
-        
         assert slot is not None
         assert slot.id == slot_id
+
 
 def test_lock_slot_not_found_raises(db_engine):
     with Session(db_engine) as session:
