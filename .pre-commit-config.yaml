@@ -5,7 +5,7 @@
 # black, flake8 і bandit — локальні хуки (language: system): беруть ті самі версії
 # і ту саму конфігурацію (pyproject.toml, .flake8), що й CI, тож результат однаковий.
 # Згенеровані файли не чіпаємо: їх перевіряє job api у CI (D-07).
-exclude: ^docs/api/openapi-generated\.(yaml|json)$
+exclude: ^(docs/api/openapi-generated\.(yaml|json)|htmlcov/)
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks

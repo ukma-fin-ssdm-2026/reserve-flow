@@ -48,7 +48,7 @@
 
         is_shelter: Boolean
 
-        building_ua: Enum ("Корпус 1", "Корпус 2", "Корпус 3", "Корпус 4", "Корпус 5", 
+        building_ua: Enum ("Корпус 1", "Корпус 2", "Корпус 3", "Корпус 4", "Корпус 5",
         "Корпус 6", "Корпус 7", "Корпус 8", "Корпус 9", "Корпус 10", "КМЦ", "Наукова бібліотека", "Історико-музейний комплекс НаУКМА")
 
         building_en: Enum ("Building 1", "Building 2", "Building 3", "Building 4", "Building 5", "Building 6", "Building 7", "Building 8", "Building 9", "Building 10", "Cultural and Art Center (KMC)", "Research Library", "Historical and Museum Complex of NaUKMA")
