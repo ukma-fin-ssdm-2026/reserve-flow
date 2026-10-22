@@ -36,3 +36,15 @@ def test_adjacent_slots_do_not_overlap():
     b_end = datetime(2026, 10, 15, 16, 40)
 
     assert slots_overlap(a_start, a_end, b_start, b_end) is False
+
+
+def test_nested_slots_overlap():
+    # Слот A: 10:00 - 14:00 
+    a_start = datetime(2026, 10, 15, 10, 0)
+    a_end = datetime(2026, 10, 15, 14, 0)
+
+    # Слот B: 11:00 - 12:00 
+    b_start = datetime(2026, 10, 15, 11, 0)
+    b_end = datetime(2026, 10, 15, 12, 0)
+
+    assert slots_overlap(a_start, a_end, b_start, b_end) is True
