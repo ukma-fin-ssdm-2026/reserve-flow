@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, col, select
 
 from models import Booking, BookingStatus, Notification
-from services.exceptions import SlotUnavailable
+from services.exceptions import SlotUnavailable, SlotNotFound
 from services.rooms import lock_slot
 
 ACTIVE_STATUSES = (BookingStatus.PENDING, BookingStatus.CONFIRMED)
@@ -25,6 +25,8 @@ def create_booking(session: Session, client_id: UUID, slot_id: UUID, purpose: st
     """
     try:
         slot = lock_slot(session, slot_id)
+        if not slot:
+            raise SlotNotFound()
         if not slot.is_available:
             raise SlotUnavailable(str(slot_id))
 
