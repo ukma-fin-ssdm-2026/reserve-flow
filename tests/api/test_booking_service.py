@@ -55,8 +55,11 @@ def test_create_booking_returns_pending_booking_with_notification(session):
 
     slot_data = find_by_id(SLOTS, str(SLOT_FREE))
     expected_time = slot_data["start_time"] - booking_engine.REMINDER_LEAD
-    expected_time_utc_naive = expected_time.astimezone(timezone.utc).replace(tzinfo=None)
-    assert notification.scheduled_time == expected_time_utc_naive
+    scheduled = notification.scheduled_time
+    if scheduled.tzinfo is None:  # SQLite не зберігає часовий пояс; значення вже в UTC
+        scheduled = scheduled.replace(tzinfo=timezone.utc)
+    # PostgreSQL повертає дату з часовим поясом; порівнюємо як моменти часу
+    assert scheduled == expected_time
 
 
 @pytest.mark.parametrize(
