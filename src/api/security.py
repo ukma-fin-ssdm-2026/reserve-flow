@@ -104,9 +104,12 @@ def decode_access_token(token: str) -> dict:
 
 
 def validate_password_strength(password: str) -> list[str]:
+    problems = []
     if len(password) < 8:
-        return ["too_short"]
-    return []
+        problems.append("too_short")
+    if not any(ch.isdigit() for ch in password):
+        problems.append("no_digit")
+    return problems
 
 
 # Використання ШІ: при написанні коду використано допомогу ШІ Claude.
