@@ -13,3 +13,8 @@ def test_password_without_digit_is_rejected():
 
 def test_password_without_letter_is_rejected():
     assert "no_letter" in validate_password_strength("12345678")
+
+
+def test_password_over_72_bytes_is_rejected():
+    # 38 символів, але 74 байти в UTF-8: bcrypt такий пароль не прийме
+    assert "too_long" in validate_password_strength("ї" * 36 + "a1")
