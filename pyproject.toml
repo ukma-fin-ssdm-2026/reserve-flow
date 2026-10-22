@@ -4,3 +4,16 @@ target-version = ["py311", "py312", "py313"]
 
 [tool.bandit]
 exclude_dirs = ["tests", ".venv", ".pytest_cache"]
+
+[tool.coverage.run]
+source = ["src/api"]
+branch = true
+omit = [
+    "src/api/mocks.py",
+    "src/api/seed.py",
+    "src/api/config.py",
+    "src/api/mcp_server.py",
+    "src/api/export_openapi.py"
+]
+[tool.coverage.report]
+show_missing = true

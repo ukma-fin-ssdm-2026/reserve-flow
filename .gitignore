@@ -21,3 +21,6 @@ env/
 build/
 _site/
 plantuml.jar
+
+# Логи та звіти
+.coverage

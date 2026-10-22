@@ -49,8 +49,11 @@ uvicorn main:app --app-dir src/api --reload
 # Запуск пакета тестів через pytest (із перевіркою БД на SQLite/Postgres)
 pytest tests/
 
+# Запуск тестів з аналізом покриття коду та генерацією HTML-звіту
+pytest --cov --cov-report=term-missing --cov-report=html
+
 # Форматування коду
-black src/ tests/
+black src/ tests
 
 # Статичний аналіз лінтером
 flake8 src/ tests/

@@ -1,5 +1,5 @@
 @startuml
-' Налаштування стилю для кращої читабельності 
+' Налаштування стилю для кращої читабельності
 skinparam roundcorner 5
 skinparam linetype ortho
 skinparam shadowing false
@@ -79,8 +79,8 @@ entity "AuditLog" as auditlog {
 }
 
 ' Зв'язки (Кардинальність)
-user ||--o{ room : "створює / володіє (Provider/Admin)" 
-user ||--o{ room : "модерує / погоджує (Admin)" 
+user ||--o{ room : "створює / володіє (Provider/Admin)"
+user ||--o{ room : "модерує / погоджує (Admin)"
 room ||--o{ timeslot : "містить"
 user ||--o{ booking : "створює (Client)"
 timeslot ||--o{ booking : "резервується в"
