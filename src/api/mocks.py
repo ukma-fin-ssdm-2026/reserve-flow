@@ -1,6 +1,7 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
-KYIV = timezone(timedelta(hours=3))  # A-001: одна часова зона, Київ (EEST)
+KYIV = ZoneInfo("Europe/Kyiv")  # A-001: одна часова зона — Київ (літній/зимовий час)
 
 # --- Користувачі (заглушка для D-06; токени — у deps.py) -------------------
 USER_CLIENT_ID = "11111111-1111-4111-8111-111111111111"
