@@ -6,9 +6,12 @@ from uuid import UUID
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, col, select
 
-from models import Booking, BookingStatus, Notification
+from models import Booking, BookingStatus, Notification, TimeSlot
 from services.exceptions import SlotUnavailable, SlotNotFound
 from services.rooms import lock_slot
+
+from services.validators import slots_overlap
+from errors import AppError
 
 ACTIVE_STATUSES = (BookingStatus.PENDING, BookingStatus.CONFIRMED)
 
@@ -37,6 +40,24 @@ def create_booking(session: Session, client_id: UUID, slot_id: UUID, purpose: st
         ).first()
         if taken is not None:
             raise SlotUnavailable(str(slot_id))
+
+        client_active_slots = session.exec(
+            select(TimeSlot)
+            .join(Booking)
+            .where(Booking.client_id == client_id)
+            .where(col(Booking.status).in_(ACTIVE_STATUSES))
+        ).all()
+
+        # Перевіряємо, чи немає перетину з новим слотом
+        for active_slot in client_active_slots:
+            if slots_overlap(
+                slot.start_time, slot.end_time, active_slot.start_time, active_slot.end_time
+            ):
+                raise AppError(
+                    status_code=409,
+                    error_code="CLIENT_SCHEDULE_CONFLICT",
+                    message="Ви вже маєте бронювання на час, що перетинається з цим слотом.",
+                )
 
         booking = Booking(
             client_id=client_id,
