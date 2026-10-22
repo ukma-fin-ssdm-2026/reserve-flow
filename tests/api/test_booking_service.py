@@ -10,10 +10,11 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, func, select
 
-from mocks import SLOT_1_ID, SLOT_2_ID, USER_CLIENT_ID
+from mocks import SLOT_1_ID, SLOT_2_ID, USER_CLIENT_ID, SLOTS, find_by_id
 from models import Booking, BookingStatus, Notification
 from services import bookings as booking_engine
 from services.exceptions import SlotNotFound, SlotUnavailable
+from datetime import timezone
 
 CLIENT_ID = uuid.UUID(USER_CLIENT_ID)
 SLOT_FREE = uuid.UUID(SLOT_1_ID)
@@ -51,6 +52,11 @@ def test_create_booking_returns_pending_booking_with_notification(session):
         select(Notification).where(Notification.booking_id == booking.id)
     ).one()
     assert notification.retry_count == 0
+
+    slot_data = find_by_id(SLOTS, str(SLOT_FREE))
+    expected_time = slot_data["start_time"] - booking_engine.REMINDER_LEAD
+    expected_time_utc_naive = expected_time.astimezone(timezone.utc).replace(tzinfo=None)
+    assert notification.scheduled_time == expected_time_utc_naive
 
 
 @pytest.mark.parametrize(
@@ -117,6 +123,12 @@ def test_unexpected_error_rolls_back_whole_transaction(session, monkeypatch):
         raise RuntimeError("збій")
 
     monkeypatch.setattr(booking_engine, "Notification", boom)
+
+    rollback_spy = MagicMock(wraps=session.rollback)
+    commit_spy = MagicMock(wraps=session.commit)
+    monkeypatch.setattr(session, "rollback", rollback_spy)
+    monkeypatch.setattr(session, "commit", commit_spy)
+
     bookings_before = _count(session, Booking)
 
     # Act
@@ -125,6 +137,8 @@ def test_unexpected_error_rolls_back_whole_transaction(session, monkeypatch):
 
     # Assert: нічого не збережено — Booking відкотився разом з Notification
     assert _count(session, Booking) == bookings_before
+    rollback_spy.assert_called_once()
+    commit_spy.assert_not_called()
 
 
 def test_integrity_error_is_reported_as_slot_unavailable(session, monkeypatch):
@@ -139,3 +153,7 @@ def test_integrity_error_is_reported_as_slot_unavailable(session, monkeypatch):
     with pytest.raises(SlotUnavailable):
         booking_engine.create_booking(session, CLIENT_ID, SLOT_FREE, "Семінар")
     rollback.assert_called_once()
+
+
+# Вмкористання ШІ: використано ШІ Gemini ля прискорення написання тестів. Код перевірено,
+# відредаговано та затверджено учасником команди.
