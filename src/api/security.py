@@ -107,6 +107,7 @@ def decode_access_token(token: str) -> dict:
 _PASSWORD_RULES = (
     ("too_short", lambda p: len(p) >= 8),
     ("no_digit", lambda p: any(ch.isdigit() for ch in p)),
+    ("no_letter", lambda p: any(ch.isalpha() for ch in p)),
 )
 
 
