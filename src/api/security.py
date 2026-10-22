@@ -103,5 +103,11 @@ def decode_access_token(token: str) -> dict:
         raise InvalidToken(str(exc)) from exc
 
 
+def validate_password_strength(password: str) -> list[str]:
+    if len(password) < 8:
+        return ["too_short"]
+    return []
+
+
 # Використання ШІ: при написанні коду використано допомогу ШІ Claude.
 # Код перевірено учасниками команди.
