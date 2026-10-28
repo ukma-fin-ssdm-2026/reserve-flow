@@ -9,6 +9,7 @@
 | Гілка з помилкою (не мерджиться) | `debug/l6-07-break` |
 | Регресійний тест у `main` | `tests/api/test_bookings_regression.py::test_cancel_deadline_boundary` (PR #277) |
 | Місце помилки | `src/api/routes/bookings.py:251`, функція `update_booking` |
+| Червоний прогін CI | Draft PR #<337> (закрито без злиття) — [Tests with coverage](<https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/runs/40700104716/job/122857277718?pr=337#logs>) |
 
 ### Симптом
 
