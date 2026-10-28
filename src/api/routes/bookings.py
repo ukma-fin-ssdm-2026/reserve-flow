@@ -248,7 +248,7 @@ async def update_booking(
         )
     if booking_in.status == BookingStatus.CANCELLED:
         slot = find_by_id(SLOTS, booking["slot_id"])
-        if slot and slot["start_time"] - _now() < _CANCELLATION_DEADLINE:
+        if slot and slot["start_time"] - _now() <= _CANCELLATION_DEADLINE:
             raise AppError(
                 status.HTTP_409_CONFLICT,
                 ErrorCode.CANCELLATION_TOO_LATE,
