@@ -1,12 +1,22 @@
-import pytest
-from unittest.mock import patch
 
+"""Тести матриці переходів статусів бронювання."""
+
+from datetime import timedelta, timezone
+from uuid import UUID
+
+import pytest
+from sqlmodel import Session
+
+import routes.bookings as bookings_module
 from conftest import auth
+from models import Booking, TimeSlot
+from schemas.bookings import BookingStatus
 
 pytestmark = pytest.mark.req("FR-010", "FR-007", "FR-002")
 
-# Матриця переходів станів
-# Збігається з таблицею переходів станів у test-plan.md (Бонус 2)
+BOOKING_ID = UUID("c3000000-0000-4000-8000-000000000001")
+BOOKING_URL = f"/api/v1/bookings/{BOOKING_ID}"
+
 TRANSITIONS = [
     ("TR-01", "Pending", "Confirmed", "provider", 200),
     ("TR-02", "Pending", "Confirmed", "client", 403),
@@ -24,44 +34,58 @@ TRANSITIONS = [
 ]
 
 
-@pytest.mark.parametrize("test_id, initial_status, target_status, role, expected_code", TRANSITIONS)
-@patch("routes.bookings._can_view", return_value=True)
-@patch("routes.bookings._get_booking_or_404")
+@pytest.mark.parametrize(
+    "test_id,initial_status,target_status,role,expected_code",
+    TRANSITIONS,
+    ids=[item[0] for item in TRANSITIONS],
+)
 def test_booking_status_transition_matrix(
-    mock_get_booking,
-    mock_can_view,
     client,
+    db_engine,
+    monkeypatch,
     test_id,
     initial_status,
     target_status,
     role,
     expected_code,
 ):
-    """
-    Перевіряє техніку тест-дизайну 'Таблиця переходів станів' (State Transition Testing).
-    Кожен ID відповідає рядку з таблиці в test-plan.md.
-    """
-    mock_get_booking.return_value = {
-        "id": "c3000000-0000-4000-8000-111111111111",
-        "client_id": "c1000000-0000-4000-8000-000000000001",
-        "slot_id": "00000000-0000-0000-0000-000000000000",  # Валідний UUID, якого немає в БД
-        "status": initial_status,
-        "purpose": "State Transition Test",
-        "rejection_reason": None,
-        "created_at": "2026-01-01T00:00:00Z",
-    }
+    # Arrange: задаємо початковий статус безпосередньо в тестовій БД.
+    with Session(db_engine) as session:
+        booking = session.get(Booking, BOOKING_ID)
+        assert booking is not None, "Seeded-бронювання не знайдено"
+
+        booking.status = BookingStatus(initial_status)
+        session.add(booking)
+        session.commit()
+
+        slot = session.get(TimeSlot, booking.slot_id)
+        if slot is not None:
+            slot_start = slot.start_time
+            if slot_start.tzinfo is None:
+                slot_start = slot_start.replace(tzinfo=timezone.utc)
+
+            # Скасування в цьому тесті має перевіряти переходи статусів,
+            # а не випадково провалюватися через дедлайн.
+            monkeypatch.setattr(
+                bookings_module,
+                "_now",
+                lambda: slot_start - timedelta(hours=3),
+            )
 
     payload = {"status": target_status}
     if target_status == "Rejected":
         payload["reason"] = "Причина відмови"
 
-    headers = auth(role)
-
-    r = client.patch(
-        "/api/v1/bookings/c3000000-0000-4000-8000-111111111111", headers=headers, json=payload
+    # Act
+    response = client.patch(
+        BOOKING_URL,
+        headers=auth(role),
+        json=payload,
     )
 
-    assert r.status_code == expected_code, (
+    # Assert
+    assert response.status_code == expected_code, (
         f"[{test_id}] Очікувався {expected_code} для переходу "
-        f"{initial_status} -> {target_status} ({role}), отримано {r.status_code}"
+        f"{initial_status} -> {target_status} ({role}), "
+        f"отримано {response.status_code}: {response.text}"
     )
