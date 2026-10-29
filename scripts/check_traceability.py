@@ -29,7 +29,7 @@ RTM = ROOT / "docs" / "requirements" / "rtm.md"
 TESTS = ROOT / "tests"
 
 # Рядок матриці: | FR-007 | Функціональна | ...
-RTM_ROW = re.compile(r"^\|\s*((?:US|UC|FR|PERF|SEC|REL)-\d{3})\s*\|\s*([^|]+?)\s*\|")
+RTM_ROW = re.compile(r"^\|\s*((?:US|UC|FR|PERF|SEC|REL)-\d{3})\s*\|([^|]*)\|")
 # Тип вимоги, для якої обов'язковий хоча б один тест
 REQUIRED_TYPES = {"Функціональна", "Нефункціональна"}
 
@@ -40,7 +40,7 @@ def read_requirements() -> tuple[set[str], set[str]]:
     for line in RTM.read_text(encoding="utf-8").splitlines():
         match = RTM_ROW.match(line)
         if match:
-            req_id, req_type = match.groups()
+            req_id, req_type = match.group(1), match.group(2).strip()
             known.add(req_id)
             if req_type in REQUIRED_TYPES:
                 required.add(req_id)
@@ -168,3 +168,8 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+# Використання ШІ: скрипт і його тести (tests/test_traceability.py) згенеровано за допомогою
+# Claude (Anthropic); регулярний вираз RTM_ROW спрощено за зауваженням SonarCloud.
+# Код переглянуто, перевірено локально й у CI (червоний і зелений прогони в PR #351)
+# та затверджено учасниками команди.
