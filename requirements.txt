@@ -10,7 +10,7 @@ pyyaml>=6.0
 
 # БД (L5-10)
 sqlmodel>=0.0.22
-psycopg[binary]>=3.2
+psycopg[binary]>=3.3.6
 python-dotenv>=1.0
 # Часовий пояс Europe/Kyiv (mocks.KYIV): на Windows у Python немає бази поясів
 tzdata>=2024.1
