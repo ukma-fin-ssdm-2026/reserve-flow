@@ -5,12 +5,14 @@ GET і PATCH поки працюють із заглушками mocks.py (BOOKI
 переходять на БД в окремих задачах.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Path, Query, Response, status
 from sqlmodel import Session
+
+from services.cancellation import can_cancel
 
 from config import API_PREFIX
 from db import get_session
@@ -33,9 +35,6 @@ router = APIRouter(
 
 # Статуси, за яких бронювання займає слот.
 _ACTIVE_STATUSES = {BookingStatus.PENDING.value, BookingStatus.CONFIRMED.value}
-
-# FR-007: скасувати можна не пізніше ніж за 2 години до початку.
-_CANCELLATION_DEADLINE = timedelta(hours=2)
 
 
 def _now() -> datetime:
@@ -248,7 +247,7 @@ async def update_booking(
         )
     if booking_in.status == BookingStatus.CANCELLED:
         slot = find_by_id(SLOTS, booking["slot_id"])
-        if slot and slot["start_time"] - _now() < _CANCELLATION_DEADLINE:
+        if slot and not can_cancel(slot["start_time"], _now()):
             raise AppError(
                 status.HTTP_409_CONFLICT,
                 ErrorCode.CANCELLATION_TOO_LATE,
