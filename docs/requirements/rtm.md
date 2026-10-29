@@ -117,7 +117,7 @@
 | TP-09 | `_to_kyiv` | FR-003, US-007 | `tests/test_slots_unit.py` | Зелений |
 | TP-10 | Пошук слотів із фільтрами | FR-003, US-007 | `tests/api/test_slots_rooms.py` | Зелений |
 | TP-11 | Пошук: некоректний інтервал | FR-003 | `tests/api/test_slots_rooms.py` | Зелений |
-| TP-12 | `slots_overlap` + правило через API | FR-016 | `tests/test_validators.py`, `tests/test_booking_create_db.py` | Модульний — зелений; через API — `xfail` (дефект: `500` замість `409`) |
+| TP-12 | `slots_overlap` + правило через API | FR-016 | `tests/test_validators.py`, `tests/test_booking_create_db.py` | Зелений (дефект #355 виправлено в #364) |
 | TP-13 | Закриття слота постачальником | FR-008, FR-009, US-003 | `tests/api/test_slots_rooms.py` | Зелений |
 | TP-14 | `compute_reminder_time` | FR-014, US-005 | `tests/test_notifications.py` | Зелений |
 | TP-15 | PT-001, пошук під навантаженням | PERF-001 | `tests/test_slots_performance.py` | Зелений (job `Performance Tests (NFR)`) |
