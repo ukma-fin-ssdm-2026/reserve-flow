@@ -5,6 +5,8 @@ import uuid
 
 from sqlmodel import Session, func, select
 
+from datetime import datetime
+
 from conftest import auth
 from models import Booking, BookingStatus, Notification, TimeSlot, AuditLog, AuditAction, EntityType
 
@@ -87,3 +89,40 @@ def test_cancelled_booking_frees_slot(client, db_engine):
         s.get(Booking, uuid.UUID(first["id"])).status = BookingStatus.CANCELLED
         s.commit()
     assert _post(client, SLOT_FREE).status_code == 201
+
+
+@pytest.mark.req("FR-016")
+def test_client_can_book_adjacent_back_to_back_slot(client, db_engine):
+    """
+    Перевіряє, що клієнт може успішно забронювати слот
+    'впритул' (15:20–16:40), коли попереднє
+    бронювання закінчується рівно о 15:20
+    (повертає 201 Created).
+    """
+    with Session(db_engine) as s:
+        free_slot = s.get(TimeSlot, uuid.UUID(SLOT_FREE))
+        room_id = free_slot.room_id
+
+        adjacent_slot = TimeSlot(
+            id=uuid.uuid4(),
+            room_id=room_id,
+            start_time=datetime(2026, 10, 25, 15, 20),
+            end_time=datetime(2026, 10, 25, 16, 40),
+            status="Available",
+        )
+        s.add(adjacent_slot)
+        s.commit()
+        adjacent_slot_id = str(adjacent_slot.id)
+
+    r = client.post(
+        "/api/v1/bookings",
+        headers=CLIENT,
+        json={"slot_id": adjacent_slot_id, "purpose": "Конференція"},
+    )
+
+    assert r.status_code == 201
+    assert r.json()["slot_id"] == adjacent_slot_id
+
+
+# Використання ШІ: для допрацювання тесту на основі ідей учасника команди
+# було використано ШІ Gemini. Код був перевірений та затверджений командою.
