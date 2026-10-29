@@ -16,7 +16,7 @@ python-dotenv>=1.0
 tzdata>=2024.1
 
 # Автентифікація за ADR-003 (L5-12)
-PyJWT>=2.10
+PyJWT>=2.15.1
 pwdlib[bcrypt]>=0.2
 
 # тести
