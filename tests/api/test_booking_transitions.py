@@ -4,7 +4,7 @@ from unittest.mock import patch
 from conftest import auth
 
 # Матриця переходів станів
-# Збігається з таблицею рішень у test-plan.md (Бонус 2)
+# Збігається з таблицею переходів станів у test-plan.md (Бонус 2)
 TRANSITIONS = [
     ("TR-01", "Pending", "Confirmed", "provider", 200),
     ("TR-02", "Pending", "Confirmed", "client", 403),
