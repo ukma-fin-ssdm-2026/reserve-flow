@@ -1,4 +1,3 @@
-
 """Тести роутера bookings на тестовій БД (404, 403, 409)."""
 
 from datetime import timedelta, timezone
@@ -99,9 +98,7 @@ def test_list_is_stable_and_from_database(client):
     assert first_response.status_code == 200
     assert second_response.status_code == 200
     assert first_response.json() == second_response.json()
-    assert [
-        item["id"] for item in first_response.json()["items"]
-    ] == [str(BOOKING_ID)]
+    assert [item["id"] for item in first_response.json()["items"]] == [str(BOOKING_ID)]
 
 
 def test_list_for_provider_and_admin(client):
@@ -125,7 +122,6 @@ def test_get_unknown_booking_returns_404(client):
     r = client.get(UNKNOWN_BOOKING, headers=CLIENT)
     assert r.status_code == 404
     assert r.json()["error"]["code"] == "NOT_FOUND"
-
 
 
 def test_foreign_booking_returns_403(client, db_engine):
@@ -169,9 +165,7 @@ def test_confirm_from_rejected_returns_409(client, db_engine):
     assert r.json()["error"]["code"] == "INVALID_STATUS_TRANSITION"
 
 
-def test_cancel_less_than_2h_before_start_returns_409(
-    client, db_engine, monkeypatch
-):
+def test_cancel_less_than_2h_before_start_returns_409(client, db_engine, monkeypatch):
     start = _slot_start(db_engine)
     monkeypatch.setattr(
         bookings_module,

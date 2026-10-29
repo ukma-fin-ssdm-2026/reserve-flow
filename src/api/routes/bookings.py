@@ -6,8 +6,6 @@ GET і PATCH поки працюють із заглушками mocks.py (BOOKI
 переходять на БД в окремих задачах.
 """
 
-
-
 from datetime import datetime, timezone
 from typing import Annotated
 from uuid import UUID
@@ -57,7 +55,7 @@ def _can_view(session: Session, user: UserOut, booking: Booking) -> bool:
         return True
     if user.role == Role.CLIENT:
         return str(booking.client_id) == str(user.id)
-    
+
     # Перевірка для постачальника: чи належить кімната слота цього постачальника
     slot = session.get(TimeSlot, booking.slot_id)
     if not slot:
@@ -146,10 +144,10 @@ async def get_bookings(
     stmt = select(Booking)
     if status_filter:
         stmt = stmt.where(Booking.status == status_filter)
-    
+
     all_bookings = session.exec(stmt).all()
     filtered = [b for b in all_bookings if _can_view(session, current_user, b)]
-    
+
     items = [_to_out(b) for b in filtered]
     return paginate(items, params)
 
@@ -209,21 +207,21 @@ async def update_booking(
             ErrorCode.INVALID_STATUS_TRANSITION,
             f"Неможливо перевести бронювання в статус {booking_in.status.value}",
         )
-    
+
     if current_user.role != allowed_role or not _can_view(session, current_user, booking):
         raise AppError(
             status.HTTP_403_FORBIDDEN,
             ErrorCode.FORBIDDEN,
             "Недостатньо прав для цієї зміни статусу",
         )
-        
+
     if booking.status.value not in _ALLOWED_FROM[booking_in.status]:
         raise AppError(
             status.HTTP_409_CONFLICT,
             ErrorCode.INVALID_STATUS_TRANSITION,
             f"Перехід {booking.status.value} → {booking_in.status.value} не дозволений",
         )
-        
+
     slot_to_release = None
 
     if booking_in.status == BookingStatus.CANCELLED:

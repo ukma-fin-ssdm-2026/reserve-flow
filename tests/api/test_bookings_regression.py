@@ -1,4 +1,3 @@
-
 """Регресійні тести межі правила двох годин для скасування (FR-007)."""
 
 from datetime import timedelta, timezone

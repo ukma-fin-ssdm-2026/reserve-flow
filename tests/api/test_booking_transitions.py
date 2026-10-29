@@ -1,4 +1,3 @@
-
 """Тести матриці переходів статусів бронювання."""
 
 from datetime import timedelta, timezone
