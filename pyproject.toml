@@ -25,3 +25,8 @@ fail_under = 80
 exclude_also = [
     'if __name__ == "__main__":',
 ]
+
+[tool.pytest.ini_options]
+markers = [
+    "perf: performance tests (NFR)",
+]
