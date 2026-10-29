@@ -2,12 +2,12 @@
 
 import pytest
 import uuid
+from datetime import datetime, timezone
 
 from sqlmodel import Session, func, select
 
-from datetime import datetime
-
 from conftest import auth
+from mocks import KYIV, ROOM_2_ID
 from models import Booking, BookingStatus, Notification, TimeSlot, AuditLog, AuditAction, EntityType
 
 pytestmark = pytest.mark.req("FR-005", "FR-006", "FR-013", "FR-014")
@@ -15,6 +15,8 @@ pytestmark = pytest.mark.req("FR-005", "FR-006", "FR-013", "FR-014")
 CLIENT = auth("client")
 SLOT_FREE = "b2000000-0000-4000-8000-000000000001"
 SLOT_BOOKED = "b2000000-0000-4000-8000-000000000002"
+# Інша кімната, той самий час, що й SLOT_BOOKED (15:40–17:00), на який клієнт уже має Pending
+SLOT_SAME_TIME_OTHER_ROOM = "b2000000-0000-4000-8000-000000000004"
 
 
 def _post(client, slot_id):
@@ -92,37 +94,58 @@ def test_cancelled_booking_frees_slot(client, db_engine):
 
 
 @pytest.mark.req("FR-016")
-def test_client_can_book_adjacent_back_to_back_slot(client, db_engine):
-    """
-    Перевіряє, що клієнт може успішно забронювати слот
-    'впритул' (15:20–16:40), коли попереднє
-    бронювання закінчується рівно о 15:20
-    (повертає 201 Created).
-    """
+@pytest.mark.xfail(
+    strict=True,
+    reason="Дефект FR-016: services/bookings.py викликає AppError(error_code=...) — "
+    "неіснуючий аргумент, і коду CLIENT_SCHEDULE_CONFLICT немає в ErrorCode, тому 500 замість 409. "
+    "Після виправлення прибрати xfail (strict=True нагадає).",
+)
+def test_client_cannot_book_overlapping_slot_in_other_room(client, db_engine):
+    # Arrange: у клієнта з seed активне бронювання на 15:40–17:00 (кімната 1)
+    bookings_before = _count(db_engine, Booking)
+
+    # Act: той самий час, але кімната 2
+    r = _post(client, SLOT_SAME_TIME_OTHER_ROOM)
+
+    # Assert
+    assert r.status_code == 409
+    assert r.json()["error"]["code"] == "CLIENT_SCHEDULE_CONFLICT"
+    assert _count(db_engine, Booking) == bookings_before
+
+
+@pytest.mark.req("FR-016")
+def test_cancelled_booking_does_not_block_overlapping_slot(client, db_engine):
+    # Arrange: скасовуємо активне бронювання клієнта на 15:40–17:00
     with Session(db_engine) as s:
-        free_slot = s.get(TimeSlot, uuid.UUID(SLOT_FREE))
-        room_id = free_slot.room_id
-
-        adjacent_slot = TimeSlot(
-            id=uuid.uuid4(),
-            room_id=room_id,
-            start_time=datetime(2026, 10, 25, 15, 20),
-            end_time=datetime(2026, 10, 25, 16, 40),
-            status="Available",
-        )
-        s.add(adjacent_slot)
+        booking = s.exec(select(Booking).where(Booking.slot_id == uuid.UUID(SLOT_BOOKED))).one()
+        booking.status = BookingStatus.CANCELLED
         s.commit()
-        adjacent_slot_id = str(adjacent_slot.id)
 
-    r = client.post(
-        "/api/v1/bookings",
-        headers=CLIENT,
-        json={"slot_id": adjacent_slot_id, "purpose": "Конференція"},
-    )
+    # Act / Assert: скасоване бронювання не враховується
+    assert _post(client, SLOT_SAME_TIME_OTHER_ROOM).status_code == 201
 
+
+@pytest.mark.req("FR-016")
+def test_client_can_book_adjacent_back_to_back_slot(client, db_engine):
+    # Arrange: у клієнта з seed активне бронювання на 15:40–17:00 (кімната 1);
+    # додаємо слот «впритул» 17:00–18:20 того ж дня в кімнаті 2 (у БД — UTC, як у seed)
+    with Session(db_engine) as s:
+        slot = TimeSlot(
+            room_id=uuid.UUID(ROOM_2_ID),
+            start_time=datetime(2026, 10, 15, 17, 0, tzinfo=KYIV).astimezone(timezone.utc),
+            end_time=datetime(2026, 10, 15, 18, 20, tzinfo=KYIV).astimezone(timezone.utc),
+        )
+        s.add(slot)
+        s.commit()
+        slot_id = str(slot.id)
+
+    # Act
+    r = _post(client, slot_id)
+
+    # Assert: кінець одного = початок іншого — це не перетин
     assert r.status_code == 201
-    assert r.json()["slot_id"] == adjacent_slot_id
+    assert r.json()["slot_id"] == slot_id
 
 
-# Використання ШІ: для допрацювання тесту на основі ідей учасника команди
-# було використано ШІ Gemini. Код був перевірений та затверджений командою.
+# Використання ШІ: тест «впритул» підготовано за допомогою ШІ (Gemini, Claude)
+# на основі ідеї учасниці команди; перевірено та затверджено командою.
