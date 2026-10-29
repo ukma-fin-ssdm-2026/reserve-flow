@@ -20,10 +20,13 @@ from main import app
 from services import bookings as booking_engine
 from models import Booking, BookingStatus
 
-pytestmark = pytest.mark.skipif(
-    not os.getenv("TEST_DATABASE_URL", "").startswith("postgresql"),
-    reason="потрібна тестова PostgreSQL (TEST_DATABASE_URL)",
-)
+pytestmark = [
+    pytest.mark.skipif(
+        not os.getenv("TEST_DATABASE_URL", "").startswith("postgresql"),
+        reason="потрібна тестова PostgreSQL (TEST_DATABASE_URL)",
+    ),
+    pytest.mark.req("REL-001", "FR-006"),
+]
 
 PARALLEL_REQUESTS = 10
 SLOT_FREE = "b2000000-0000-4000-8000-000000000001"

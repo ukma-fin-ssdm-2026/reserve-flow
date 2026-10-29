@@ -16,6 +16,8 @@ from services import bookings as booking_engine
 from services.exceptions import SlotNotFound, SlotUnavailable
 from datetime import timezone
 
+pytestmark = pytest.mark.req("FR-005", "FR-006", "FR-014")
+
 CLIENT_ID = uuid.UUID(USER_CLIENT_ID)
 SLOT_FREE = uuid.UUID(SLOT_1_ID)
 SLOT_WITH_PENDING = uuid.UUID(SLOT_2_ID)  # у seed має бронювання Pending

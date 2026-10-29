@@ -7,6 +7,10 @@ import pytest
 
 from schemas.bookings import BookingOut, BookingStatus
 
+pytestmark = pytest.mark.no_req(
+    "узгодженість контракту API (типи id, UTC) — зауваження огляду коду Лаб 5, #245"
+)
+
 
 def test_booking_created_at_is_timezone_aware_utc():
     # Arrange / Act: created_at не передаємо — спрацьовує default_factory

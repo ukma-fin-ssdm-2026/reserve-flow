@@ -1,5 +1,8 @@
+import pytest
 from datetime import datetime, timedelta
 from services.notifications import compute_reminder_time
+
+pytestmark = pytest.mark.req("FR-014")
 
 
 def test_reminder_24h_before():

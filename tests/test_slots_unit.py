@@ -15,6 +15,8 @@ from models import TimeSlot
 from schemas.common import PaginationParams
 from sqlmodel import Session
 
+pytestmark = pytest.mark.req("FR-003", "FR-005")
+
 
 # --- 1. lock_slot: реальні запити до БД замість моків ---
 def test_lock_slot_returns_existing_slot(db_engine):

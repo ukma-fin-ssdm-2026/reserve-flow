@@ -1,5 +1,10 @@
+import pytest
 from sqlmodel import Session
 from db import get_database_url, make_engine, get_engine, init_db, get_session
+
+pytestmark = pytest.mark.no_req(
+    "інфраструктура: підключення до БД і сесії (db.py), не поведінка системи"
+)
 
 # Вигадана адреса тестової БД, не справжні облікові дані
 TEST_DB_URL = "postgresql+psycopg://test:test@localhost/db"  # pragma: allowlist secret

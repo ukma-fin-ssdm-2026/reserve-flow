@@ -4,6 +4,8 @@ import pytest
 
 from security import validate_password_strength
 
+pytestmark = pytest.mark.req("FR-001", "SEC-001")
+
 
 @pytest.mark.parametrize(
     ("password", "problem"),

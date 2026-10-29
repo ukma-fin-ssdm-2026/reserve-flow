@@ -14,6 +14,8 @@ import pytest
 import security
 from security import InvalidToken, create_access_token, decode_access_token
 
+pytestmark = pytest.mark.req("FR-001", "SEC-001")
+
 USER_ID = "11111111-1111-4111-8111-111111111111"
 START = datetime(2026, 10, 22, 12, 0, tzinfo=timezone.utc)
 

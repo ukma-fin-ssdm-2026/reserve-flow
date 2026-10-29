@@ -4,6 +4,8 @@ import pytest
 
 from conftest import auth
 
+pytestmark = pytest.mark.req("FR-010", "FR-007", "FR-002")
+
 BOOKING_URL = "/api/v1/bookings/c3000000-0000-4000-8000-000000000001"
 CLIENT = auth("client")
 PROVIDER = auth("provider")

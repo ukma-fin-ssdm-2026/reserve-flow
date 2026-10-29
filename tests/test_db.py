@@ -26,6 +26,8 @@ from models import (
 )
 from seed import seed
 
+pytestmark = pytest.mark.req("FR-006", "FR-013")
+
 
 @pytest.fixture()
 def session():

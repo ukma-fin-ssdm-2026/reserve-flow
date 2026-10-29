@@ -8,10 +8,13 @@
 - Неможливість перевести відхилене бронювання у статус Confirmed (INVALID_STATUS_TRANSITION).
 """
 
+import pytest
 from datetime import timedelta
 
 import routes.bookings as bookings_module
 from conftest import auth
+
+pytestmark = pytest.mark.req("FR-005", "FR-007", "FR-002")
 
 CLIENT = auth("client")
 PROVIDER = auth("provider")
