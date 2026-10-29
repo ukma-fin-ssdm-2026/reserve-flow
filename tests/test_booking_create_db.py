@@ -1,11 +1,14 @@
 """POST /bookings працює через БД: транзакція, Notification, AuditLog, відкат при конфлікті."""
 
+import pytest
 import uuid
 
 from sqlmodel import Session, func, select
 
 from conftest import auth
 from models import Booking, BookingStatus, Notification, TimeSlot, AuditLog, AuditAction, EntityType
+
+pytestmark = pytest.mark.req("FR-005", "FR-006", "FR-013", "FR-014")
 
 CLIENT = auth("client")
 SLOT_FREE = "b2000000-0000-4000-8000-000000000001"

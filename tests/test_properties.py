@@ -1,6 +1,9 @@
+import pytest
 from hypothesis import given, settings
 from hypothesis.strategies import text
 from security import hash_password, verify_password
+
+pytestmark = pytest.mark.req("FR-001", "SEC-001")
 
 
 @settings(max_examples=10, deadline=None)

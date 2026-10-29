@@ -12,6 +12,8 @@ from conftest import TEST_USERS, auth
 from models import Role, User
 from security import JWT_ALGORITHM, JWT_ISSUER, decode_access_token
 
+pytestmark = pytest.mark.req("FR-001", "FR-002", "FR-012")
+
 TOKEN_URL = "/api/v1/auth/token"
 BOOKINGS_URL = "/api/v1/bookings"
 

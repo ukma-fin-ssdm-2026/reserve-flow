@@ -3,6 +3,8 @@ from unittest.mock import patch
 
 from conftest import auth
 
+pytestmark = pytest.mark.req("FR-010", "FR-007", "FR-002")
+
 # Матриця переходів станів
 # Збігається з таблицею переходів станів у test-plan.md (Бонус 2)
 TRANSITIONS = [

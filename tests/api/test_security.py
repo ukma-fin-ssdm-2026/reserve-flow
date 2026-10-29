@@ -28,6 +28,8 @@ from security import (
     verify_password,
 )
 
+pytestmark = pytest.mark.req("FR-001", "SEC-001")
+
 USER_ID = "11111111-1111-4111-8111-111111111111"
 GOOD = "correct horse battery staple"
 

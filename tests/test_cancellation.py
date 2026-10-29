@@ -6,6 +6,8 @@ import pytest
 
 from services.cancellation import can_cancel
 
+pytestmark = pytest.mark.req("FR-007")
+
 KYIV = timezone(timedelta(hours=3))
 SLOT_START = datetime(2026, 10, 15, 14, 0, tzinfo=KYIV)
 

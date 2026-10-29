@@ -3,6 +3,8 @@ import time
 import pytest
 from conftest import auth
 
+pytestmark = pytest.mark.req("PERF-001")
+
 CLIENT = auth("client")
 
 

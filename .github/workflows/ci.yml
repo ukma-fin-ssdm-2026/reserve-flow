@@ -187,6 +187,12 @@ jobs:
 
       - name: Security analysis (Bandit)
         run: bandit -c pyproject.toml -r src/ -ll
+
+      # Простежуваність «вимога ↔ тест» (Лаб 7, бонус, #326): вимога з rtm.md без тесту
+      # або тест без мітки вимоги валить збірку. Таблиця — у Summary прогону.
+      - name: Traceability (requirement <-> test)
+        run: python scripts/check_traceability.py
+
   performance:
     name: Performance Tests (NFR)
     runs-on: [self-hosted, linux]

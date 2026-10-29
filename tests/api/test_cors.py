@@ -5,6 +5,10 @@
 падають на тій конфігурації і проходять після виправлення.
 """
 
+import pytest
+
+pytestmark = pytest.mark.req("SEC-001")
+
 FRONTEND = "http://localhost:5173"
 EVIL = "https://evil.example"
 HEALTH = "/api/v1/health"

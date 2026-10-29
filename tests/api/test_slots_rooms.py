@@ -4,6 +4,8 @@ import pytest
 
 from conftest import auth
 
+pytestmark = pytest.mark.req("FR-003", "FR-008", "FR-009", "FR-002")
+
 CLIENT = auth("client")
 PROVIDER = auth("provider")
 

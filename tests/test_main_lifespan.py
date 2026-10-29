@@ -4,12 +4,15 @@
 файли не змінюються, а перевіряються всі три гілки — успіх, модуля немає, помилка експорту.
 """
 
+import pytest
 import asyncio
 import logging
 import sys
 import types
 
 import main
+
+pytestmark = pytest.mark.no_req("інфраструктура: експорт OpenAPI під час старту сервера (D-07)")
 
 
 def _start_and_stop_app():
