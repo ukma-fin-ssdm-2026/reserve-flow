@@ -1,4 +1,12 @@
-"""Кінцеві точки для роботи з бронюваннями (робота з БД для POST, GET, PATCH)."""
+"""Кінцеві точки для роботи з бронюваннями (робота з БД для POST, GET, PATCH).
+
+
+POST створює бронювання в БД (services/bookings.py, одна транзакція з FOR UPDATE).
+GET і PATCH поки працюють із заглушками mocks.py (BOOKINGS, SLOTS, ROOMS) і
+переходять на БД в окремих задачах.
+"""
+
+
 
 from datetime import datetime, timezone
 from typing import Annotated
@@ -263,10 +271,28 @@ async def update_booking(
         )
         session.add(audit)
 
-    session.commit()
-    session.refresh(booking)
+    try:
+        session.add(booking)
+
+        if audit_action:
+            audit = AuditLog(
+                actor_type=ActorType.USER,
+                user_id=UUID(str(current_user.id)),
+                action=audit_action,
+                entity_type=EntityType.BOOKING,
+                entity_id=booking_id,
+                details=booking_in.reason,
+            )
+            session.add(audit)
+
+        session.commit()
+        session.refresh(booking)
+    except Exception:
+        session.rollback()
+        raise
 
     return _to_out(booking)
+
 
 # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.
 # Код вичитано, відредаговано та затверджено учасниками команди
