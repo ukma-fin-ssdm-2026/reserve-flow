@@ -13,6 +13,8 @@ pytestmark = pytest.mark.req("FR-005", "FR-006", "FR-013", "FR-014")
 CLIENT = auth("client")
 SLOT_FREE = "b2000000-0000-4000-8000-000000000001"
 SLOT_BOOKED = "b2000000-0000-4000-8000-000000000002"
+# Інша кімната, той самий час, що й SLOT_BOOKED (15:40–17:00), на який клієнт уже має Pending
+SLOT_SAME_TIME_OTHER_ROOM = "b2000000-0000-4000-8000-000000000004"
 
 
 def _post(client, slot_id):
@@ -87,3 +89,35 @@ def test_cancelled_booking_frees_slot(client, db_engine):
         s.get(Booking, uuid.UUID(first["id"])).status = BookingStatus.CANCELLED
         s.commit()
     assert _post(client, SLOT_FREE).status_code == 201
+
+
+@pytest.mark.req("FR-016")
+@pytest.mark.xfail(
+    strict=True,
+    reason="Дефект FR-016: services/bookings.py викликає AppError(error_code=...) — "
+    "неіснуючий аргумент, і коду CLIENT_SCHEDULE_CONFLICT немає в ErrorCode, тому 500 замість 409. "
+    "Після виправлення прибрати xfail (strict=True нагадає).",
+)
+def test_client_cannot_book_overlapping_slot_in_other_room(client, db_engine):
+    # Arrange: у клієнта з seed активне бронювання на 15:40–17:00 (кімната 1)
+    bookings_before = _count(db_engine, Booking)
+
+    # Act: той самий час, але кімната 2
+    r = _post(client, SLOT_SAME_TIME_OTHER_ROOM)
+
+    # Assert
+    assert r.status_code == 409
+    assert r.json()["error"]["code"] == "CLIENT_SCHEDULE_CONFLICT"
+    assert _count(db_engine, Booking) == bookings_before
+
+
+@pytest.mark.req("FR-016")
+def test_cancelled_booking_does_not_block_overlapping_slot(client, db_engine):
+    # Arrange: скасовуємо активне бронювання клієнта на 15:40–17:00
+    with Session(db_engine) as s:
+        booking = s.exec(select(Booking).where(Booking.slot_id == uuid.UUID(SLOT_BOOKED))).one()
+        booking.status = BookingStatus.CANCELLED
+        s.commit()
+
+    # Act / Assert: скасоване бронювання не враховується
+    assert _post(client, SLOT_SAME_TIME_OTHER_ROOM).status_code == 201

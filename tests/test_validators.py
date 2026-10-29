@@ -2,7 +2,7 @@ from datetime import datetime
 import pytest
 from services.validators import slots_overlap
 
-pytestmark = pytest.mark.req("FR-005")
+pytestmark = pytest.mark.req("FR-016")
 
 
 @pytest.mark.parametrize(

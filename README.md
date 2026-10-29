@@ -133,6 +133,8 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 * [Стратегія тестування (Testing Strategy)](docs/testing/testing-strategy.md)
 * [Журнал налагодження (Debugging Log)](docs/testing/debugging-log.md)
 * [Звіт про покриття тестами (Coverage Report)](htmlcov/index.html)
+* [План тестування (Test Plan)](docs/validation/test-plan.md)
+* [Журнал взаємного огляду (Review Log)](docs/validation/review-log.md)
 
 ## Архітектурні артефакти (Architecture Artifacts)
 

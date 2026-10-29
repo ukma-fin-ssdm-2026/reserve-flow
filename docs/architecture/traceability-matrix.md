@@ -30,6 +30,7 @@
 | FR-013 | Системні логи з часовими мітками | Audit Log Service, Admin APIRouter, Booking Engine Service, Room Management Service, PostgreSQL | Сервіси пишуть дії в таблицю `AuditLog`; записи лише додаються, не змінюються | TC-004, TC-005, TC-006 |
 | FR-014 | Нагадування за N годин | Notification Scheduler, PostgreSQL, External Email Gateway | Окремий процес APScheduler опитує таблицю `Notification` кожні 30 с; пропускає користувачів з `notifications_enabled = false` | TC-013, TC-015, PT-002 |
 | FR-015 | Логування помилок доставки та retry | Notification Scheduler, Audit Log Service, External Email Gateway, PostgreSQL | `Notification.status` і `retry_count`; кожна помилка записується в `AuditLog` | TC-014, RT-002 |
+| FR-016 | Клієнт не має двох активних бронювань, що перетинаються в часі | Booking APIRouter, Booking Engine Service, PostgreSQL | У тій самій транзакції, що й FR-006, Booking Engine вибирає активні бронювання клієнта і перевіряє перетин `services/validators.slots_overlap`; при перетині — `409 CLIENT_SCHEDULE_CONFLICT` (додано в Лаб 7) | TP-12 і тести API (див. `rtm.md`) |
 
 ### 1.2 Нефункціональні вимоги
 
@@ -50,21 +51,21 @@
 | Web SPA | Клієнт | FR-001, FR-003, FR-004, FR-005, SEC-001 |
 | Auth APIRouter | API | FR-001, FR-002, SEC-001 |
 | Room APIRouter | API | FR-002, FR-003, FR-008, FR-009, FR-011, PERF-001, SEC-001 |
-| Booking APIRouter | API | FR-002, FR-005, FR-007, FR-010, SEC-001 |
+| Booking APIRouter | API | FR-002, FR-005, FR-007, FR-010, FR-016, SEC-001 |
 | Admin APIRouter | API | FR-002, FR-011, FR-012, FR-013, SEC-001 |
 | User & Auth Service | Домен | FR-001, FR-002, FR-012, SEC-001 |
 | Room Management Service | Домен | FR-003, FR-005, FR-008, FR-009, FR-011, FR-012, FR-013, PERF-001 |
-| Booking Engine Service | Домен | FR-005, FR-006, FR-007, FR-010, FR-013, REL-001 |
+| Booking Engine Service | Домен | FR-005, FR-006, FR-007, FR-010, FR-013, FR-016, REL-001 |
 | Audit Log Service | Домен | FR-007, FR-013, FR-015, REL-002 |
 | Notification Scheduler | Фоновий процес | FR-014, FR-015, PERF-002, REL-002 |
-| PostgreSQL | Дані | FR-001, FR-003–FR-015, PERF-001, PERF-002, SEC-001, REL-001, REL-002 |
+| PostgreSQL | Дані | FR-001, FR-003–FR-016, PERF-001, PERF-002, SEC-001, REL-001, REL-002 |
 | External Email Gateway | Зовнішній | FR-014, FR-015, REL-002 |
 
 ---
 
 ## 3. Перевірка покриття
 
-- **Вимоги без компонента:** немає — усі 15 FR і 5 NFR мають щонайменше один компонент і метод верифікації.
+- **Вимоги без компонента:** немає — усі 16 FR і 5 NFR мають щонайменше один компонент і метод верифікації.
 - **Компоненти без вимоги:** немає — усі 12 компонентів з `component.puml` покривають щонайменше одну вимогу.
 
 **Знайдені розбіжності між вимогами й діаграмами (виправлено):**
