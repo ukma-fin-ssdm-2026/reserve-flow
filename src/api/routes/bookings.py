@@ -224,6 +224,8 @@ async def update_booking(
             f"Перехід {booking.status.value} → {booking_in.status.value} не дозволений",
         )
         
+    slot_to_release = None
+
     if booking_in.status == BookingStatus.CANCELLED:
         slot = session.get(TimeSlot, booking.slot_id)
 
@@ -235,6 +237,9 @@ async def update_booking(
             )
 
         slot_start = slot.start_time
+
+        # SQLite може повертати datetime без tzinfo.
+        # Це коректно лише за умови, що naive-час у БД зберігається в UTC.
         if slot_start.tzinfo is None:
             slot_start = slot_start.replace(tzinfo=timezone.utc)
 
@@ -245,48 +250,43 @@ async def update_booking(
                 "Скасувати можна не пізніше ніж за 2 години до початку",
             )
 
-    # Оновлюємо статус в БД
+        slot_to_release = slot
+
+    # Змінюємо статус бронювання.
     booking.status = booking_in.status
     if booking_in.reason:
         booking.rejection_reason = booking_in.reason
-    session.add(booking)
 
-    # --- AuditLog (FR-013) ---
-    audit_action = None
-    if booking_in.status == BookingStatus.CONFIRMED:
-        audit_action = AuditAction.BOOKING_CONFIRMED
-    elif booking_in.status == BookingStatus.REJECTED:
-        audit_action = AuditAction.BOOKING_REJECTED
-    elif booking_in.status == BookingStatus.CANCELLED:
-        audit_action = AuditAction.BOOKING_CANCELLED
-
-    if audit_action:
-        audit = AuditLog(
-            actor_type=ActorType.USER,
-            user_id=UUID(str(current_user.id)),
-            action=audit_action,
-            entity_type=EntityType.BOOKING,
-            entity_id=booking_id,
-            details=booking_in.reason,
-        )
-        session.add(audit)
+    audit_action = {
+        BookingStatus.CONFIRMED: AuditAction.BOOKING_CONFIRMED,
+        BookingStatus.REJECTED: AuditAction.BOOKING_REJECTED,
+        BookingStatus.CANCELLED: AuditAction.BOOKING_CANCELLED,
+    }.get(booking_in.status)
 
     try:
         session.add(booking)
 
-        if audit_action:
-            audit = AuditLog(
-                actor_type=ActorType.USER,
-                user_id=UUID(str(current_user.id)),
-                action=audit_action,
-                entity_type=EntityType.BOOKING,
-                entity_id=booking_id,
-                details=booking_in.reason,
+        # Скасування звільняє слот у тій самій транзакції.
+        if slot_to_release is not None:
+            slot_to_release.is_available = True
+            session.add(slot_to_release)
+
+        # Один запис аудиту на одну зміну статусу.
+        if audit_action is not None:
+            session.add(
+                AuditLog(
+                    actor_type=ActorType.USER,
+                    user_id=UUID(str(current_user.id)),
+                    action=audit_action,
+                    entity_type=EntityType.BOOKING,
+                    entity_id=booking_id,
+                    details=booking_in.reason,
+                )
             )
-            session.add(audit)
 
         session.commit()
         session.refresh(booking)
+
     except Exception:
         session.rollback()
         raise
