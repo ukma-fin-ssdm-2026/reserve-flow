@@ -46,7 +46,7 @@ jobs:
       - name: Run tests with coverage
         env:
           TEST_DATABASE_URL: postgresql+psycopg://reserveflow@localhost:${{ job.services.postgres.ports['5432'] }}/reserveflow_test
-        run: pytest tests -q --cov --cov-report=term-missing --cov-report=html
+        run: pytest tests -q -m "not perf" --cov --cov-report=term-missing --cov-report=html
 
       # Ворота покриття (L6-13, #260; рішення T-03 у #248): кожен файл ≥ 80 % (рядки + гілки).
       # Загальний поріг (fail_under у pyproject.toml) перевіряє pytest-cov у кроці вище;
@@ -192,3 +192,42 @@ jobs:
       # або тест без мітки вимоги валить збірку. Таблиця — у Summary прогону.
       - name: Traceability (requirement <-> test)
         run: python scripts/check_traceability.py
+
+  performance:
+    name: Performance Tests (NFR)
+    runs-on: [self-hosted, linux]
+    continue-on-error: true # Щоб flaky-тести продуктивності не блокували PR
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: reserveflow
+          POSTGRES_DB: reserveflow_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd "pg_isready -U reserveflow -d reserveflow_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run performance tests
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg://reserveflow@localhost:${{ job.services.postgres.ports['5432'] }}/reserveflow_test
+        # Запускає тільки тести з маркером perf і виводимо print (-s)
+        run: pytest tests -m perf -s

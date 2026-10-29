@@ -30,6 +30,7 @@ exclude_also = [
 # --strict-markers: описка в назві мітки (наприклад, @pytest.mark.reqs) — помилка, а не тихий пропуск
 addopts = "--strict-markers"
 markers = [
+    "perf: performance tests (NFR)",
     "req(*ids): ID вимог з docs/requirements/rtm.md, які перевіряє тест (Лаб 7, #326)",
     "no_req(reason): тест свідомо без вимоги — з поясненням чому (інфраструктура тощо)",
 ]
