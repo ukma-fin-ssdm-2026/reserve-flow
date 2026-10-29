@@ -127,12 +127,15 @@ def test_get_unknown_booking_returns_404(client):
     assert r.json()["error"]["code"] == "NOT_FOUND"
 
 
+
 def test_foreign_booking_returns_403(client, db_engine):
-    # Змінюємо власника в БД, а не в mocks.py.
-    _set_booking(
-        db_engine,
-        client_id=UUID("99999999-9999-4999-8999-999999999999"),
-    )
+    # ADMIN — існуючий користувач у тестовій БД,
+    # але не власник бронювання клієнта.
+    from conftest import TEST_USERS
+
+    other_client_id = UUID(str(TEST_USERS["admin"][0]))
+
+    _set_booking(db_engine, client_id=other_client_id)
 
     r = client.get(BOOKING_1, headers=CLIENT)
 
