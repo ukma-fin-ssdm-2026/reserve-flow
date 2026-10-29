@@ -50,7 +50,7 @@
 | 8 | `tests/api/test_auth.py::test_blocked_user_token_stops_working_immediately` |
 | 9 | `tests/test_slots_unit.py` |
 | 10, 11 | `tests/api/test_slots_rooms.py` |
-| 12 | `tests/test_validators.py`; правило через API — `tests/test_booking_create_db.py::test_client_cannot_book_overlapping_slot_in_other_room` (`xfail`, дефект FR-016), `::test_cancelled_booking_does_not_block_overlapping_slot`, слот «впритул» через API → `201` — `::test_client_can_book_adjacent_back_to_back_slot` |
+| 12 | `tests/test_validators.py`; правило через API — `tests/test_booking_create_db.py::test_client_cannot_book_overlapping_slot_in_other_room` (дефект #355 виправлено в #364), `::test_cancelled_booking_does_not_block_overlapping_slot`, слот «впритул» через API → `201` — `::test_client_can_book_adjacent_back_to_back_slot` |
 | 13 | `tests/api/test_slots_rooms.py` |
 | 14 | `tests/test_notifications.py` |
 | 15 | `tests/test_slots_performance.py` (мітка `perf`, окрема CI-job `Performance Tests (NFR)`) |
