@@ -92,12 +92,6 @@ def test_cancelled_booking_frees_slot(client, db_engine):
 
 
 @pytest.mark.req("FR-016")
-@pytest.mark.xfail(
-    strict=True,
-    reason="Дефект FR-016: services/bookings.py викликає AppError(error_code=...) — "
-    "неіснуючий аргумент, і коду CLIENT_SCHEDULE_CONFLICT немає в ErrorCode, тому 500 замість 409. "
-    "Після виправлення прибрати xfail (strict=True нагадає).",
-)
 def test_client_cannot_book_overlapping_slot_in_other_room(client, db_engine):
     # Arrange: у клієнта з seed активне бронювання на 15:40–17:00 (кімната 1)
     bookings_before = _count(db_engine, Booking)
