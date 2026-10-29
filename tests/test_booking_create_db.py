@@ -2,10 +2,12 @@
 
 import pytest
 import uuid
+from datetime import datetime, timezone
 
 from sqlmodel import Session, func, select
 
 from conftest import auth
+from mocks import KYIV, ROOM_2_ID
 from models import Booking, BookingStatus, Notification, TimeSlot, AuditLog, AuditAction, EntityType
 
 pytestmark = pytest.mark.req("FR-005", "FR-006", "FR-013", "FR-014")
@@ -121,3 +123,25 @@ def test_cancelled_booking_does_not_block_overlapping_slot(client, db_engine):
 
     # Act / Assert: скасоване бронювання не враховується
     assert _post(client, SLOT_SAME_TIME_OTHER_ROOM).status_code == 201
+
+
+@pytest.mark.req("FR-016")
+def test_client_can_book_adjacent_back_to_back_slot(client, db_engine):
+    # Arrange: у клієнта з seed активне бронювання на 15:40–17:00 (кімната 1);
+    # додаємо слот «впритул» 17:00–18:20 того ж дня в кімнаті 2 (у БД — UTC, як у seed)
+    with Session(db_engine) as s:
+        slot = TimeSlot(
+            room_id=uuid.UUID(ROOM_2_ID),
+            start_time=datetime(2026, 10, 15, 17, 0, tzinfo=KYIV).astimezone(timezone.utc),
+            end_time=datetime(2026, 10, 15, 18, 20, tzinfo=KYIV).astimezone(timezone.utc),
+        )
+        s.add(slot)
+        s.commit()
+        slot_id = str(slot.id)
+
+    # Act
+    r = _post(client, slot_id)
+
+    # Assert: кінець одного = початок іншого — це не перетин
+    assert r.status_code == 201
+    assert r.json()["slot_id"] == slot_id
