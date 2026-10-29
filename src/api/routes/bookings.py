@@ -1,9 +1,7 @@
-"""Кінцеві точки для роботи з бронюваннями (робота з БД для POST, GET, PATCH).
+"""Кінцеві точки для роботи з бронюваннями.
 
-
-POST створює бронювання в БД (services/bookings.py, одна транзакція з FOR UPDATE).
-GET і PATCH поки працюють із заглушками mocks.py (BOOKINGS, SLOTS, ROOMS) і
-переходять на БД в окремих задачах.
+POST, GET і PATCH працюють із базою даних.
+Створення бронювання використовує services/bookings.py.
 """
 
 from datetime import datetime, timezone
@@ -185,11 +183,26 @@ _ALLOWED_FROM: dict[BookingStatus, set[str]] = {
 }
 
 
+PATCH_DESCRIPTION = """Змінює статус бронювання (D-03).
+Замість окремих `/cancel`, `/confirm`, `/decision`.
+
+| З | В | Хто | Умова | Помилка |
+|---|---|---|---|---|
+| `Pending` | `Confirmed` | Постачальник | — | `403` чужа кімната або інша роль |
+| `Pending` | `Rejected` | Постачальник | `reason` обов'язковий (FR-010) | `422` без причини |
+| `Pending`, `Confirmed` | `Cancelled` | Клієнт-власник | за ≥ 2 год | `409` CANCELLATION_TOO_LATE |
+
+Будь-який інший перехід (зокрема в `Pending` або з `Rejected` / `Cancelled`)
+-> `409 INVALID_STATUS_TRANSITION`.
+Неіснуюче бронювання -> `404`.
+"""
+
+
 @router.patch(
     "/{booking_id}",
     response_model=BookingOut,
-    summary="Змінити статус бронювання в БД",
-    description="Змінює статус бронювання та оновлює стан слота в БД (D-03, FR-007).",
+    summary="Змінити статус бронювання",
+    description=PATCH_DESCRIPTION,
     responses=error_responses(401, 403, 404, 409, 422),
 )
 async def update_booking(
@@ -229,8 +242,8 @@ async def update_booking(
 
         if slot is None:
             raise AppError(
-                status.HTTP_409_CONFLICT,
-                ErrorCode.INVALID_STATUS_TRANSITION,
+                status.HTTP_404_NOT_FOUND,
+                ErrorCode.NOT_FOUND,
                 "Слот бронювання не знайдено",
             )
 

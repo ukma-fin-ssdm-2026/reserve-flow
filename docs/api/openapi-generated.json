@@ -400,8 +400,8 @@
         "tags": [
           "bookings"
         ],
-        "summary": "Змінити статус бронювання в БД",
-        "description": "Змінює статус бронювання та оновлює стан слота в БД (D-03, FR-007).",
+        "summary": "Змінити статус бронювання",
+        "description": "Змінює статус бронювання (D-03).\nЗамість окремих `/cancel`, `/confirm`, `/decision`.\n\n| З | В | Хто | Умова | Помилка |\n|---|---|---|---|---|\n| `Pending` | `Confirmed` | Постачальник | — | `403` чужа кімната або інша роль |\n| `Pending` | `Rejected` | Постачальник | `reason` обов'язковий (FR-010) | `422` без причини |\n| `Pending`, `Confirmed` | `Cancelled` | Клієнт-власник | за ≥ 2 год | `409` CANCELLATION_TOO_LATE |\n\nБудь-який інший перехід (зокрема в `Pending` або з `Rejected` / `Cancelled`)\n-> `409 INVALID_STATUS_TRANSITION`.\nНеіснуюче бронювання -> `404`.",
         "operationId": "update_booking_api_v1_bookings__booking_id__patch",
         "security": [
           {
