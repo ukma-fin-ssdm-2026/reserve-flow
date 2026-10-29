@@ -11,7 +11,7 @@ from services.exceptions import SlotUnavailable, SlotNotFound
 from services.rooms import lock_slot
 
 from services.validators import slots_overlap
-from errors import AppError
+from errors import AppError, ErrorCode
 
 ACTIVE_STATUSES = (BookingStatus.PENDING, BookingStatus.CONFIRMED)
 
@@ -55,7 +55,7 @@ def create_booking(session: Session, client_id: UUID, slot_id: UUID, purpose: st
             ):
                 raise AppError(
                     status_code=409,
-                    error_code="CLIENT_SCHEDULE_CONFLICT",
+                    code=ErrorCode.CLIENT_SCHEDULE_CONFLICT,
                     message="Ви вже маєте бронювання на час, що перетинається з цим слотом.",
                 )
 
