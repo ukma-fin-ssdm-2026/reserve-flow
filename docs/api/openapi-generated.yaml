@@ -166,8 +166,8 @@ paths:
       tags:
       - bookings
       summary: Отримати список бронювань
-      description: Повертає сторінку бронювань з фільтром за статусом. Клієнт бачить
-        свої бронювання, постачальник — бронювання на свої кімнати, адміністратор
+      description: Повертає сторінку бронювань з фільтром за статусом із БД. Клієнт
+        бачить свої бронювання, постачальник — бронювання на свої кімнати, адміністратор
         — усі.
       operationId: get_bookings_api_v1_bookings_get
       security:
@@ -228,7 +228,7 @@ paths:
       tags:
       - bookings
       summary: Отримати бронювання за ID
-      description: Повертає деталі бронювання. Чуже бронювання → `403`, неіснуюче
+      description: Повертає деталі бронювання з БД. Чуже бронювання → `403`, неіснуюче
         → `404`.
       operationId: get_booking_api_v1_bookings__booking_id__get
       security:
@@ -277,31 +277,8 @@ paths:
     patch:
       tags:
       - bookings
-      summary: Змінити статус бронювання
-      description: 'Змінює статус бронювання (D-03).
-
-        Замість окремих `/cancel`, `/confirm`, `/decision`.
-
-
-        | З | В | Хто | Умова | Помилка |
-
-        |---|---|---|---|---|
-
-        | `Pending` | `Confirmed` | Постачальник | — | `403` чужа кімната або інша
-        роль |
-
-        | `Pending` | `Rejected` | Постачальник | `reason` обов''язковий (FR-010)
-        | `422` без причини |
-
-        | `Pending`, `Confirmed` | `Cancelled` | Клієнт-власник | за ≥ 2 год | `409`
-        CANCELLATION_TOO_LATE |
-
-
-        Будь-який інший перехід (зокрема в `Pending` або з `Rejected` / `Cancelled`)
-
-        -> `409 INVALID_STATUS_TRANSITION`.
-
-        Неіснуюче бронювання -> `404`.'
+      summary: Змінити статус бронювання в БД
+      description: Змінює статус бронювання та оновлює стан слота в БД (D-03, FR-007).
       operationId: update_booking_api_v1_bookings__booking_id__patch
       security:
       - HTTPBearer: []
