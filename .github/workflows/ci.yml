@@ -41,7 +41,7 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt -r requirements-dev.txt
+        run: 'pip install --only-binary :all: -r requirements.txt -r requirements-dev.txt'
 
       - name: Run tests with coverage
         env:
@@ -224,7 +224,7 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt -r requirements-dev.txt
+        run: 'pip install --only-binary :all: -r requirements.txt -r requirements-dev.txt'
 
       - name: Run performance tests
         env:
