@@ -11,7 +11,7 @@
 |---|---:|
 | Code Smells / Maintainability issues | 12 |
 | Maintainability Rating | A |
-| Technical Debt | Не зафіксовано |
+| Technical Debt | 24 min |
 | Duplicated Lines | 11,8% |
 | Reliability Rating | C |
 | Reliability issues | 21 |
