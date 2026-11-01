@@ -16,7 +16,7 @@
 | Reliability Rating | C |
 | Reliability issues | 21 |
 | Security Rating | C |
-| Security issues | 17 |
+| Security issues | 19 |
 | Security Hotspots | 0 |
 | Quality Gate | Passed |
 
