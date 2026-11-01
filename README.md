@@ -146,16 +146,21 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 Уся документація з інженерії вимог зберігається в каталозі `docs/requirements/`. Ключові документи проєкту:
 
 * [Опис проєкту / Міні-ТЗ (Project Description)](Project-Description.md)
-* [Статут команди (Team Charter)](TeamCharter.md)
 * [Користувацькі історії (User Stories)](docs/requirements/user-stories.md)
 * [Функціональні та нефункціональні вимоги (FR & NFR)](docs/requirements/requirements.md)
 * [Матриця простежуваності (Requirements Traceability Matrix)](docs/requirements/rtm.md)
 * [Варіанти використання (Use Cases)](docs/requirements/use-cases.md)
+
+## Тестування та валідація (Testing & Validation)
+
+Тести — у каталозі `tests/`, документація — у `docs/testing/` і `docs/validation/`:
+
 * [Стратегія тестування (Testing Strategy)](docs/testing/testing-strategy.md)
 * [Журнал налагодження (Debugging Log)](docs/testing/debugging-log.md)
 * [Звіт про покриття тестами (Coverage Report)](htmlcov/index.html)
 * [План тестування (Test Plan)](docs/validation/test-plan.md)
 * [Журнал взаємного огляду (Review Log)](docs/validation/review-log.md)
+* Перевірка простежуваності «вимога ↔ тест» у CI: [`scripts/check_traceability.py`](scripts/check_traceability.py)
 
 ## Архітектурні та API артефакти (Architecture & Code Quality Artifacts)
 
