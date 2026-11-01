@@ -64,9 +64,19 @@
 git clone https://github.com/ukma-fin-ssdm-2026/reserve-flow.git
 cd reserve-flow
 
+# Створення та активація віртуального середовища (рекомендовано Python 3.11)
+python -m venv .venv
+# Для Windows:
+.venv\Scripts\activate
+# Для Linux/macOS:
+# source .venv/bin/activate
+
 # Встановлення залежностей
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
+
+# Налаштування конфігурації оточення
+cp env.example .env
 
 # Запуск контейнера PostgreSQL через Docker Compose
 docker compose up -d db
