@@ -21,8 +21,8 @@
 
 Система налаштована для публічного хмарного розгортання (FastAPI + PostgreSQL 16) за допомогою конфігурації [`render.yaml`](render.yaml) (Render Blueprint) або контейнера [`Dockerfile`](Dockerfile).
 
-* **Публічна адреса Swagger UI (Render):** [https://reserve-flow-api.onrender.com/api-docs](https://reserve-flow-api.onrender.com/api-docs)
-* **Перевірка стану (Healthcheck):** [https://reserve-flow-api.onrender.com/api/v1/health](https://reserve-flow-api.onrender.com/api/v1/health)
+* **Публічна адреса Swagger UI (Render):** [https://reserve-flow.onrender.com/api-docs](https://reserve-flow.onrender.com/api-docs)
+* **Перевірка стану (Healthcheck):** [https://reserve-flow.onrender.com/api/v1/health](https://reserve-flow.onrender.com/api/v1/health)
 * **Статична документація OpenAPI (GitHub Pages):** [https://ukma-fin-ssdm-2026.github.io/reserve-flow/](https://ukma-fin-ssdm-2026.github.io/reserve-flow/)
 
 ## Запуск API (Локальна розробка)
