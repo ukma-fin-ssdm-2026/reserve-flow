@@ -20,7 +20,6 @@
 | Security Hotspots | 0 |
 | Quality Gate | Passed |
 
-**Technical Debt:** 24 min.
 
 ## 2. Вибрані метрики для покращення
 
