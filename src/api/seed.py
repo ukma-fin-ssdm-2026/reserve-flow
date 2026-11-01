@@ -7,9 +7,8 @@ cd src/api && python seed.py --reset    # спочатку drop_all
 import argparse
 import os
 import uuid
+from datetime import datetime, timedelta, timezone
 from functools import lru_cache
-
-from datetime import timezone
 
 from sqlmodel import Session, SQLModel
 
@@ -124,6 +123,22 @@ if __name__ == "__main__":
     init_db(engine)
     with Session(engine) as session:
         seed(session)
+        # Додатковий слот менш ніж за 2 год від поточного моменту для живої демонстрації
+        # правила 409 CANCELLATION_TOO_LATE (FR-007) у Swagger UI на Render.
+        soon_start = datetime.now(timezone.utc).replace(second=0, microsecond=0) + timedelta(
+            hours=1
+        )
+        session.merge(
+            TimeSlot(
+                id=uuid.UUID("b2000000-0000-4000-8000-000000000006"),
+                room_id=uuid.UUID(mocks.ROOM_2_ID),
+                start_time=soon_start,
+                end_time=soon_start + timedelta(minutes=80),
+                is_available=True,
+                closure_reason=None,
+            )
+        )
+        session.commit()
     print("Seed виконано.")
     if not os.getenv("SEED_USER_PASSWORD"):
         print("УВАГА: SEED_USER_PASSWORD не задано — тестові користувачі не зможуть увійти.")

@@ -179,13 +179,13 @@ def test_only_free_slots_returned(client):
 
 
 def test_filter_by_date(client):
-    assert _ids(client, "?date=2026-10-16") == [FREE_5]
-    assert _ids(client, "?date=2026-10-20") == []
+    assert _ids(client, "?date=2026-11-16") == [FREE_5]
+    assert _ids(client, "?date=2026-11-20") == []
 
 
 def test_filter_by_time_interval(client):
-    assert _ids(client, "?date=2026-10-15&start=14:00:00&end=15:30:00") == [FREE_1]
-    assert _ids(client, "?date=2026-10-15&start=15:00:00") == [FREE_4]
+    assert _ids(client, "?date=2026-11-15&start=14:00:00&end=15:30:00") == [FREE_1]
+    assert _ids(client, "?date=2026-11-15&start=15:00:00") == [FREE_4]
 
 
 def test_filter_by_room_properties(client):
@@ -201,7 +201,7 @@ def test_filter_by_room_id(client):
     room_2 = "a1000000-0000-4000-8000-000000000002"
     assert _ids(client, f"?room_id={room_1}") == [FREE_1, FREE_5]
     assert _ids(client, f"?room_id={room_2}") == [FREE_4]
-    assert _ids(client, f"?room_id={room_1}&date=2026-10-15") == [FREE_1]
+    assert _ids(client, f"?room_id={room_1}&date=2026-11-15") == [FREE_1]
     assert _ids(client, "?room_id=00000000-0000-4000-8000-000000000000") == []
 
 

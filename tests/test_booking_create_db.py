@@ -126,8 +126,8 @@ def test_client_can_book_adjacent_back_to_back_slot(client, db_engine):
     with Session(db_engine) as s:
         slot = TimeSlot(
             room_id=uuid.UUID(ROOM_2_ID),
-            start_time=datetime(2026, 10, 15, 17, 0, tzinfo=KYIV).astimezone(timezone.utc),
-            end_time=datetime(2026, 10, 15, 18, 20, tzinfo=KYIV).astimezone(timezone.utc),
+            start_time=datetime(2026, 11, 15, 17, 0, tzinfo=KYIV).astimezone(timezone.utc),
+            end_time=datetime(2026, 11, 15, 18, 20, tzinfo=KYIV).astimezone(timezone.utc),
         )
         s.add(slot)
         s.commit()
