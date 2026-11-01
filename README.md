@@ -175,6 +175,20 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 * [Проєктування API (API Design)](docs/api/api-design.md), [Атрибути якості API](docs/api/quality-attributes.md) та [OpenAPI специфікація](docs/api/openapi-generated.yaml).
 * [Звіт огляду коду (Review Report)](docs/code-quality/review-report.md), [Статичний аналіз (Static Analysis)](docs/code-quality/static-analysis.md) та [Прогрес розробки (Progress)](docs/code-quality/progress.md).
 
+## Артефакти за лабораторними
+
+| Лаб | Тема | Артефакти | Відео Loom |
+|---|---|---|---|
+| 1 | Команда та інструменти | [Статут команди](TeamCharter.md) (зокрема «Використання ШІ»), [README](README.md), [CI](.github/workflows/) | [`Labs/Lab01/`](Labs/Lab01/) |
+| 2 | Вимоги | [Міні-ТЗ](Project-Description.md), [історії](docs/requirements/user-stories.md), [вимоги FR/NFR](docs/requirements/requirements.md), [варіанти використання](docs/requirements/use-cases.md), [RTM](docs/requirements/rtm.md) | [`Labs/Lab02/`](Labs/Lab02/) |
+| 3 | Архітектура | [HLD](docs/architecture/high-level-design.md), [матриця простежуваності](docs/architecture/traceability-matrix.md), [UML](docs/architecture/uml/), [модель даних](docs/architecture/data-model.md), [модель загроз](docs/architecture/threat-model.md), [ADR](docs/architecture/decisions/) | [`Labs/Lab03/`](Labs/Lab03/) |
+| 4 | API | [дизайн API](docs/api/api-design.md), [OpenAPI](docs/api/openapi-generated.yaml), [атрибути якості](docs/api/quality-attributes.md), [Swagger на GitHub Pages](https://ukma-fin-ssdm-2026.github.io/reserve-flow/) | [`Labs/Lab04/`](Labs/Lab04/) |
+| 5 | Якість коду | [огляд коду](docs/code-quality/review-report.md), [статичний аналіз](docs/code-quality/static-analysis.md), [прогрес](docs/code-quality/progress.md) | [`Labs/Lab05/`](Labs/Lab05/) |
+| 6 | Тестування | [стратегія](docs/testing/testing-strategy.md), [журнал налагодження](docs/testing/debugging-log.md), [покриття](htmlcov/index.html) | [`Labs/Lab06/`](Labs/Lab06/) |
+| 7 | Планування тестування | [план тестування](docs/validation/test-plan.md), [журнал огляду](docs/validation/review-log.md) | [`Labs/Lab07/`](Labs/Lab07/) |
+| 8 | Рефакторинг | [звіт SonarQube Cloud](docs/refactoring/sonarcloud-report.md) | — |
+| — | Проміжне оцінювання | [розгортання і демо](Labs/midterm-presentation.txt) | — |
+
 ## Робочий процес
 
 Команда відстежує всю роботу через GitHub Issues і дошку Project з чотирма колонками:
