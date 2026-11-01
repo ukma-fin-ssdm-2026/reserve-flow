@@ -9,29 +9,16 @@
     "/api/v1/health": {
       "get": {
         "tags": [
-          "system"
+          "System"
         ],
-        "summary": "Перевірити стан API",
-        "description": "Повертає `ok`, якщо сервер запущено. Не потребує автентифікації.",
-        "operationId": "get_health_api_v1_health_get",
+        "summary": "Health Check",
+        "operationId": "health_check_api_v1_health_get",
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HealthOut"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Внутрішня помилка сервера",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "schema": {}
               }
             }
           }
@@ -1219,33 +1206,6 @@
         "title": "ErrorResponse",
         "description": "Єдиний формат відповіді з помилкою."
       },
-      "HealthOut": {
-        "properties": {
-          "status": {
-            "type": "string",
-            "title": "Status",
-            "description": "Стан сервісу",
-            "examples": [
-              "ok"
-            ]
-          },
-          "version": {
-            "type": "string",
-            "title": "Version",
-            "description": "Версія API (документа OpenAPI)",
-            "examples": [
-              "1.0.0"
-            ]
-          }
-        },
-        "type": "object",
-        "required": [
-          "status",
-          "version"
-        ],
-        "title": "HealthOut",
-        "description": "Стан API."
-      },
       "ModerationStatusEnum": {
         "type": "string",
         "enum": [
@@ -1648,7 +1608,7 @@
   },
   "tags": [
     {
-      "name": "system",
+      "name": "System",
       "description": "Службові кінцеві точки"
     },
     {
