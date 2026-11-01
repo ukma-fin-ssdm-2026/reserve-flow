@@ -9,7 +9,7 @@ from conftest import auth
 
 pytestmark = pytest.mark.req("UC-001", "FR-005", "FR-007")
 CLIENT = auth("client")
-SLOT = "b2000000-0000-4000-8000-000000000001"  # 15.10, 14:00–15:20 (Київ); «зараз» у тестах — 08.10
+SLOT = "b2000000-0000-4000-8000-000000000001"  # перший вільний слот із seed (mocks.SLOTS)
 
 
 def test_row0_end_to_end(client):
@@ -29,7 +29,7 @@ def test_row0_end_to_end(client):
     assert cancelled.status_code == 200 and cancelled.json()["status"] == "Cancelled"
 
     # слот знову в пошуку, і його можна забронювати повторно
-    search = client.get("/api/v1/slots", headers=CLIENT, params={"date": "2026-10-15"})
+    search = client.get("/api/v1/slots", headers=CLIENT)  # без дати: не залежить від дат у seed
     assert search.status_code == 200
     assert SLOT in [s["id"] for s in search.json()["items"]]
     again = client.post(
