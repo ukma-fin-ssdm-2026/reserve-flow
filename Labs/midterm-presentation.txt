@@ -1,4 +1,1 @@
-Swagger UI (публічне розгортання API на Render): https://reserve-flow-api.onrender.com/api-docs
-Перевірка стану API (Healthcheck): https://reserve-flow-api.onrender.com/api/v1/health
-Документація API (GitHub Pages): https://ukma-fin-ssdm-2026.github.io/reserve-flow/
-Демонстраційне відео проєкту (Loom): <додати посилання на Loom-відео (MT-01)>
+ref

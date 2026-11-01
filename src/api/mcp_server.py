@@ -1,39 +1,35 @@
-"""MCP-сервер, згенерований з API Reserve Flow (бонус Lab 4).
+"""MCP-сервер Reserve Flow: обгортка FastAPI над інструментами агента.
 
-Кожна кінцева точка FastAPI стає інструментом MCP: назва, опис і схема
-параметрів беруться з тих самих анотацій, що й OpenAPI / Swagger UI.
-FastMCP викликає застосунок напряму, тож окремо запускати API не потрібно.
+Генерує інструменти з OpenAPI-схеми FastAPI (рішення FastMCP.from_fastapi):
+кожна кінцева точка API стає інструментом агента без дублювання логіки.
 
-Запуск (з кореня репозиторію):
-    pip install -r requirements-mcp.txt
-    python src/api/mcp_server.py                      # транспорт stdio
+Запуск у терміналі (з кореня репо):
+    python src/api/mcp_server.py
 
 Перевірка в MCP Inspector:
     npx @modelcontextprotocol/inspector python src/api/mcp_server.py
-
-Агент працює від імені тестового користувача з seed.py (потрібні запущена БД,
-`python src/api/seed.py` і JWT_SECRET у .env). Роль задається змінною середовища,
-за замовчуванням — клієнт:
-    RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
-
-Короткоживучий JWT (ADR-003) видається заново перед кожним викликом інструмента,
-тож сесія агента не обривається, коли спливає строк дії токена.
-Готовий токен можна передати й напряму: RESERVE_FLOW_TOKEN=<jwt>.
 """
 
 import os
 import sys
 from pathlib import Path
 
-# Імпорти застосунку працюють так само, як з uvicorn --app-dir src/api
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+# Імпортуємо модулі API так само, як uvicorn (через sys.path)
+API_DIR = Path(__file__).resolve().parent
+if str(API_DIR) not in sys.path:
+    sys.path.insert(0, str(API_DIR))
 
-from fastmcp import FastMCP  # noqa: E402
+try:
+    from fastmcp import FastMCP
+except ImportError:
+    sys.exit("fastmcp не встановлено. Запустіть: pip install -r requirements-mcp.txt")
 
 from main import app  # noqa: E402
 from mocks import USER_ADMIN_ID, USER_CLIENT_ID, USER_PROVIDER_ID  # noqa: E402
 from security import create_access_token  # noqa: E402
 
+# Користувач за замовчуванням — клієнт. Щоб агент діяв як постачальник
+# або адмін: RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 AGENT_USERS = {
     "client": (USER_CLIENT_ID, "Client"),
     "provider": (USER_PROVIDER_ID, "Provider"),
@@ -55,6 +51,7 @@ def _add_token(request):
 # (напр. search_slots_api_v1_slots_get): агенту легше обрати потрібний.
 TOOL_NAMES = {
     "get_health_api_v1_health_get": "check_health",
+    "health_check_api_v1_health_get": "check_health",
     # bandit B105 — хибне спрацювання: ключ містить «token», а значення — назва інструмента
     "issue_token_api_v1_auth_token_post": "issue_token",  # nosec B105
     "read_me_api_v1_auth_me_get": "who_am_i",
@@ -77,8 +74,5 @@ mcp = FastMCP.from_fastapi(
 
 
 if __name__ == "__main__":
-    mcp.run()  # транспорт stdio за замовчуванням
-
-
-# Використання ШІ: при написанні коду використано допомогу ШІ Claude
-# на основі прикладу курсу (FastMCP.from_fastapi). Код перевірено учасниками команди.
+    # fastmcp run бере назву об'єкта або запускає stdio-транспорт напряму
+    mcp.run()
