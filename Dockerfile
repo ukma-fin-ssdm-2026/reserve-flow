@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 COPY requirements.txt .
-RUN 'pip install --only-binary :all: --no-cache-dir -r requirements.txt'
+RUN pip install --only-binary :all: --no-cache-dir -r requirements.txt
 
 COPY src/ ./src/
 COPY docs/ ./docs/
