@@ -24,7 +24,10 @@ CORS_ORIGINS = [
     for origin in os.getenv("CORS_ORIGINS", _DEFAULT_CORS_ORIGINS).split(",")
     if origin.strip() and origin.strip() != "*"
 ]
+if _render_url := os.getenv("RENDER_EXTERNAL_URL", "").strip().rstrip("/"):
+    if _render_url not in CORS_ORIGINS:
+        CORS_ORIGINS.append(_render_url)
 
 
-# Використання ШІ: При написанні коду було використано допомогу ШІ Claude.
+# Використання ШІ: При написанні коду було використано допомогу ШІ Claude та Gemini.
 # Код вичитано, відредаговано та затверджено учасниками команди

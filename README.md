@@ -15,12 +15,22 @@
 * `docs/` — проєктна документація (вимоги, архітектура, API)
 * `src/` — вихідний код проєкту
 * `tests/` — модульні та інтеграційні тести
-* `labs/` — посилання на Loom-відео до лабораторних у txt-файлах
+* `Labs/` — посилання на Loom-відео до лабораторних і проміжної презентації у txt-файлах
+
+## Публічне розгортання API (Render / Docker)
+
+Система налаштована для публічного хмарного розгортання (FastAPI + PostgreSQL 16) за допомогою конфігурації [`render.yaml`](render.yaml) (Render Blueprint) або контейнера [`Dockerfile`](Dockerfile).
+
+* **Публічна адреса Swagger UI (Render):** [https://reserve-flow-api.onrender.com/api-docs](https://reserve-flow-api.onrender.com/api-docs)
+* **Перевірка стану (Healthcheck):** [https://reserve-flow-api.onrender.com/api/v1/health](https://reserve-flow-api.onrender.com/api/v1/health)
+* **Статична документація OpenAPI (GitHub Pages):** [https://ukma-fin-ssdm-2026.github.io/reserve-flow/](https://ukma-fin-ssdm-2026.github.io/reserve-flow/)
 
 ## Запуск API (Локальна розробка)
 
-Щоб запустити бекенд локально, з кореня репозиторію:
+Потрібен **Python 3.11+** (у CI використовується Python 3.11) та Docker. Щоб запустити бекенд локально з кореня репозиторію:
 ```bash
+python -m venv .venv
+# Windows: .venv\Scripts\activate | Linux/macOS: source .venv/bin/activate
 pip install -r requirements.txt
 cp env.example .env          # і заповніть POSTGRES_PASSWORD, JWT_SECRET, SEED_USER_PASSWORD
 docker compose up -d db      # PostgreSQL 16 на 127.0.0.1:5432
@@ -34,7 +44,7 @@ python -c "import secrets; print(secrets.token_urlsafe(48))"
 
 **Вхід** (ADR-003): `POST /api/v1/auth/token` з email і паролем повертає JWT (строк дії — `ACCESS_TOKEN_EXPIRE_MINUTES`, 30 хв). Тестові користувачі після seed: `client@ukma.edu.ua`, `provider@ukma.edu.ua`, `admin@ukma.edu.ua`; пароль — ваш `SEED_USER_PASSWORD`. У Swagger UI вставте `access_token` у **Authorize**.
 
-Адреса Swagger UI після запуску: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+Адреса Swagger UI після локального запуску: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
 
 **Команда генерації OpenAPI:**
 ```bash
@@ -126,6 +136,8 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 
 Уся документація з інженерії вимог зберігається в каталозі `docs/requirements/`. Ключові документи проєкту:
 
+* [Опис проєкту / Міні-ТЗ (Project Description)](Project-Description.md)
+* [Статут команди (Team Charter)](TeamCharter.md)
 * [Користувацькі історії (User Stories)](docs/requirements/user-stories.md)
 * [Функціональні та нефункціональні вимоги (FR & NFR)](docs/requirements/requirements.md)
 * [Матриця простежуваності (Requirements Traceability Matrix)](docs/requirements/rtm.md)
@@ -136,9 +148,9 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 * [План тестування (Test Plan)](docs/validation/test-plan.md)
 * [Журнал взаємного огляду (Review Log)](docs/validation/review-log.md)
 
-## Архітектурні артефакти (Architecture Artifacts)
+## Архітектурні та API артефакти (Architecture & Code Quality Artifacts)
 
-Усі архітектурні рішення, діаграми та моделі зберігаються в каталозі `docs/architecture/`. Ключові документи проєкту:
+Усі архітектурні рішення, діаграми, специфікації API та звіти якості коду зберігаються в каталогах `docs/architecture/`, `docs/api/` та `docs/code-quality/`:
 
 * [Високорівневий дизайн (High-Level Design)](docs/architecture/high-level-design.md) — опис архітектурного стилю (модульний моноліт + SPA), компонентна архітектура та зведені UML-діаграми.
 * [Матриця простежуваності (Traceability Matrix)](docs/architecture/traceability-matrix.md) — відображення функціональних та нефункціональних вимог на конкретні архітектурні компоненти.
@@ -146,6 +158,8 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 * [Модель загроз (Threat Model)](docs/architecture/threat-model.md) — аналіз безпекових ризиків за методологією STRIDE на основі діаграми розгортання.
 * [Журнал архітектурних рішень (ADR)](docs/architecture/decisions/) — реєстр ключових технічних рішень (вибір стилю, перехід на FastAPI тощо).
 * [UML-діаграми (UML Diagrams)](docs/architecture/uml/) — вихідні файли діаграм компонентів, розгортання, послідовності та діяльності у форматі PlantUML.
+* [Проєктування API (API Design)](docs/api/api-design.md), [Атрибути якості API](docs/api/quality-attributes.md) та [OpenAPI специфікація](docs/api/openapi-generated.yaml).
+* [Звіт огляду коду (Review Report)](docs/code-quality/review-report.md), [Статичний аналіз (Static Analysis)](docs/code-quality/static-analysis.md) та [Прогрес розробки (Progress)](docs/code-quality/progress.md).
 
 ## Робочий процес
 
@@ -161,4 +175,4 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 Issues групуються за milestones (наприклад, `Lab01: Team & Tooling Setup`), щоб відстежувати прогрес по кожному етапу проєкту окремо.
 
 ----------
-Використання ШІ: Структурування документа та базовий текст згенеровані за допомогою ШІ Claude на основі ідей команди. Увесь текст вичитано, відредаговано та затверджено учасниками команди для відповідності реальним планам проєкту
+Використання ШІ: Структурування документа та базовий текст згенеровані за допомогою ШІ Claude та Gemini на основі ідей команди. Увесь текст вичитано, відредаговано та затверджено учасниками команди для відповідності реальним планам проєкту

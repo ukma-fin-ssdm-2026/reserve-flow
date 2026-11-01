@@ -15,6 +15,10 @@ load_dotenv()
 
 def get_database_url() -> str:
     if url := os.getenv("DATABASE_URL"):
+        if url.startswith("postgres://"):
+            return url.replace("postgres://", "postgresql+psycopg://", 1)
+        if url.startswith("postgresql://"):
+            return url.replace("postgresql://", "postgresql+psycopg://", 1)
         return url
     user = quote_plus(os.getenv("POSTGRES_USER", "reserveflow"))
     password = quote_plus(os.environ["POSTGRES_PASSWORD"])
@@ -64,3 +68,7 @@ def get_session() -> Iterator[Session]:
     У тестах підміняється через app.dependency_overrides[get_session]."""
     with Session(get_engine()) as session:
         yield session
+
+
+# Використання ШІ: для редагування файлу для публічного розгортання було використано ШІ Gemini,
+# перевірено та затверджено командою.
