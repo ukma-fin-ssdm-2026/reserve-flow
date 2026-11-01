@@ -1,0 +1,13 @@
+.git
+.github
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+.hypothesis
+.coverage
+htmlcov
+.env
+tests
+Labs

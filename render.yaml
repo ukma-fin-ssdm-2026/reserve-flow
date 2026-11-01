@@ -1,0 +1,37 @@
+# Blueprint для автоматичного розгортання Reserve Flow на Render.
+# Створює керовану базу даних PostgreSQL 16 та вебсервіс FastAPI.
+# Секрети (JWT_SECRET, SEED_USER_PASSWORD) не зберігаються в репозиторії:
+# JWT_SECRET генерується автоматично, а SEED_USER_PASSWORD запитується в панелі Render.
+
+databases:
+  - name: reserve-flow-db
+    databaseName: reserveflow
+    user: reserveflow
+    plan: free
+    postgresMajorVersion: "16"
+
+services:
+  - type: web
+    name: reserve-flow-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python src/api/seed.py && uvicorn main:app --app-dir src/api --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: reserve-flow-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SEED_USER_PASSWORD
+        sync: false
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "30"
+      - key: CORS_ORIGINS
+        value: "http://localhost:5173,http://localhost:3000,https://ukma-fin-ssdm-2026.github.io"
+
+# Використання ШІ: створено за допомогою ШІ Gemini, перевірено та затверджено командою.

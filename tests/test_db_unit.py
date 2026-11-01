@@ -15,6 +15,19 @@ def test_get_database_url_explicit(monkeypatch):
     assert get_database_url() == TEST_DB_URL
 
 
+@pytest.mark.parametrize(
+    "raw_url",
+    [
+        "postgres://test:test@localhost:5432/db",  # pragma: allowlist secret
+        "postgresql://test:test@localhost:5432/db",  # pragma: allowlist secret
+    ],
+)
+def test_get_database_url_normalizes_paas_schemes(monkeypatch, raw_url):
+    monkeypatch.setenv("DATABASE_URL", raw_url)
+    expected = "postgresql+psycopg://test:test@localhost:5432/db"  # pragma: allowlist secret
+    assert get_database_url() == expected
+
+
 def test_get_database_url_env_fallback(monkeypatch):
     monkeypatch.delenv("DATABASE_URL", raising=False)
     monkeypatch.setenv("POSTGRES_USER", "admin")
@@ -74,3 +87,7 @@ def test_get_session_generator(monkeypatch):
         next(gen)
     except StopIteration:
         pass
+
+
+# Використання ШІ: створено за допомогою ШІ Gemini на основі ідей команди, перевірено та затверджено
+# командою.
