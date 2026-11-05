@@ -1,6 +1,5 @@
 """Booking Engine Service: створення бронювання в одній транзакції (FR-005, FR-006)."""
 
-from datetime import timedelta
 from uuid import UUID
 
 from sqlalchemy.exc import IntegrityError
@@ -12,11 +11,9 @@ from services.rooms import lock_slot
 
 from services.validators import slots_overlap
 from errors import AppError, ErrorCode
+from services.notifications import REMINDER_LEAD
 
 ACTIVE_STATUSES = (BookingStatus.PENDING, BookingStatus.CONFIRMED)
-
-# FR-014: нагадування за N годин до початку. N у вимогах не визначено — тимчасово 24 год.
-REMINDER_LEAD = timedelta(hours=24)
 
 
 def create_booking(session: Session, client_id: UUID, slot_id: UUID, purpose: str) -> Booking:
