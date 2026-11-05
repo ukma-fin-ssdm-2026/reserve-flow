@@ -186,7 +186,7 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 | 5 | Якість коду | [огляд коду](docs/code-quality/review-report.md), [статичний аналіз](docs/code-quality/static-analysis.md), [прогрес](docs/code-quality/progress.md) | [`Labs/Lab05/`](Labs/Lab05/) |
 | 6 | Тестування | [стратегія](docs/testing/testing-strategy.md), [журнал налагодження](docs/testing/debugging-log.md), [покриття](htmlcov/index.html) | [`Labs/Lab06/`](Labs/Lab06/) |
 | 7 | Планування тестування | [план тестування](docs/validation/test-plan.md), [журнал огляду](docs/validation/review-log.md) | [`Labs/Lab07/`](Labs/Lab07/) |
-| 8 | Рефакторинг | [звіт SonarQube Cloud](docs/refactoring/sonarcloud-report.md) | — |
+| 8 | Рефакторинг | [звіт SonarQube Cloud](docs/refactoring/sonarcloud-report.md), [CHANGELOG](CHANGELOG.md) | [`Labs/Lab08/`](Labs/Lab08/) |
 | — | Проміжне оцінювання | [розгортання і демо](Labs/midterm-presentation.txt) | — |
 
 ## Робочий процес
