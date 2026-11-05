@@ -49,8 +49,9 @@ def _add_token(request):
 
 # Короткі назви інструментів замість автоматичних operationId FastAPI
 # (напр. search_slots_api_v1_slots_get): агенту легше обрати потрібний.
+# Ключ — operationId з app.openapi(); кожна операція API має рівно одну назву
+# (tests/test_mcp_server.py).
 TOOL_NAMES = {
-    "get_health_api_v1_health_get": "check_health",
     "health_check_api_v1_health_get": "check_health",
     # bandit B105 — хибне спрацювання: ключ містить «token», а значення — назва інструмента
     "issue_token_api_v1_auth_token_post": "issue_token",  # nosec B105
@@ -79,3 +80,5 @@ if __name__ == "__main__":
 
 # Використання ШІ: при написанні коду використано допомогу ШІ Claude
 # на основі прикладу курсу (FastMCP.from_fastapi). Код перевірено учасниками команди.
+# Лаб 8 (#413): видалено мертвий ключ get_health_api_v1_health_get (операції з таким operationId
+# немає: роутер routes/health.py не підключено) після характеризаційних тестів; ШІ — Claude Code.
