@@ -94,24 +94,13 @@ def create_booking(
     session: Annotated[Session, Depends(get_session)],
 ) -> BookingOut:
     try:
+        # Бронювання й AuditLog (FR-013) зберігаються в одній транзакції сервісу
         booking = booking_engine.create_booking(
             session,
             client_id=UUID(str(current_user.id)),
             slot_id=booking_in.slot_id,
             purpose=booking_in.purpose,
         )
-
-        # --- AuditLog (FR-013) ---
-        audit = AuditLog(
-            actor_type=ActorType.USER,
-            user_id=UUID(str(current_user.id)),
-            action=AuditAction.BOOKING_CREATED,
-            entity_type=EntityType.BOOKING,
-            entity_id=booking.id,
-        )
-        session.add(audit)
-        session.commit()
-
     except SlotNotFound:
         raise AppError(status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Слот не знайдено") from None
     except SlotUnavailable:
