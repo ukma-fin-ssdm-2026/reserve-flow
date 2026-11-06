@@ -4,24 +4,28 @@ POST, GET і PATCH працюють із базою даних.
 Створення бронювання використовує services/bookings.py.
 """
 
+import logging
 from datetime import datetime, timezone
 from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Path, Query, Response, status
-from sqlmodel import Session, select
+from sqlmodel import Session, select, update
 
 from config import API_PREFIX
 from db import get_session
 from deps import get_current_user, require_role
 from errors import AppError, ErrorCode, error_responses
 from models import ActorType, AuditAction, AuditLog, EntityType, Booking, TimeSlot, Room
+from models import BookingStatus as DbBookingStatus
 from schemas.auth import Role, UserOut
 from schemas.bookings import BookingCreate, BookingOut, BookingStatus, BookingUpdate
 from schemas.common import Page, PaginationParams, paginate, pagination_params
 from services import bookings as booking_engine
 from services.cancellation import can_cancel
 from services.exceptions import SlotNotFound, SlotUnavailable
+
+logger = logging.getLogger("reserve_flow.api")
 
 # Усі кінцеві точки bookings потребують токена (D-06): без нього -> 401.
 router = APIRouter(
@@ -255,10 +259,13 @@ def update_booking(
 
         slot_to_release = slot
 
-    # Змінюємо статус бронювання.
-    booking.status = booking_in.status
+    # Новий статус пишемо умовним UPDATE (compare-and-set, Лаб 9, знахідка #6): рядок
+    # зміниться, лише якщо статус досі той, який ми перевіряли вище. Паралельний запит,
+    # що встиг змінити статус першим, «виграє», а цей отримує 409, а не хибний 200.
+    expected_status = booking.status
+    new_values: dict = {"status": DbBookingStatus(booking_in.status.value)}
     if booking_in.reason:
-        booking.rejection_reason = booking_in.reason
+        new_values["rejection_reason"] = booking_in.reason
 
     audit_action = {
         BookingStatus.CONFIRMED: AuditAction.BOOKING_CONFIRMED,
@@ -267,7 +274,23 @@ def update_booking(
     }.get(booking_in.status)
 
     try:
-        session.add(booking)
+        changed = session.exec(
+            update(Booking)
+            .where(Booking.id == booking_id, Booking.status == expected_status)
+            .values(**new_values)
+        ).rowcount
+        if changed != 1:
+            logger.warning(
+                "Concurrent status change of booking %s: expected %s, request wanted %s",
+                booking_id,
+                expected_status.value,
+                booking_in.status.value,
+            )
+            raise AppError(
+                status.HTTP_409_CONFLICT,
+                ErrorCode.INVALID_STATUS_TRANSITION,
+                "Статус бронювання щойно змінив інший запит. Оновіть дані й спробуйте ще раз.",
+            )
 
         # Скасування звільняє слот у тій самій транзакції.
         if slot_to_release is not None:
