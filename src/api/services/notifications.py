@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
-_REMINDER_LEAD_TIME = timedelta(hours=24)
+# FR-014: нагадування за N годин до початку. N у вимогах не визначено — тимчасово 24 год.
+REMINDER_LEAD = timedelta(hours=24)
 
 
 def compute_reminder_time(slot_start: datetime, now: datetime) -> datetime | None:
@@ -8,5 +9,5 @@ def compute_reminder_time(slot_start: datetime, now: datetime) -> datetime | Non
     Якщо 24 год уже минули, повертає поточний час. Якщо слот почався — None."""
     if now >= slot_start:
         return None
-    reminder = slot_start - _REMINDER_LEAD_TIME
+    reminder = slot_start - REMINDER_LEAD
     return max(reminder, now)
