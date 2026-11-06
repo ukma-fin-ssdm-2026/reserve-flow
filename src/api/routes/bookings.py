@@ -133,7 +133,7 @@ def create_booking(
     ),
     responses=error_responses(401, 422),
 )
-async def get_bookings(
+def get_bookings(
     current_user: Annotated[UserOut, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
     params: Annotated[PaginationParams, Depends(pagination_params)],
@@ -160,7 +160,7 @@ async def get_bookings(
     description="Повертає деталі бронювання з БД. Чуже бронювання → `403`, неіснуюче → `404`.",
     responses=error_responses(401, 403, 404, 422),
 )
-async def get_booking(
+def get_booking(
     booking_id: Annotated[UUID, Path(description="ID бронювання")],
     current_user: Annotated[UserOut, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
@@ -208,7 +208,7 @@ PATCH_DESCRIPTION = """Змінює статус бронювання (D-03).
     description=PATCH_DESCRIPTION,
     responses=error_responses(401, 403, 404, 409, 422),
 )
-async def update_booking(
+def update_booking(
     booking_id: Annotated[UUID, Path(description="ID бронювання")],
     booking_in: BookingUpdate,
     current_user: Annotated[UserOut, Depends(get_current_user)],

@@ -63,7 +63,7 @@ def _slot_to_out(slot: TimeSlot) -> SlotOut:
     ),
     responses=error_responses(401, 422, 500),
 )
-async def search_slots(
+def search_slots(
     session: Annotated[Session, Depends(get_session)],
     room_id: UUID | None = Query(None, description="ID приміщення"),
     search_date: date | None = Query(None, alias="date", description="Дата для пошуку"),
@@ -146,7 +146,7 @@ async def search_slots(
     ),
     responses=error_responses(401, 403, 404, 409, 422, 500),
 )
-async def patch_slot(
+def patch_slot(
     payload: SlotPatchIn,
     session: Annotated[Session, Depends(get_session)],
     # Лише постачальник; інша роль -> 403 (D-06)
