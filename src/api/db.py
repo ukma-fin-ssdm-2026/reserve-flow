@@ -28,6 +28,28 @@ def get_database_url() -> str:
     return f"postgresql+psycopg://{user}:{password}@{host}:{port}/{name}"
 
 
+# Тайм-аути до PostgreSQL (Лаб 9, знахідки #2, #3): жоден виклик до БД не чекає необмежено.
+# Значення в межах, які відчуває користувач: краще швидка 503, ніж «зависання» всього API.
+DB_CONNECT_TIMEOUT_S = 5  # TCP-з'єднання з сервером БД
+DB_POOL_TIMEOUT_S = 5  # очікування вільного з'єднання в пулі
+DB_STATEMENT_TIMEOUT_MS = 5000  # максимальний час виконання одного SQL-запиту
+DB_LOCK_TIMEOUT_MS = 3000  # очікування блокування рядка (SELECT ... FOR UPDATE)
+
+
+def _postgres_timeouts() -> dict:
+    """Параметри create_engine з тайм-аутами для psycopg / PostgreSQL."""
+    return {
+        "pool_timeout": DB_POOL_TIMEOUT_S,
+        "connect_args": {
+            "connect_timeout": DB_CONNECT_TIMEOUT_S,
+            "options": (
+                f"-c statement_timeout={DB_STATEMENT_TIMEOUT_MS} "
+                f"-c lock_timeout={DB_LOCK_TIMEOUT_MS}"
+            ),
+        },
+    }
+
+
 def make_engine(url: str, **kwargs) -> Engine:
     """PostgreSQL для застосунку; SQLite (зокрема in-memory) для тестів."""
     if url.startswith("sqlite"):
@@ -43,6 +65,8 @@ def make_engine(url: str, **kwargs) -> Engine:
             cur.close()
 
         return engine
+    for key, value in _postgres_timeouts().items():
+        kwargs.setdefault(key, value)
     return create_engine(url, pool_pre_ping=True, **kwargs)
 
 
