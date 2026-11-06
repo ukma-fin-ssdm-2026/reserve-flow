@@ -80,9 +80,12 @@ def _get_booking_or_404(session: Session, booking_id: UUID) -> Booking:
         "Бронює вільний слот (FR-005). Нове бронювання має статус `Pending`. "
         "У разі успіху повертає `201` та заголовок `Location`.\n\n"
         "* `404` — слота не існує;\n"
-        "* `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне бронювання."
+        "* `409 SLOT_UNAVAILABLE` — слот закрито постачальником "
+        "або він уже має активне бронювання;\n"
+        "* `503 SERVICE_UNAVAILABLE` — БД не відповіла вчасно (зокрема слот заблоковано "
+        "паралельним бронюванням довше за тайм-аут); повторіть після `Retry-After`."
     ),
-    responses=error_responses(401, 403, 404, 409, 422),
+    responses=error_responses(401, 403, 404, 409, 422, 503),
 )
 def create_booking(
     booking_in: BookingCreate,
