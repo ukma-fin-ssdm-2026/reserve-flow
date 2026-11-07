@@ -44,6 +44,73 @@ def _slot_to_out(slot: TimeSlot) -> SlotOut:
     )
 
 
+def _validate_time_range(start, end) -> None:
+    "Helper function to validate the slot patch time."
+    if start and end and end <= start:
+        raise AppError(
+            422,
+            ErrorCode.VALIDATION_ERROR,
+            "Некоректні дані запиту",
+            [
+                ErrorDetail(
+                    field="end", issue="Час закінчення має бути строго пізніше за час початку"
+                )
+            ],
+        )
+
+
+def _build_slots_query(
+    room_id: UUID | None,
+    capacity: int | None,
+    has_projector: bool | None,
+    is_shelter: bool | None,
+    building: BuildingEnum | None,
+):
+    """Helper function to build the SQL query for searching available slots based on filters."""
+    stmt = (
+        select(TimeSlot, Room)
+        .join(Room, TimeSlot.room_id == Room.id)
+        .where(TimeSlot.is_available.is_(True))
+    )
+
+    if room_id is not None:
+        stmt = stmt.where(TimeSlot.room_id == room_id)
+    if capacity is not None:
+        stmt = stmt.where(Room.capacity >= capacity)
+    if has_projector is not None:
+        stmt = stmt.where(Room.has_projector == has_projector)
+    if is_shelter is not None:
+        stmt = stmt.where(Room.is_shelter == is_shelter)
+    if building is not None:
+        stmt = stmt.where(Room.building_ua == building.value)
+
+    return stmt
+
+
+def _matches_slot_filter(
+    slot: TimeSlot,
+    booked_ids: set[UUID],
+    search_date: date | None,
+    start: time | None,
+    end: time | None,
+) -> bool:
+    """Helper function to check if a slot matches the provided filters."""
+    if slot.id in booked_ids:
+        return False
+
+    starts = _to_kyiv(slot.start_time)
+    ends = _to_kyiv(slot.end_time)
+
+    if search_date and starts.date() != search_date:
+        return False
+    if start and starts.time().strftime("%H:%M:%S") < start.strftime("%H:%M:%S"):
+        return False
+    if end and ends.time().strftime("%H:%M:%S") > end.strftime("%H:%M:%S"):
+        return False
+
+    return True
+
+
 @router.get(
     "",
     response_model=Page[SlotOut],
@@ -76,35 +143,8 @@ def search_slots(
     params: PaginationParams = Depends(pagination_params),
 ) -> Page[SlotOut]:
     """Фільтрує слоти в БД та повертає результат."""
-    if start and end and end <= start:
-        raise AppError(
-            422,
-            ErrorCode.VALIDATION_ERROR,
-            "Некоректні дані запиту",
-            [
-                ErrorDetail(
-                    field="end", issue="Час закінчення має бути строго пізніше за час початку"
-                )
-            ],
-        )
-
-    stmt = (
-        select(TimeSlot, Room)
-        .join(Room, TimeSlot.room_id == Room.id)
-        .where(TimeSlot.is_available.is_(True))
-    )
-
-    if room_id is not None:
-        stmt = stmt.where(TimeSlot.room_id == room_id)
-    if capacity is not None:
-        stmt = stmt.where(Room.capacity >= capacity)
-    if has_projector is not None:
-        stmt = stmt.where(Room.has_projector == has_projector)
-    if is_shelter is not None:
-        stmt = stmt.where(Room.is_shelter == is_shelter)
-    if building is not None:
-        stmt = stmt.where(Room.building_ua == building.value)
-
+    _validate_time_range(start, end)
+    stmt = _build_slots_query(room_id, capacity, has_projector, is_shelter, building)
     rows = session.exec(stmt).all()
 
     booked_ids = set(
@@ -117,20 +157,8 @@ def search_slots(
 
     slots_out: list[SlotOut] = []
     for slot, _room in rows:
-        if slot.id in booked_ids:
-            continue
-
-        starts = _to_kyiv(slot.start_time)
-        ends = _to_kyiv(slot.end_time)
-
-        if search_date and starts.date() != search_date:
-            continue
-        if start and starts.time().strftime("%H:%M:%S") < start.strftime("%H:%M:%S"):
-            continue
-        if end and ends.time().strftime("%H:%M:%S") > end.strftime("%H:%M:%S"):
-            continue
-
-        slots_out.append(_slot_to_out(slot))
+        if _matches_slot_filter(slot, booked_ids, search_date, start, end):
+            slots_out.append(_slot_to_out(slot))
 
     return paginate(slots_out, params)
 
