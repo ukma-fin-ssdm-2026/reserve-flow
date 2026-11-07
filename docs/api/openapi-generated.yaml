@@ -107,7 +107,10 @@ paths:
         * `404` — слота не існує;
 
         * `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне
-        бронювання.'
+        бронювання;
+
+        * `503 SERVICE_UNAVAILABLE` — БД не відповіла вчасно (зокрема слот заблоковано
+        паралельним бронюванням довше за тайм-аут); повторіть після `Retry-After`.'
       operationId: create_booking_api_v1_bookings_post
       security:
       - HTTPBearer: []
@@ -150,6 +153,13 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
           description: Помилка валідації вхідних даних
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Сервіс тимчасово недоступний (БД не відповіла вчасно), повторіть
+            пізніше
           content:
             application/json:
               schema:
@@ -821,6 +831,7 @@ components:
       - ACTIVE_BOOKING_NEEDS_CONFIRMATION
       - VALIDATION_ERROR
       - INTERNAL_ERROR
+      - SERVICE_UNAVAILABLE
       title: ErrorCode
       description: Фіксований перелік кодів помилок API.
     ErrorDetail:

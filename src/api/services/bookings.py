@@ -1,4 +1,4 @@
-"""Booking Engine Service: створення бронювання в одній транзакції (FR-005, FR-006)."""
+"""Booking Engine Service: створення бронювання в одній транзакції (FR-005, FR-006, FR-013)."""
 
 from datetime import timedelta
 from uuid import UUID
@@ -6,7 +6,16 @@ from uuid import UUID
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, col, select
 
-from models import Booking, BookingStatus, Notification, TimeSlot
+from models import (
+    ActorType,
+    AuditAction,
+    AuditLog,
+    Booking,
+    BookingStatus,
+    EntityType,
+    Notification,
+    TimeSlot,
+)
 from services.exceptions import SlotUnavailable, SlotNotFound
 from services.rooms import lock_slot
 
@@ -20,9 +29,12 @@ REMINDER_LEAD = timedelta(hours=24)
 
 
 def create_booking(session: Session, client_id: UUID, slot_id: UUID, purpose: str) -> Booking:
-    """Блокує слот, перевіряє доступність, створює Booking (Pending) і Notification.
+    """Блокує слот, перевіряє доступність, створює Booking (Pending), Notification і AuditLog.
 
-    Усе в одній транзакції. Паралельний запит на той самий слот чекає на
+    Усе в одній транзакції (Лаб 9, знахідка #4): або є і бронювання, і запис аудиту,
+    або немає нічого — клієнт ніколи не отримає 500 на бронювання, яке вже збережено.
+
+    Паралельний запит на той самий слот чекає на
     SELECT ... FOR UPDATE, а після COMMIT першої транзакції бачить її бронювання
     і отримує SlotUnavailable. Будь-який виняток -> ROLLBACK (знімає блокування).
     """
@@ -69,6 +81,15 @@ def create_booking(session: Session, client_id: UUID, slot_id: UUID, purpose: st
         session.flush()  # потрібен booking.id для Notification
         session.add(
             Notification(booking_id=booking.id, scheduled_time=slot.start_time - REMINDER_LEAD)
+        )
+        session.add(
+            AuditLog(
+                actor_type=ActorType.USER,
+                user_id=client_id,
+                action=AuditAction.BOOKING_CREATED,
+                entity_type=EntityType.BOOKING,
+                entity_id=booking.id,
+            )
         )
         session.commit()
     except IntegrityError as exc:
