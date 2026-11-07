@@ -7,6 +7,8 @@ from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import TimeoutError as PoolTimeoutError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 logger = logging.getLogger("reserve_flow.api")
@@ -26,6 +28,7 @@ class ErrorCode(str, Enum):
     ACTIVE_BOOKING_NEEDS_CONFIRMATION = "ACTIVE_BOOKING_NEEDS_CONFIRMATION"
     VALIDATION_ERROR = "VALIDATION_ERROR"
     INTERNAL_ERROR = "INTERNAL_ERROR"
+    SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE"
 
 
 class ErrorDetail(BaseModel):
@@ -109,7 +112,11 @@ _RESPONSE_DESCRIPTIONS: dict[int, str] = {
     409: "Конфлікт стану ресурсу",
     422: "Помилка валідації вхідних даних",
     500: "Внутрішня помилка сервера",
+    503: "Сервіс тимчасово недоступний (БД не відповіла вчасно), повторіть пізніше",
 }
+
+# Через скільки секунд клієнту варто повторити запит після 503.
+RETRY_AFTER_SECONDS = 5
 
 
 def error_responses(*status_codes: int) -> dict[int | str, dict[str, Any]]:
@@ -227,11 +234,38 @@ async def _unhandled_error_handler(request: Request, exc: Exception) -> JSONResp
     return response
 
 
+async def _db_unavailable_handler(request: Request, exc: Exception) -> JSONResponse:
+    """БД недоступна або спрацював тайм-аут (з'єднання, пул, запит, блокування) -> 503.
+
+    Швидка відмова (fail fast): клієнт одразу отримує зрозумілу відповідь і Retry-After,
+    а не чекає, поки запит «провисить» хвилинами. Повтор робить клієнт: сервер сам не
+    повторює, бо POST /bookings не ідемпотентний.
+    """
+    correlation_id = _get_correlation_id(request)
+    logger.warning(
+        "DB unavailable on %s %s [%s]: %s",
+        request.method,
+        request.url.path,
+        correlation_id,
+        type(exc).__name__,
+    )
+    return _error_json(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        code=ErrorCode.SERVICE_UNAVAILABLE,
+        message="Сервіс тимчасово недоступний. Спробуйте ще раз за кілька секунд.",
+        correlation_id=correlation_id,
+        headers={"Retry-After": str(RETRY_AFTER_SECONDS)},
+    )
+
+
 def register_error_handlers(app: FastAPI) -> None:
     """Підключає всі обробники помилок до застосунку."""
     app.add_exception_handler(AppError, _app_error_handler)
     app.add_exception_handler(StarletteHTTPException, _http_exception_handler)
     app.add_exception_handler(RequestValidationError, _validation_error_handler)
+    # Вузькі обробники збоїв БД — до загального Exception (Лаб 9, знахідки #2, #3)
+    app.add_exception_handler(OperationalError, _db_unavailable_handler)
+    app.add_exception_handler(PoolTimeoutError, _db_unavailable_handler)
     app.add_exception_handler(Exception, _unhandled_error_handler)
 
     # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.

@@ -4,24 +4,28 @@ POST, GET і PATCH працюють із базою даних.
 Створення бронювання використовує services/bookings.py.
 """
 
+import logging
 from datetime import datetime, timezone
 from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Path, Query, Response, status
-from sqlmodel import Session, select
+from sqlmodel import Session, select, update
 
 from config import API_PREFIX
 from db import get_session
 from deps import get_current_user, require_role
 from errors import AppError, ErrorCode, error_responses
 from models import ActorType, AuditAction, AuditLog, EntityType, Booking, TimeSlot, Room
+from models import BookingStatus as DbBookingStatus
 from schemas.auth import Role, UserOut
 from schemas.bookings import BookingCreate, BookingOut, BookingStatus, BookingUpdate
 from schemas.common import Page, PaginationParams, paginate, pagination_params
 from services import bookings as booking_engine
 from services.cancellation import can_cancel
 from services.exceptions import SlotNotFound, SlotUnavailable
+
+logger = logging.getLogger("reserve_flow.api")
 
 # Усі кінцеві точки bookings потребують токена (D-06): без нього -> 401.
 router = APIRouter(
@@ -80,9 +84,12 @@ def _get_booking_or_404(session: Session, booking_id: UUID) -> Booking:
         "Бронює вільний слот (FR-005). Нове бронювання має статус `Pending`. "
         "У разі успіху повертає `201` та заголовок `Location`.\n\n"
         "* `404` — слота не існує;\n"
-        "* `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне бронювання."
+        "* `409 SLOT_UNAVAILABLE` — слот закрито постачальником "
+        "або він уже має активне бронювання;\n"
+        "* `503 SERVICE_UNAVAILABLE` — БД не відповіла вчасно (зокрема слот заблоковано "
+        "паралельним бронюванням довше за тайм-аут); повторіть після `Retry-After`."
     ),
-    responses=error_responses(401, 403, 404, 409, 422),
+    responses=error_responses(401, 403, 404, 409, 422, 503),
 )
 def create_booking(
     booking_in: BookingCreate,
@@ -91,24 +98,13 @@ def create_booking(
     session: Annotated[Session, Depends(get_session)],
 ) -> BookingOut:
     try:
+        # Бронювання й AuditLog (FR-013) зберігаються в одній транзакції сервісу
         booking = booking_engine.create_booking(
             session,
             client_id=UUID(str(current_user.id)),
             slot_id=booking_in.slot_id,
             purpose=booking_in.purpose,
         )
-
-        # --- AuditLog (FR-013) ---
-        audit = AuditLog(
-            actor_type=ActorType.USER,
-            user_id=UUID(str(current_user.id)),
-            action=AuditAction.BOOKING_CREATED,
-            entity_type=EntityType.BOOKING,
-            entity_id=booking.id,
-        )
-        session.add(audit)
-        session.commit()
-
     except SlotNotFound:
         raise AppError(status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Слот не знайдено") from None
     except SlotUnavailable:
@@ -130,7 +126,7 @@ def create_booking(
     ),
     responses=error_responses(401, 422),
 )
-async def get_bookings(
+def get_bookings(
     current_user: Annotated[UserOut, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
     params: Annotated[PaginationParams, Depends(pagination_params)],
@@ -157,7 +153,7 @@ async def get_bookings(
     description="Повертає деталі бронювання з БД. Чуже бронювання → `403`, неіснуюче → `404`.",
     responses=error_responses(401, 403, 404, 422),
 )
-async def get_booking(
+def get_booking(
     booking_id: Annotated[UUID, Path(description="ID бронювання")],
     current_user: Annotated[UserOut, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
@@ -205,7 +201,7 @@ PATCH_DESCRIPTION = """Змінює статус бронювання (D-03).
     description=PATCH_DESCRIPTION,
     responses=error_responses(401, 403, 404, 409, 422),
 )
-async def update_booking(
+def update_booking(
     booking_id: Annotated[UUID, Path(description="ID бронювання")],
     booking_in: BookingUpdate,
     current_user: Annotated[UserOut, Depends(get_current_user)],
@@ -263,10 +259,13 @@ async def update_booking(
 
         slot_to_release = slot
 
-    # Змінюємо статус бронювання.
-    booking.status = booking_in.status
+    # Новий статус пишемо умовним UPDATE (compare-and-set, Лаб 9, знахідка #6): рядок
+    # зміниться, лише якщо статус досі той, який ми перевіряли вище. Паралельний запит,
+    # що встиг змінити статус першим, «виграє», а цей отримує 409, а не хибний 200.
+    expected_status = booking.status
+    new_values: dict = {"status": DbBookingStatus(booking_in.status.value)}
     if booking_in.reason:
-        booking.rejection_reason = booking_in.reason
+        new_values["rejection_reason"] = booking_in.reason
 
     audit_action = {
         BookingStatus.CONFIRMED: AuditAction.BOOKING_CONFIRMED,
@@ -275,7 +274,23 @@ async def update_booking(
     }.get(booking_in.status)
 
     try:
-        session.add(booking)
+        changed = session.exec(
+            update(Booking)
+            .where(Booking.id == booking_id, Booking.status == expected_status)
+            .values(**new_values)
+        ).rowcount
+        if changed != 1:
+            logger.warning(
+                "Concurrent status change of booking %s: expected %s, request wanted %s",
+                booking_id,
+                expected_status.value,
+                booking_in.status.value,
+            )
+            raise AppError(
+                status.HTTP_409_CONFLICT,
+                ErrorCode.INVALID_STATUS_TRANSITION,
+                "Статус бронювання щойно змінив інший запит. Оновіть дані й спробуйте ще раз.",
+            )
 
         # Скасування звільняє слот у тій самій транзакції.
         if slot_to_release is not None:

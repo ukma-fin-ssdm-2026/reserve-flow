@@ -1,6 +1,5 @@
 """Модульні тести для rooms.py та slots.py за патерном AAA."""
 
-import asyncio
 from datetime import datetime, time, timezone
 
 import pytest
@@ -86,21 +85,19 @@ def test_search_slots_invalid_time_range_raises_422(start_t, end_t):
     session_mock = MagicMock()
     params = PaginationParams(limit=10, offset=0)
 
-    # Act & Assert: роутер async, тож викликаємо через asyncio.run
+    # Act & Assert: обробник синхронний (Лаб 9, знахідка #1), викликаємо напряму
     with pytest.raises(AppError) as exc_info:
-        asyncio.run(
-            search_slots(
-                session=session_mock,
-                room_id=None,
-                search_date=None,
-                start=start_t,
-                end=end_t,
-                capacity=None,
-                has_projector=None,
-                is_shelter=None,
-                building=None,
-                params=params,
-            )
+        search_slots(
+            session=session_mock,
+            room_id=None,
+            search_date=None,
+            start=start_t,
+            end=end_t,
+            capacity=None,
+            has_projector=None,
+            is_shelter=None,
+            building=None,
+            params=params,
         )
     assert exc_info.value.status_code == 422
 
@@ -115,19 +112,17 @@ def test_search_slots_pagination_bounds():
     params = PaginationParams(limit=10, offset=990)  # сторінка далеко за межами даних
 
     # Act
-    result = asyncio.run(
-        search_slots(
-            session=session_mock,
-            room_id=None,
-            search_date=None,
-            start=None,
-            end=None,
-            capacity=None,
-            has_projector=None,
-            is_shelter=None,
-            building=None,
-            params=params,
-        )
+    result = search_slots(
+        session=session_mock,
+        room_id=None,
+        search_date=None,
+        start=None,
+        end=None,
+        capacity=None,
+        has_projector=None,
+        is_shelter=None,
+        building=None,
+        params=params,
     )
 
     # Assert
