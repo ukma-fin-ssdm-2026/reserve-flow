@@ -84,7 +84,7 @@
 
 | Бонус | Відповідальний (пояснює у відео) | Що зроблено | Докази | Стан |
 |---|---|---|---|---|
-| Quality Gate як обов'язкова перевірка PR (#412) | Ромах | правило захисту гілки `main`: required status check `SonarCloud Code Analysis` — PR з червоним Quality Gate не можна злити | PR, зупинений Quality Gate: <посилання>; зелений прогін після виправлення: <посилання> | у роботі (правило налаштовано, доказів ще немає) |
+| Quality Gate як обов'язкова перевірка PR (#412) | Ромах | правило захисту гілки `main`: required status check `SonarCloud Code Analysis` — PR з червоним Quality Gate не можна злити | PR #388: зупинено Quality Gate ([`2e82519`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/pull/388/changes/2e82519da80964ac5d9ae7ff1a374af4d8e803ae#diff-dd2c0eb6ea5cfc6c4bd4eac30934e2d5746747af48fef6da689e85b752f39557)); зелений прогін після виправлення ([`9a2f31c`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/pull/388/changes/9a2f31c14a8045d82c5616839454246a83163632)) | ✅ виконано |
 | Характеризаційні тести `mcp_server.py` (#413) | Лавришин | тести фіксують поточну поведінку `mcp_server.py` (`TOOL_NAMES` ↔ `operationId` з `app.openapi()`, вибір ролі `RESERVE_FLOW_ROLE`, JWT у `_add_token`), потім рефакторинг Remove Dead Code (ключ `get_health_api_v1_health_get`); ті самі тести зелені до і після | коміт з тестами: <sha>; коміт з рефакторингом: <sha>; прогін CI, де тести виконано (не пропущено): <посилання> | у роботі |
 | Автоматизований реліз, release-please (#414) | — | — | — | **не виконано**: команда обрала ручний реліз (#409, #410) — CI працює на повільних self-hosted раннерах, і ризик для обов'язкової частини «CHANGELOG + версіонування» не вартий бонусу; issue закрито як «не плануємо» |
 
