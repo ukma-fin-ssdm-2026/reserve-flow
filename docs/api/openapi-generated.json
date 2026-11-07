@@ -130,7 +130,7 @@
           "bookings"
         ],
         "summary": "Створити нове бронювання",
-        "description": "Бронює вільний слот (FR-005). Нове бронювання має статус `Pending`. У разі успіху повертає `201` та заголовок `Location`.\n\n* `404` — слота не існує;\n* `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне бронювання.",
+        "description": "Бронює вільний слот (FR-005). Нове бронювання має статус `Pending`. У разі успіху повертає `201` та заголовок `Location`.\n\n* `404` — слота не існує;\n* `409 SLOT_UNAVAILABLE` — слот закрито постачальником або він уже має активне бронювання;\n* `503 SERVICE_UNAVAILABLE` — БД не відповіла вчасно (зокрема слот заблоковано паралельним бронюванням довше за тайм-аут); повторіть після `Retry-After`.",
         "operationId": "create_booking_api_v1_bookings_post",
         "security": [
           {
@@ -200,6 +200,16 @@
           },
           "422": {
             "description": "Помилка валідації вхідних даних",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Сервіс тимчасово недоступний (БД не відповіла вчасно), повторіть пізніше",
             "content": {
               "application/json": {
                 "schema": {
@@ -1155,7 +1165,8 @@
           "INVALID_STATUS_TRANSITION",
           "ACTIVE_BOOKING_NEEDS_CONFIRMATION",
           "VALIDATION_ERROR",
-          "INTERNAL_ERROR"
+          "INTERNAL_ERROR",
+          "SERVICE_UNAVAILABLE"
         ],
         "title": "ErrorCode",
         "description": "Фіксований перелік кодів помилок API."

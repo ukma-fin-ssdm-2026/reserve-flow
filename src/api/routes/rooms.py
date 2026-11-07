@@ -28,7 +28,7 @@ router = APIRouter(
     description="Повертає детальну інформацію про кімнату за її ідентифікатором.",
     responses=error_responses(401, 404, 422, 500),
 )
-async def get_room(
+def get_room(
     session: Annotated[Session, Depends(get_session)],
     room_id: str = Path(..., description="ID кімнати"),
 ) -> RoomOut:
