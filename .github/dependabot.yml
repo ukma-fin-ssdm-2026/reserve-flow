@@ -1,10 +1,18 @@
 # Dependabot (L5-16, #209): щотижня перевіряє залежності й відкриває PR з оновленнями.
+# #429: усі оновлення однієї екосистеми приходять одним PR (groups) — менше прогонів CI
+# на self-hosted раннерах; перевірка — щопонеділка о 10:00 за київським часом.
 version: 2
 updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "10:00"
+      timezone: "Europe/Kyiv"
+    groups:
+      pip-dependencies:
+        patterns: ["*"]
     open-pull-requests-limit: 5
     labels: ["security", "ci"]
 
@@ -12,5 +20,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "10:00"
+      timezone: "Europe/Kyiv"
+    groups:
+      github-actions:
+        patterns: ["*"]
     open-pull-requests-limit: 5
     labels: ["ci"]
