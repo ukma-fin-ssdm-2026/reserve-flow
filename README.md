@@ -21,7 +21,7 @@
   * `docs/validation/` — план тестування, журнал взаємного огляду (Лаб 7)
   * `docs/refactoring/` — звіт SonarQube Cloud (Лаб 8)
 * `scripts/` — службові скрипти (перевірка простежуваності «вимога ↔ тест» у CI)
-* `htmlcov/` — HTML-звіт покриття тестами
+* HTML-звіт покриття (`htmlcov/`) у git не зберігається: його створює CI (артефакт `htmlcov`) або локально `pytest --cov --cov-report=html`
 * `src/` — вихідний код проєкту
 * `tests/` — модульні та інтеграційні тести
 * `Labs/` — посилання на Loom-відео до лабораторних і проміжної презентації у txt-файлах
@@ -157,7 +157,7 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 
 * [Стратегія тестування (Testing Strategy)](docs/testing/testing-strategy.md)
 * [Журнал налагодження (Debugging Log)](docs/testing/debugging-log.md)
-* [Звіт про покриття тестами (Coverage Report)](htmlcov/index.html)
+* Звіт про покриття тестами (Coverage Report): підсумок і HTML-артефакт `htmlcov` — у [прогонах CI](https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/workflows/ci.yml) (job «Tests with coverage»); локально — `pytest --cov --cov-report=html`, далі відкрити `htmlcov/index.html`
 * [План тестування (Test Plan)](docs/validation/test-plan.md)
 * [Журнал взаємного огляду (Review Log)](docs/validation/review-log.md)
 * Перевірка простежуваності «вимога ↔ тест» у CI: [`scripts/check_traceability.py`](scripts/check_traceability.py)
@@ -184,7 +184,7 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 | 3 | Архітектура | [HLD](docs/architecture/high-level-design.md), [матриця простежуваності](docs/architecture/traceability-matrix.md), [UML](docs/architecture/uml/), [модель даних](docs/architecture/data-model.md), [модель загроз](docs/architecture/threat-model.md), [ADR](docs/architecture/decisions/) | [`Labs/Lab03/`](Labs/Lab03/) |
 | 4 | API | [дизайн API](docs/api/api-design.md), [OpenAPI](docs/api/openapi-generated.yaml), [атрибути якості](docs/api/quality-attributes.md), [Swagger на GitHub Pages](https://ukma-fin-ssdm-2026.github.io/reserve-flow/) | [`Labs/Lab04/`](Labs/Lab04/) |
 | 5 | Якість коду | [огляд коду](docs/code-quality/review-report.md), [статичний аналіз](docs/code-quality/static-analysis.md), [прогрес](docs/code-quality/progress.md) | [`Labs/Lab05/`](Labs/Lab05/) |
-| 6 | Тестування | [стратегія](docs/testing/testing-strategy.md), [журнал налагодження](docs/testing/debugging-log.md), [покриття](htmlcov/index.html) | [`Labs/Lab06/`](Labs/Lab06/) |
+| 6 | Тестування | [стратегія](docs/testing/testing-strategy.md), [журнал налагодження](docs/testing/debugging-log.md), [покриття (артефакт CI)](https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/workflows/ci.yml) | [`Labs/Lab06/`](Labs/Lab06/) |
 | 7 | Планування тестування | [план тестування](docs/validation/test-plan.md), [журнал огляду](docs/validation/review-log.md) | [`Labs/Lab07/`](Labs/Lab07/) |
 | 8 | Рефакторинг | [звіт SonarQube Cloud](docs/refactoring/sonarcloud-report.md), [CHANGELOG](CHANGELOG.md) | [`Labs/Lab08/`](Labs/Lab08/) |
 | — | Проміжне оцінювання | [розгортання і демо](Labs/midterm-presentation.txt) | — |

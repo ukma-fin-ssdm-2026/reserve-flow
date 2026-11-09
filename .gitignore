@@ -24,3 +24,5 @@ plantuml.jar
 
 # Логи та звіти
 .coverage
+# Звіт покриття: генерує CI (артефакт htmlcov) або локально pytest --cov --cov-report=html
+htmlcov/
