@@ -1,3 +1,10 @@
+[project]
+name = "reserve-flow"
+# Версія релізу (SemVer). Має збігатися з API_VERSION у src/api/config.py, CHANGELOG.md і git-тегом vX.Y.Z
+version = "1.0.1"
+description = "Reserve Flow — API бронювання приміщень НаУКМА"
+requires-python = ">=3.11"
+
 [tool.black]
 line-length = 100
 target-version = ["py311", "py312", "py313"]

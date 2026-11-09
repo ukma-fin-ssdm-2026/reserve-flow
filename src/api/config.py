@@ -10,7 +10,7 @@ API_DESCRIPTION = (
 )
 
 # Версія документа OpenAPI: змінюється з кожним релізом.
-API_VERSION = "1.0.0"
+API_VERSION = "1.0.1"
 
 # Версія у шляху: змінюється лише при несумісних змінах (див. api-design.md).
 API_PREFIX = "/api/v1"
