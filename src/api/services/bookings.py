@@ -1,5 +1,6 @@
 """Booking Engine Service: створення бронювання в одній транзакції (FR-005, FR-006, FR-013)."""
 
+from datetime import datetime, timezone
 from uuid import UUID
 
 from sqlalchemy.exc import IntegrityError
@@ -20,12 +21,23 @@ from services.rooms import lock_slot
 
 from services.validators import slots_overlap
 from errors import AppError, ErrorCode
-from services.notifications import REMINDER_LEAD
+from services.notifications import compute_reminder_time
 
 ACTIVE_STATUSES = (BookingStatus.PENDING, BookingStatus.CONFIRMED)
 
 
-def create_booking(session: Session, client_id: UUID, slot_id: UUID, purpose: str) -> Booking:
+def _as_utc(dt: datetime) -> datetime:
+    """SQLite повертає naive-час; у БД він зберігається в UTC."""
+    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+
+def create_booking(
+    session: Session,
+    client_id: UUID,
+    slot_id: UUID,
+    purpose: str,
+    now: datetime | None = None,
+) -> Booking:
     """Блокує слот, перевіряє доступність, створює Booking (Pending), Notification і AuditLog.
 
     Усе в одній транзакції (Лаб 9, знахідка #4): або є і бронювання, і запис аудиту,
@@ -34,6 +46,9 @@ def create_booking(session: Session, client_id: UUID, slot_id: UUID, purpose: st
     Паралельний запит на той самий слот чекає на
     SELECT ... FOR UPDATE, а після COMMIT першої транзакції бачить її бронювання
     і отримує SlotUnavailable. Будь-який виняток -> ROLLBACK (знімає блокування).
+
+    Час нагадування — за compute_reminder_time (#421): не раніше за `now`; для слота,
+    що вже почався, нагадування не створюється.
     """
     try:
         slot = lock_slot(session, slot_id)
@@ -76,9 +91,16 @@ def create_booking(session: Session, client_id: UUID, slot_id: UUID, purpose: st
         )
         session.add(booking)
         session.flush()  # потрібен booking.id для Notification
-        session.add(
-            Notification(booking_id=booking.id, scheduled_time=slot.start_time - REMINDER_LEAD)
+        reminder_time = compute_reminder_time(
+            _as_utc(slot.start_time), now or datetime.now(timezone.utc)
         )
+        if reminder_time is not None:
+            # UTC, як і решта часу в БД: SQLite відкидає часовий пояс
+            session.add(
+                Notification(
+                    booking_id=booking.id, scheduled_time=reminder_time.astimezone(timezone.utc)
+                )
+            )
         session.add(
             AuditLog(
                 actor_type=ActorType.USER,
