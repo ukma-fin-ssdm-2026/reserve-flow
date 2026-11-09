@@ -5,7 +5,8 @@
 **Стан «до»:** гілка [`pre-refactor`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/tree/pre-refactor) — коміт [`3cbd8ae`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/commit/3cbd8ae1e37729809d75e143467b1634c1c8a453) (05.11.2026)  
 **Аналіз «до»:** 05.11.2026 13:47 UTC, `main` @ `3cbd8ae` (останній аналіз перед рефакторингами Лаб 8)  
 **Quality Gate («до»):** Passed  
-**Аналіз «після»:** 07.11.2026 18:31 UTC, `main` @ [`34067a8`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/commit/34067a80dabeeda5a277bafbc9fc7c11f1030d39) — після злиття всіх рефакторингів (#430, #432, #423, #438)
+**Аналіз «після»:** 07.11.2026 18:31 UTC, `main` @ [`34067a8`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/commit/34067a80dabeeda5a277bafbc9fc7c11f1030d39) — після злиття всіх рефакторингів (#430, #432, #423, #438)  
+**Quality Gate («після»):** Passed  
 
 ## 1. Показники «до» і «після»
 
