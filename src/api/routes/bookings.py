@@ -104,6 +104,7 @@ def create_booking(
             client_id=UUID(str(current_user.id)),
             slot_id=booking_in.slot_id,
             purpose=booking_in.purpose,
+            now=_now(),
         )
     except SlotNotFound:
         raise AppError(status.HTTP_404_NOT_FOUND, ErrorCode.NOT_FOUND, "Слот не знайдено") from None

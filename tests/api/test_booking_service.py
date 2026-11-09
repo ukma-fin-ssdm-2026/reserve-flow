@@ -14,7 +14,8 @@ from mocks import SLOT_1_ID, SLOT_2_ID, USER_CLIENT_ID, SLOTS, find_by_id
 from models import Booking, BookingStatus, Notification
 from services import bookings as booking_engine
 from services.exceptions import SlotNotFound, SlotUnavailable
-from datetime import timezone
+from services.notifications import REMINDER_LEAD
+from datetime import datetime, timezone
 
 pytestmark = pytest.mark.req("FR-005", "FR-006", "FR-014")
 
@@ -23,6 +24,7 @@ SLOT_FREE = uuid.UUID(SLOT_1_ID)
 SLOT_WITH_PENDING = uuid.UUID(SLOT_2_ID)  # у seed має бронювання Pending
 SLOT_CLOSED = uuid.UUID("b2000000-0000-4000-8000-000000000003")
 UNKNOWN_SLOT = uuid.UUID("00000000-0000-4000-8000-000000000000")
+NOW = datetime(2026, 10, 8, 10, 0, tzinfo=timezone.utc)  # задовго до слотів seed
 
 
 @pytest.fixture
@@ -40,7 +42,7 @@ def test_create_booking_returns_pending_booking_with_notification(session):
     bookings_before = _count(session, Booking)
 
     # Act
-    booking = booking_engine.create_booking(session, CLIENT_ID, SLOT_FREE, "Семінар")
+    booking = booking_engine.create_booking(session, CLIENT_ID, SLOT_FREE, "Семінар", now=NOW)
 
     # Assert
     assert booking.status == BookingStatus.PENDING
@@ -56,7 +58,7 @@ def test_create_booking_returns_pending_booking_with_notification(session):
     assert notification.retry_count == 0
 
     slot_data = find_by_id(SLOTS, str(SLOT_FREE))
-    expected_time = slot_data["start_time"] - booking_engine.REMINDER_LEAD
+    expected_time = slot_data["start_time"] - REMINDER_LEAD
     scheduled = notification.scheduled_time
     if scheduled.tzinfo is None:  # SQLite не зберігає часовий пояс; значення вже в UTC
         scheduled = scheduled.replace(tzinfo=timezone.utc)
