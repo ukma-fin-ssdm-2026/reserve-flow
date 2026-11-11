@@ -15,6 +15,13 @@ import main
 pytestmark = pytest.mark.no_req("інфраструктура: експорт OpenAPI під час старту сервера (D-07)")
 
 
+@pytest.fixture(autouse=True)
+def valid_config(monkeypatch):
+    """Валідна конфігурація: тут перевіряється лише експорт OpenAPI (перевірка — у reliability)."""
+    monkeypatch.setenv("DATABASE_URL", "sqlite://")
+    monkeypatch.setenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
+
+
 def _start_and_stop_app():
     async def run():
         async with main.lifespan(main.app):

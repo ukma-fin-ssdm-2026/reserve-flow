@@ -187,6 +187,7 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 | 6 | Тестування | [стратегія](docs/testing/testing-strategy.md), [журнал налагодження](docs/testing/debugging-log.md), [покриття (артефакт CI)](https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/workflows/ci.yml) | [`Labs/Lab06/`](Labs/Lab06/) |
 | 7 | Планування тестування | [план тестування](docs/validation/test-plan.md), [журнал огляду](docs/validation/review-log.md) | [`Labs/Lab07/`](Labs/Lab07/) |
 | 8 | Рефакторинг | [звіт SonarQube Cloud](docs/refactoring/sonarcloud-report.md), [CHANGELOG](CHANGELOG.md) | [`Labs/Lab08/`](Labs/Lab08/) |
+| 9 | Надійність | [пошук ризиків](docs/reliability/scavenger-hunt.md), [звіт про надійність](docs/reliability/reliability-report.md), [тести надійності](tests/reliability/) | [`Labs/Lab09/`](Labs/Lab09/) |
 | — | Проміжне оцінювання | [розгортання і демо](Labs/midterm-presentation.txt) | — |
 
 ## Робочий процес
