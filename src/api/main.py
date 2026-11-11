@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from config_check import ConfigError, validate_config
 from config import API_DESCRIPTION, API_TITLE, API_VERSION, CORS_ORIGINS
 from errors import register_error_handlers
 from routes.auth import router as auth_router
@@ -22,7 +23,14 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """L4-08: Життєвий цикл застосунку. Експорт OpenAPI при старті."""
+    """L4-08: Життєвий цикл застосунку. Перевірка конфігурації й експорт OpenAPI при старті."""
+    # Лаб 9, №8: некоректна конфігурація зупиняє старт, а не ламає запити пізніше
+    try:
+        validate_config()
+    except ConfigError as exc:
+        logging.critical("%s. Сервер не запущено.", exc)
+        raise
+
     try:
         from export_openapi import (
             export_openapi,
