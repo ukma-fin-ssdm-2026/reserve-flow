@@ -1169,6 +1169,7 @@
       "ErrorCode": {
         "type": "string",
         "enum": [
+          "BAD_REQUEST",
           "UNAUTHORIZED",
           "FORBIDDEN",
           "NOT_FOUND",
