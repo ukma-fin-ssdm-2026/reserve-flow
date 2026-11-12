@@ -32,7 +32,7 @@
 
 ## 1. Блокувальний I/O в асинхронних обробниках — **E**
 
-> **Статус (10.11):** ✅ **Виправлено** в #437 (коміт `6d097ea`): усі обробники з синхронною `Session` тепер `def` — FastAPI виконує їх у пулі потоків. Тест: `tests/test_no_blocking_in_async.py`.
+> **Статус (10.11):** ✅ **Виправлено** в #437 (коміт `6d097ea`): усі обробники з синхронною `Session` тепер `def` — FastAPI виконує їх у пулі потоків. Тест: `tests/reliability/test_no_blocking_in_async.py`.
 
 ```python
 # routes/bookings.py (так само search_slots, patch_slot, get_room)
@@ -54,7 +54,7 @@ async def get_bookings(..., session: Annotated[Session, Depends(get_session)], .
 
 ## 2. Немає тайм-аутів до БД — **B / E**
 
-> **Статус (10.11):** ✅ **Виправлено** в #437 (коміт `a71fed2`): `db.py:33-47` — `connect_timeout` 5 с, `pool_timeout` 5 с, `statement_timeout` 5 с; перевищення → `503 SERVICE_UNAVAILABLE` з `Retry-After`. Тест: `tests/test_db_timeouts.py`.
+> **Статус (10.11):** ✅ **Виправлено** в #437 (коміт `a71fed2`): `db.py:33-47` — `connect_timeout` 5 с, `pool_timeout` 5 с, `statement_timeout` 5 с; перевищення → `503 SERVICE_UNAVAILABLE` з `Retry-After`. Тест: `tests/reliability/test_db_timeouts.py`.
 
 ```python
 # db.py
@@ -79,7 +79,7 @@ create_engine(
 
 ## 3. Блокування рядка без тайм-ауту — **E**
 
-> **Статус (10.11):** ✅ **Виправлено** в #437 (коміт `a71fed2`): `lock_timeout` 3 с для кожного з'єднання (`db.py:47`). `with_for_update()` у `services/rooms.py:17` лишився, але чекає на блокування не довше 3 с → `503`. Тест: `tests/test_db_timeouts.py`.
+> **Статус (10.11):** ✅ **Виправлено** в #437 (коміт `a71fed2`): `lock_timeout` 3 с для кожного з'єднання (`db.py:47`). `with_for_update()` у `services/rooms.py:17` лишився, але чекає на блокування не довше 3 с → `503`. Тест: `tests/reliability/test_db_timeouts.py`.
 
 ```python
 # services/rooms.py
@@ -98,7 +98,7 @@ statement = select(TimeSlot).where(TimeSlot.id == slot_id).with_for_update()
 
 ## 4. Неатомарне створення бронювання й аудиту — **A / D**
 
-> **Статус (10.11):** ✅ **Виправлено** в #437 (коміт `a6a42db`): `AuditLog` записується в тій самій транзакції, що й бронювання та нагадування (`services/bookings.py:105-113`). Тест: `tests/test_booking_atomic_audit.py`.
+> **Статус (10.11):** ✅ **Виправлено** в #437 (коміт `a6a42db`): `AuditLog` записується в тій самій транзакції, що й бронювання та нагадування (`services/bookings.py:105-113`). Тест: `tests/reliability/test_booking_atomic_audit.py`.
 
 ```python
 # routes/bookings.py
@@ -145,7 +145,7 @@ return paginate(items, params)                                             # lim
 
 ## 6. Гонка при зміні статусу — **D**
 
-> **Статус (10.11):** ✅ **Виправлено** в #437 (коміт `c2a4ada`): умовний `UPDATE … WHERE status = <перевірений>` і перевірка `rowcount` (`routes/bookings.py:279-282`) → `409` замість хибного `200`. Тест: `tests/test_booking_status_race.py`.
+> **Статус (10.11):** ✅ **Виправлено** в #437 (коміт `c2a4ada`): умовний `UPDATE … WHERE status = <перевірений>` і перевірка `rowcount` (`routes/bookings.py:279-282`) → `409` замість хибного `200`. Тест: `tests/reliability/test_booking_status_race.py`.
 
 ```python
 booking = _get_booking_or_404(session, booking_id)        # звичайний SELECT, без блокування
