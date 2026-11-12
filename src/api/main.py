@@ -14,6 +14,7 @@ from config import API_DESCRIPTION, API_TITLE, API_VERSION, CORS_ORIGINS
 from errors import register_error_handlers
 from routes.auth import router as auth_router
 from routes.bookings import router as bookings_router
+from routes.health import router as health_router
 from routes.rooms import router as rooms_router
 from routes.slots import router as slots_router
 
@@ -114,19 +115,14 @@ async def correlation_id_middleware(request: Request, call_next):
 register_error_handlers(app)
 
 
-# --- Службові маршрути (Healthcheck & Root) --------------------------------
+# --- Службові маршрути (Root) ---------------------------------------------
 @app.get("/", include_in_schema=False)
 def root():
     return {"status": "healthy", "docs": "/api-docs"}
 
 
-@app.get("/health", tags=["System"], include_in_schema=False)
-@app.get("/api/v1/health", tags=["System"])
-def health_check():
-    return {"status": "healthy"}
-
-
 # --- Роутери (manage as needed)---------------------------------------------------------------
+app.include_router(health_router)  # Лаб 9, №7: перевірка стану з БД
 app.include_router(auth_router)  # L4-05
 app.include_router(bookings_router)
 app.include_router(slots_router)  # L4-07
