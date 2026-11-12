@@ -89,6 +89,9 @@ class BookingUpdate(BaseModel):
 
 У схемі OpenAPI відображено новий код `SLOT_ALREADY_STARTED`, опис відповіді `409` для `POST /bookings` та обмеження `maxLength: 500` для `BookingUpdate.reason`. Опис полів також повідомляє про обрізання крайових пробілів. Актуальні експорти: `docs/api/openapi-generated.json` і `docs/api/openapi-generated.yaml`.
 
+## Бонуси
+| Тести надійності — обов'язкова перевірка PR (#459) | Ромах | у job `Tests with coverage` (`ci.yml`) виділено крок `Reliability tests (tests/reliability)` (`pytest tests/reliability -v` на PostgreSQL 16); сама job є required status check у правилі захисту гілки `main` | [PR #<483>](<https://github.com/ukma-fin-ssdm-2026/reserve-flow/pull/483>), [зелений прогін CI](<https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/runs/43313415012/job/131515081068?pr=483>) | ✅ виконано |
+
 ---
 
 *Звіт описує лише виправлення знахідок №9a та №13 і не змінює статус інших знахідок у `scavenger-hunt.md`.*
