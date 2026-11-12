@@ -2,6 +2,7 @@ import sys
 
 import logging
 import os
+import re
 import uuid
 from contextlib import asynccontextmanager
 
@@ -77,10 +78,30 @@ app.add_middleware(
 )
 
 
+# Лаб 9, №11: приймаємо лише короткий ID з літер, цифр і дефісів (UUID теж підходить)
+_CORRELATION_ID = re.compile(r"[A-Za-z0-9-]{1,64}")
+logger = logging.getLogger(__name__)
+
+
+def safe_correlation_id(raw: str | None) -> str:
+    """Повертає ID клієнта, якщо він безпечний, інакше — новий UUID.
+
+    Безпечна відмова (fail safe): невалідний заголовок не зупиняє запит, але й не потрапляє
+    в логи та відповіді (підробка, надто довгий рядок, перенос рядка — log injection).
+    """
+    if raw is None:
+        return str(uuid.uuid4())
+    if _CORRELATION_ID.fullmatch(raw):
+        return raw
+    # саме значення не логуємо — лише довжину
+    logger.warning("Невалідний X-Correlation-ID (довжина %d) — замінено новим", len(raw))
+    return str(uuid.uuid4())
+
+
 @app.middleware("http")
 async def correlation_id_middleware(request: Request, call_next):
-    """Генерує або приймає Correlation ID для кожного запиту (рішення D-04)."""
-    correlation_id = request.headers.get("X-Correlation-ID", str(uuid.uuid4()))
+    """Генерує або приймає Correlation ID для кожного запиту (рішення D-04, Лаб 9 №11)."""
+    correlation_id = safe_correlation_id(request.headers.get("X-Correlation-ID"))
     request.state.correlation_id = correlation_id
 
     response = await call_next(request)
