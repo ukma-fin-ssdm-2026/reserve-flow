@@ -17,6 +17,7 @@ logger = logging.getLogger("reserve_flow.api")
 class ErrorCode(str, Enum):
     """Фіксований перелік кодів помилок API."""
 
+    BAD_REQUEST = "BAD_REQUEST"
     UNAUTHORIZED = "UNAUTHORIZED"
     FORBIDDEN = "FORBIDDEN"
     NOT_FOUND = "NOT_FOUND"
@@ -181,11 +182,22 @@ async def _app_error_handler(request: Request, exc: AppError) -> JSONResponse:
     return response
 
 
+def _default_http_error(status_code: int) -> tuple[ErrorCode, str]:
+    """Код і повідомлення за замовчуванням для StarletteHTTPException (Лаб 9, №14).
+
+    Невідомі 4xx отримують BAD_REQUEST замість INTERNAL_ERROR, щоб клієнт і моніторинг
+    не сприймали помилку клієнта (400, 409, 413 тощо) як збій сервера (5xx).
+    """
+    if status_code in _DEFAULT_ERRORS:
+        return _DEFAULT_ERRORS[status_code]
+    if 400 <= status_code < 500:
+        return ErrorCode.BAD_REQUEST, "Некоректний запит"
+    return ErrorCode.INTERNAL_ERROR, "Помилка обробки запиту"
+
+
 async def _http_exception_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:
     correlation_id = _get_correlation_id(request)
-    code, default_message = _DEFAULT_ERRORS.get(
-        exc.status_code, (ErrorCode.INTERNAL_ERROR, "Помилка обробки запиту")
-    )
+    code, default_message = _default_http_error(exc.status_code)
     message = (
         exc.detail if isinstance(exc.detail, str) and exc.status_code != 404 else default_message
     )
