@@ -44,18 +44,22 @@ class Page(BaseModel, Generic[T]):
     pagination: PaginationInfo
 
 
-def paginate(items: list[T], params: PaginationParams) -> Page[T]:
-    """Ріже вже відсортований список на сторінку."""
-    page_items = items[params.offset : params.offset + params.limit]
+def page_of(items: list[T], params: PaginationParams, total: int) -> Page[T]:
+    """Конверт для сторінки, яку вже вибрала БД (OFFSET/LIMIT), і загальної кількості."""
     return Page[T](
-        items=page_items,
+        items=items,
         pagination=PaginationInfo(
             limit=params.limit,
             offset=params.offset,
-            total=len(items),
-            has_more=params.offset + params.limit < len(items),
+            total=total,
+            has_more=params.offset + params.limit < total,
         ),
     )
+
+
+def paginate(items: list[T], params: PaginationParams) -> Page[T]:
+    """Ріже вже відсортований список на сторінку."""
+    return page_of(items[params.offset : params.offset + params.limit], params, len(items))
 
     # Використання ШІ: При написанні коду було використано допомогу ШІ Gemini та Claude.
     # Код вичитано, відредаговано та затверджено учасниками команди
