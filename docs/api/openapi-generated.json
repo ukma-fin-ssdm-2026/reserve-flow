@@ -949,7 +949,7 @@
           "purpose": {
             "type": "string",
             "maxLength": 200,
-            "minLength": 3,
+            "minLength": 1,
             "title": "Purpose",
             "description": "Мета бронювання приміщення",
             "examples": [
@@ -1053,7 +1053,7 @@
           "Cancelled"
         ],
         "title": "BookingStatus",
-        "description": "Статуси бронювання (D-03). Значення збігаються з Booking.status у data-model.md."
+        "description": "Статуси бронювання (D-03)."
       },
       "BookingUpdate": {
         "properties": {
@@ -1067,7 +1067,8 @@
           "reason": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "maxLength": 500
               },
               {
                 "type": "null"
@@ -1173,6 +1174,7 @@
           "NOT_FOUND",
           "METHOD_NOT_ALLOWED",
           "SLOT_UNAVAILABLE",
+          "SLOT_ALREADY_STARTED",
           "CLIENT_SCHEDULE_CONFLICT",
           "CANCELLATION_TOO_LATE",
           "INVALID_STATUS_TRANSITION",
