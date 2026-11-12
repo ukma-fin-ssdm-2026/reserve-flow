@@ -116,7 +116,7 @@ def create_booking(
         # (напр. на СУБД без row-lock) — це теж конфлікт, а не 500.
         session.rollback()
         raise SlotUnavailable(str(slot_id)) from exc
-    except BaseException:
+    except Exception:
         session.rollback()
         raise
 
