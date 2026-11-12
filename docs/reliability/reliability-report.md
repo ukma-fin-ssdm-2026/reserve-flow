@@ -3,7 +3,7 @@
 **Код:** `main` після #437, #443, #471, #474–#476, #478–#481 · знахідки — [`scavenger-hunt.md`](scavenger-hunt.md) · авторство знахідок — #453.
 
 > Номери знахідок — як **№1–№14** (за `scavenger-hunt.md`), щоб GitHub не перетворював їх на посилання на issues.
-> Місця з `<…>` заповнюються, коли буде злито відповідний PR (бонуси — #459, #460).
+> Місця з `<…>` заповнюються, коли буде злито відповідний PR (бонус — #460).
 
 ## 1. Усі знайдені проблеми
 
@@ -385,7 +385,7 @@ def _default_http_error(status_code: int) -> tuple[ErrorCode, str]:
 | Обробка помилки | `tests/reliability/test_http_exception_codes.py` | невідомі 4xx → `BAD_REQUEST`, 5xx → `INTERNAL_ERROR` |
 | Зовнішня відмова (ін'єкція збою) | `tests/reliability/test_openapi_export_resilience.py` | помилка запису / відсутній `yaml` → лог зі стеком, сервер стартує |
 
-Усі тести надійності Лаб 9 зібрано в `tests/reliability/` (#456, перенесення — #482); у корені `tests/` лишився лише `test_booking_reminder_time.py` (№9b).
+Усі тести надійності Лаб 9 зібрано в `tests/reliability/` (#456, перенесення — #482) і запускаються в CI окремим кроком на кожен PR (#483); у корені `tests/` лишився лише `test_booking_reminder_time.py` (№9b).
 
 ## 6. Презентація на парі (Етап 4)
 
@@ -396,7 +396,7 @@ def _default_http_error(status_code: int) -> tuple[ErrorCode, str]:
 | Бонус | Хто пояснює у відео | Що зроблено | Докази | Стан |
 |---|---|---|---|---|
 | Health check з перевіркою БД (#458) | Лавришин | `/api/v1/health` виконує `SELECT 1`: `200 healthy` або `503 unhealthy`; старий маршрут без перевірки прибрано | PR #476; тест з ін'єкцією збою `tests/reliability/test_health_db.py` | ✅ виконано |
-| Тести надійності — обов'язкова перевірка PR (#459) | Ромах | `<…>` | `<посилання на прогін>` | у роботі |
+| Тести надійності — обов'язкова перевірка PR (#459) | Ромах | у `ci.yml` окремий крок «Reliability tests (tests/reliability)» — `pytest tests/reliability -v` на PostgreSQL у job «Tests with coverage», який входить до обов'язкових перевірок гілки `main` | PR #483; [прогін, де крок пройшов](https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/runs/43313415012/job/131515081068) | ✅ виконано |
 | Повтори з експоненційним відступом і full jitter (#460, за бажанням) | Балабанов | `<…>` | `<PR, тест>` | ⏳ **буде виконано пізніше** — на момент здачі Лаб 9 ще не готово |
 
 ---
