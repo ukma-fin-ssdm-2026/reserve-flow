@@ -10,7 +10,7 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Path, Query, Response, status
-from sqlmodel import Session, select, update
+from sqlmodel import Session, func, select, update
 
 from config import API_PREFIX
 from db import get_session
@@ -20,7 +20,7 @@ from models import ActorType, AuditAction, AuditLog, EntityType, Booking, TimeSl
 from models import BookingStatus as DbBookingStatus
 from schemas.auth import Role, UserOut
 from schemas.bookings import BookingCreate, BookingOut, BookingStatus, BookingUpdate
-from schemas.common import Page, PaginationParams, paginate, pagination_params
+from schemas.common import Page, PaginationParams, page_of, pagination_params
 from services import bookings as booking_engine
 from services.cancellation import can_cancel
 from services.exceptions import SlotNotFound, SlotUnavailable
@@ -66,6 +66,21 @@ def _can_view(session: Session, user: UserOut, booking: Booking) -> bool:
     if not room:
         return False
     return str(room.provider_id) == str(user.id)
+
+
+def _visible_bookings(user: UserOut):
+    """Запит бронювань, які бачить користувач, — та сама логіка, що й `_can_view`, але в SQL."""
+    stmt = select(Booking)
+    if user.role == Role.ADMIN:
+        return stmt
+    user_id = UUID(str(user.id))
+    if user.role == Role.CLIENT:
+        return stmt.where(Booking.client_id == user_id)
+    return (
+        stmt.join(TimeSlot, TimeSlot.id == Booking.slot_id)
+        .join(Room, Room.id == TimeSlot.room_id)
+        .where(Room.provider_id == user_id)
+    )
 
 
 def _get_booking_or_404(session: Session, booking_id: UUID) -> Booking:
@@ -136,15 +151,17 @@ def get_bookings(
         Query(alias="status", description="Фільтр за статусом"),
     ] = None,
 ) -> Page[BookingOut]:
-    stmt = select(Booking)
+    # Лаб 9, №5 (#467): фільтр доступу, підрахунок і сторінка — у БД, а не в Python.
+    # Раніше: усі рядки в пам'ять + 2 запити на кожне бронювання постачальника (N+1).
+    stmt = _visible_bookings(current_user)
     if status_filter:
         stmt = stmt.where(Booking.status == status_filter)
 
-    all_bookings = session.exec(stmt).all()
-    filtered = [b for b in all_bookings if _can_view(session, current_user, b)]
-
-    items = [_to_out(b) for b in filtered]
-    return paginate(items, params)
+    total = session.exec(select(func.count()).select_from(stmt.subquery())).one()
+    rows = session.exec(
+        stmt.order_by(Booking.created_at, Booking.id).offset(params.offset).limit(params.limit)
+    ).all()
+    return page_of([_to_out(b) for b in rows], params, total)
 
 
 @router.get(

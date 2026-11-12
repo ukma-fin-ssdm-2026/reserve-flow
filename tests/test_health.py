@@ -1,29 +1,48 @@
-"""Модульні тести для перевірки стану сервісу (routes/health.py та main.py)."""
+"""Модульні тести службових маршрутів (routes/health.py та main.py).
+
+Поведінка перевірки БД (200 / 503, ін'єкція збою) — у tests/reliability/test_health_db.py.
+"""
 
 import pytest
+from fastapi.testclient import TestClient
 
-from config import API_VERSION
-from main import health_check, root
-from routes.health import HealthOut, get_health, router
+from db import get_session
+from main import app, root
+from routes.health import HealthOut, health_check
 
 pytestmark = pytest.mark.no_req(
     "інфраструктура: службова кінцева точка перевірки стану сервісу (healthcheck)"
 )
 
 
-def test_routes_health_get_health():
-    coro = get_health()
+class _Response:
+    status_code = 200
+
+
+class _Session:
+    def execute(self, statement):
+        self.sql = str(statement)
+
+
+def test_health_check_runs_select_1():
+    session = _Session()
+
+    result = health_check(_Response(), session)
+
+    assert session.sql == "SELECT 1"
+    assert result == HealthOut(status="healthy", db="ok")
+
+
+@pytest.mark.parametrize("path", ["/api/v1/health", "/health"])
+def test_health_router_is_connected(path):
+    app.dependency_overrides[get_session] = lambda: _Session()
     try:
-        coro.send(None)
-    except StopIteration as exc:
-        result = exc.value
+        response = TestClient(app).get(path)
+    finally:
+        app.dependency_overrides.pop(get_session, None)
 
-    assert isinstance(result, HealthOut)
-    assert result.status == "ok"
-    assert result.version == API_VERSION
-    assert router.prefix == "/api/v1"
+    assert response.json() == {"status": "healthy", "db": "ok"}
 
 
-def test_main_health_check_and_root():
-    assert health_check() == {"status": "healthy"}
+def test_main_root():
     assert root() == {"status": "healthy", "docs": "/api-docs"}

@@ -2,6 +2,7 @@ import sys
 
 import logging
 import os
+import re
 import uuid
 from contextlib import asynccontextmanager
 
@@ -13,6 +14,7 @@ from config import API_DESCRIPTION, API_TITLE, API_VERSION, CORS_ORIGINS
 from errors import register_error_handlers
 from routes.auth import router as auth_router
 from routes.bookings import router as bookings_router
+from routes.health import router as health_router
 from routes.rooms import router as rooms_router
 from routes.slots import router as slots_router
 
@@ -77,10 +79,30 @@ app.add_middleware(
 )
 
 
+# Лаб 9, №11: приймаємо лише короткий ID з літер, цифр і дефісів (UUID теж підходить)
+_CORRELATION_ID = re.compile(r"[A-Za-z0-9-]{1,64}")
+logger = logging.getLogger(__name__)
+
+
+def safe_correlation_id(raw: str | None) -> str:
+    """Повертає ID клієнта, якщо він безпечний, інакше — новий UUID.
+
+    Безпечна відмова (fail safe): невалідний заголовок не зупиняє запит, але й не потрапляє
+    в логи та відповіді (підробка, надто довгий рядок, перенос рядка — log injection).
+    """
+    if raw is None:
+        return str(uuid.uuid4())
+    if _CORRELATION_ID.fullmatch(raw):
+        return raw
+    # саме значення не логуємо — лише довжину
+    logger.warning("Невалідний X-Correlation-ID (довжина %d) — замінено новим", len(raw))
+    return str(uuid.uuid4())
+
+
 @app.middleware("http")
 async def correlation_id_middleware(request: Request, call_next):
-    """Генерує або приймає Correlation ID для кожного запиту (рішення D-04)."""
-    correlation_id = request.headers.get("X-Correlation-ID", str(uuid.uuid4()))
+    """Генерує або приймає Correlation ID для кожного запиту (рішення D-04, Лаб 9 №11)."""
+    correlation_id = safe_correlation_id(request.headers.get("X-Correlation-ID"))
     request.state.correlation_id = correlation_id
 
     response = await call_next(request)
@@ -93,19 +115,14 @@ async def correlation_id_middleware(request: Request, call_next):
 register_error_handlers(app)
 
 
-# --- Службові маршрути (Healthcheck & Root) --------------------------------
+# --- Службові маршрути (Root) ---------------------------------------------
 @app.get("/", include_in_schema=False)
 def root():
     return {"status": "healthy", "docs": "/api-docs"}
 
 
-@app.get("/health", tags=["System"], include_in_schema=False)
-@app.get("/api/v1/health", tags=["System"])
-def health_check():
-    return {"status": "healthy"}
-
-
 # --- Роутери (manage as needed)---------------------------------------------------------------
+app.include_router(health_router)  # Лаб 9, №7: перевірка стану з БД
 app.include_router(auth_router)  # L4-05
 app.include_router(bookings_router)
 app.include_router(slots_router)  # L4-07

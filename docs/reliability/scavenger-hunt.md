@@ -14,19 +14,19 @@
 | 2 | Немає тайм-аутів на підключення і запити до PostgreSQL | B / E | `db.py:33-47` | 🔴 Критичний | ✅ виправлено, #437 |
 | 3 | `SELECT ... FOR UPDATE` без `lock_timeout` / `NOWAIT` | E | `services/rooms.py:11-17`, `db.py:47` | 🔴 Критичний | ✅ виправлено, #437 |
 | 4 | Бронювання й аудит комітяться в різних транзакціях | A / D | `services/bookings.py:105-113` | 🔴 Критичний | ✅ виправлено, #437 |
-| 5 | `GET /bookings` вантажить усю таблицю + N+1 запитів | E | `routes/bookings.py:139-147` | 🟠 Високий | ❌ відкрито |
+| 5 | `GET /bookings` вантажить усю таблицю + N+1 запитів | E | `routes/bookings.py` (`_visible_bookings`, `get_bookings`) | 🟠 Високий | ✅ виправлено, #467 |
 | 6 | Гонка при зміні статусу (немає блокування бронювання) | D | `routes/bookings.py:279-282` | 🟠 Високий | ✅ виправлено, #437 |
-| 7 | Healthcheck каже «healthy», навіть коли БД лежить | B / D | `main.py:96-97`, `routes/health.py` | 🟠 Високий | ❌ відкрито (план — #458) |
+| 7 | Healthcheck каже «healthy», навіть коли БД лежить | B / D | `routes/health.py` (`health_check`) | 🟠 Високий | ✅ виправлено, #458 (бонус) |
 | 8 | Конфігурація перевіряється «ліниво» — збій лише на першому запиті | C / D | `db.py:24`, `security.py:39-48` | 🟠 Високий | ✅ виправлено, #469 |
-| 9a | Можна забронювати слот, який уже почався / минув | C | `services/bookings.py:34-…` (`create_booking`) | 🟠 Високий | ❌ відкрито (план — #454) |
+| 9a | Можна забронювати слот, який уже почався / минув | C | `services/bookings.py` (`create_booking`) | 🟠 Високий | ✅ виправлено, #456 |
 | 9b | Нагадування для слота, що починається менш ніж за 24 год, планується в минулому | C / D | `services/bookings.py:94` | 🟠 Високий | ✅ виправлено, #443 (зафіксовано в #421) |
 | 10 | Запис файлів на старті без резервного шляху, помилка ховається | A / B / D | `main.py:24-38`, `export_openapi.py` | 🟡 Середній | ❌ відкрито |
-| 11 | Неперевірений заголовок `X-Correlation-ID` | C / B | `main.py:73-81` | 🟡 Середній | ❌ відкрито |
+| 11 | Неперевірений заголовок `X-Correlation-ID` | C / B | `main.py` (`safe_correlation_id`) | 🟡 Середній | ✅ виправлено, #468 |
 | 12 | `except BaseException` у сервісі бронювання | A | `services/bookings.py:119` | 🟡 Середній | ❌ відкрито |
-| 13 | Слабка валідація `purpose` / `reason` | C | `schemas/bookings.py:28-52` | 🟡 Середній | ❌ відкрито, частково (план — #455) |
+| 13 | Слабка валідація `purpose` / `reason` | C | `schemas/bookings.py` (`BookingCreate`, `BookingUpdate`) | 🟡 Середній | ✅ виправлено, #457 |
 | 14 | Невідомі HTTP-коди маркуються як `INTERNAL_ERROR` | A | `errors.py:183-192` | 🟢 Низький | ❌ відкрито |
 
-**Підсумок:** виправлено 7 із 15 (№1, №2, №3, №4, №6 — #437; №8 — #469; №9b — #443), відкрито 8. Нові знахідки учасників — №15+.
+**Підсумок:** виправлено 12 із 15 (№1, №2, №3, №4, №6 — #437; №5 — #467; №7 — #458; №8 — #469; №9a — #456; №9b — #443; №11 — #468; №13 — #457), відкрито 3. Нові знахідки учасників — №15+.
 
 ---
 
@@ -124,7 +124,7 @@ session.commit()                               # окрема, друга тра
 
 ## 5. Пагінація в пам'яті і N+1 — **E**
 
-> **Статус (10.11):** ❌ **Відкрито**: `routes/bookings.py:139-147` досі вантажить усі бронювання і фільтрує їх у Python.
+> **Статус (12.11):** ✅ **Виправлено** в #467: `routes/bookings.py::_visible_bookings` будує фільтр доступу в SQL (клієнт — `client_id`, постачальник — `JOIN time_slots, rooms` за `provider_id`, адміністратор — без фільтра); `get_bookings` рахує `total` через `COUNT` і вибирає сторінку `ORDER BY created_at, id … OFFSET … LIMIT`. На сторінку — 3 SQL-запити незалежно від розміру БД (було для постачальника 28 на 12 бронюваннях і 108 на 52). `_can_view` лишився для `GET`/`PATCH /bookings/{id}`. Тест: `tests/reliability/test_bookings_list_query.py`.
 
 ```python
 all_bookings = session.exec(select(Booking)).all()                         # уся таблиця
@@ -169,7 +169,7 @@ session.commit()
 
 ## 7. Healthcheck не перевіряє залежності — **B / D**
 
-> **Статус (10.11):** ❌ **Відкрито**: `main.py:96-97` досі повертає `{"status": "healthy"}`. План — бонус «health check» (#458).
+> **Статус (12.11):** ✅ **Виправлено** в #458 (бонус): `/api/v1/health` виконує `SELECT 1` (тайм-аути з `db.py`: з'єднання, пул і запит — до 5 с). БД відповіла → `200 {"status": "healthy", "db": "ok"}`; будь-яка помилка SQLAlchemy → `503 {"status": "unhealthy", "db": "unavailable"}` без внутрішніх деталей, у лозі — попередження з типом помилки. Мертвий `routes/health.py` тепер підключено (з `main.py` маршрут прибрано); `operationId` не змінився, тож інструмент MCP `check_health` працює як раніше. Тест: `tests/reliability/test_health_db.py`.
 
 ```python
 @app.get("/api/v1/health", tags=["System"])
@@ -217,17 +217,18 @@ if len(secret) < MIN_SECRET_LENGTH:
 
 ## 9. Немає граничної перевірки часу слота — **C**
 
-> **Статус (10.11):** ⚠️ **Розділено на дві знахідки.** **№9a** — бронювання слота, що вже почався: ❌ відкрито, план — #454. **№9b** — нагадування в минулому: ✅ виправлено в #443 (`create_booking` викликає `compute_reminder_time`, `services/bookings.py:94`; для слота, що вже почався, нагадування не створюється; тест `tests/test_booking_reminder_time.py`), уперше зафіксовано в #421.
+> **Статус (12.11):** ⚠️ **Розділено на дві знахідки.** **№9a** — бронювання слота, що вже почався: ✅ виправлено в #456 (`create_booking` відхиляє `slot.start_time <= now` через `409 SLOT_ALREADY_STARTED`; у лог записуються ID слота й обидва моменти часу). **№9b** — нагадування в минулому: ✅ виправлено в #443 (`create_booking` викликає `compute_reminder_time`; для слота, що вже почався, нагадування не створюється; тест `tests/test_booking_reminder_time.py`), уперше зафіксовано в #421.
 
 ```python
 # services/bookings.py
 slot = lock_slot(session, slot_id)
-if not slot.is_available: ...
-# перевірки slot.start_time > now немає
-session.add(Notification(booking_id=booking.id, scheduled_time=slot.start_time - REMINDER_LEAD))
+slot_start = _as_utc(slot.start_time)
+current_time = _as_utc(now or datetime.now(timezone.utc))
+if slot_start <= current_time:
+    raise AppError(409, ErrorCode.SLOT_ALREADY_STARTED, "Час початку слота вже настав")
 ```
 
-**Чому небезпечно.** Клієнт може забронювати слот, який уже почався або минув. Нагадування для
+**Чому небезпечно.** До виправлення клієнт міг забронювати слот, який уже почався або минув. Нагадування для
 слота, що стартує менш ніж за 24 год, планується в минулому. Готова функція
 `notifications.compute_reminder_time()` (яка це враховує) не використовується. Також `if not slot:`
 — мертвий код, бо `lock_slot` уже кидає `SlotNotFound`.
@@ -238,7 +239,9 @@ session.add(Notification(booking_id=booking.id, scheduled_time=slot.start_time -
 **Відтворено.** Тимчасовий тест через `TestClient` на seed-даних: доданий слот на 01.01.2020 →
 `POST /api/v1/bookings` = `201 Created`.
 
-**Як виправити.** Перевіряти `slot.start_time > now` (→ `409`), використати `compute_reminder_time`.
+**Виправлення.** Guard clause виконується до перевірок доступності та створення бронювання. Слот, що починається рівно зараз або вже почався, відхиляється з `409 SLOT_ALREADY_STARTED`; причина й час фіксуються в логах. Час порівнюється після нормалізації до UTC. Майбутній слот за секунду до початку приймається.
+
+**Тести.** `tests/reliability/test_booking_time_boundaries.py`: початок за секунду до `now` → `409`; рівно `now` → `409`; за секунду після `now` → `201`. Для двох відхилених випадків перевіряються код помилки, відсутність запису бронювання та логування.
 
 ## 10. Файлові операції на старті без резервного шляху — **A / B / D**
 
@@ -267,7 +270,7 @@ read-only файловій системі (контейнер, деякі PaaS) 
 
 ## 11. Неперевірений заголовок `X-Correlation-ID` — **C / B**
 
-> **Статус (10.11):** ❌ **Відкрито**: `main.py:75` — заголовок береться як є.
+> **Статус (12.11):** ✅ **Виправлено** в #468: `main.py::safe_correlation_id` приймає лише `[A-Za-z0-9-]{1,64}` (UUID підходить), інакше — новий UUID і попередження в лозі без «сирого» значення. Безпечна відмова: запит не відхиляється. Тест: `tests/reliability/test_correlation_id.py`.
 
 ```python
 correlation_id = request.headers.get("X-Correlation-ID", str(uuid.uuid4()))
@@ -304,20 +307,29 @@ except BaseException:
 
 ## 13. Слабка валідація текстових полів — **C**
 
-> **Статус (10.11):** ❌ **Відкрито, частково**: у `purpose` вже є `max_length=200`, але немає обрізання пробілів; `reason` без `max_length` (`schemas/bookings.py:28-52`). План — #455.
+> **Статус (12.11):** ✅ **Виправлено** в #457: `BookingCreate` і `BookingUpdate` використовують `str_strip_whitespace=True`; `purpose` перевіряється після обрізання (3–200 символів), `reason` має `max_length=500`.
 
 ```python
-purpose: str = Field(..., min_length=3, max_length=200)   # "   " проходить
-reason: str | None = Field(None, ...)                     # без max_length
+class BookingCreate(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+    purpose: str = Field(..., min_length=3, max_length=200)
+
+class BookingUpdate(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+    reason: str | None = Field(None, max_length=500)
 ```
 
-**Чому небезпечно.** `purpose` з трьох пробілів проходить валідацію. `reason` не має обмеження
-довжини і записується одразу в `bookings.rejection_reason` та `audit_log.details`.
+**Чому небезпечно.** Без обрізання пробілів `purpose` міг містити лише пробільні символи. `reason` не мав
+обмеження довжини та записувався в `bookings.rejection_reason` й `audit_log.details`.
 
-**Потенційний вплив.** Порожні за змістом дані; запит із мегабайтним `reason` роздуває БД і логи
-або падає з `500` на обмеженні колонки замість зрозумілої `422`.
+**Потенційний вплив.** Порожні за змістом дані; дуже довгий `reason` збільшує обсяг БД і логів
+або може спричинити помилку збереження замість зрозумілої `422`.
 
-**Як виправити.** `str_strip_whitespace=True` у `model_config`, `max_length=500` для `reason`.
+**Виправлення.** Pydantic обрізає пробіли до перевірки обмежень. Порожній або коротший за 3 символи `purpose`
+відхиляється як `422 VALIDATION_ERROR`; допустима довжина — до 200 символів. `reason` обмежено 500 символами;
+надмірне значення відхиляється до потрапляння в бізнес-логіку та БД. Обмеження доступні в OpenAPI.
+
+**Тести.** `tests/reliability/test_booking_input_validation.py`: порожній `purpose`, лише пробіли, рівно 200 і 201 символ; `reason` — лише пробіли, рівно 500 і 501 символ. Перевіряється також збереження обрізаних значень.
 
 ## 14. Невідомі HTTP-коди маркуються як `INTERNAL_ERROR` — **A**
 

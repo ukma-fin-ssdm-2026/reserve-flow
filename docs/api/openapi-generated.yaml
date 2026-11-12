@@ -12,14 +12,23 @@ paths:
     get:
       tags:
       - System
-      summary: Health Check
+      summary: Перевірити стан API і БД
+      description: Виконує `SELECT 1` у БД (з тайм-аутами з `db.py`). `200 healthy`,
+        якщо БД відповіла; `503 unhealthy`, якщо ні. Не потребує автентифікації.
       operationId: health_check_api_v1_health_get
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/HealthOut'
+        '503':
+          description: БД недоступна
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthOut'
   /api/v1/auth/token:
     post:
       tags:
@@ -652,7 +661,7 @@ components:
         purpose:
           type: string
           maxLength: 200
-          minLength: 3
+          minLength: 1
           title: Purpose
           description: Мета бронювання приміщення
           examples:
@@ -728,8 +737,7 @@ components:
       - Rejected
       - Cancelled
       title: BookingStatus
-      description: Статуси бронювання (D-03). Значення збігаються з Booking.status
-        у data-model.md.
+      description: Статуси бронювання (D-03).
     BookingUpdate:
       properties:
         status:
@@ -741,6 +749,7 @@ components:
         reason:
           anyOf:
           - type: string
+            maxLength: 500
           - type: 'null'
           title: Reason
           description: Причина. Обов'язкова при відхиленні (`Rejected`, FR-010); при
@@ -825,6 +834,7 @@ components:
       - NOT_FOUND
       - METHOD_NOT_ALLOWED
       - SLOT_UNAVAILABLE
+      - SLOT_ALREADY_STARTED
       - CLIENT_SCHEDULE_CONFLICT
       - CANCELLATION_TOO_LATE
       - INVALID_STATUS_TRANSITION
@@ -864,6 +874,33 @@ components:
       - error
       title: ErrorResponse
       description: Єдиний формат відповіді з помилкою.
+    HealthOut:
+      properties:
+        status:
+          type: string
+          enum:
+          - healthy
+          - unhealthy
+          title: Status
+          description: Чи може сервіс обслуговувати запити
+          examples:
+          - healthy
+        db:
+          type: string
+          enum:
+          - ok
+          - unavailable
+          title: Db
+          description: Чи відповідає база даних
+          examples:
+          - ok
+      type: object
+      required:
+      - status
+      - db
+      title: HealthOut
+      description: Стан API і його залежностей — без внутрішніх деталей (хост, текст
+        помилки).
     ModerationStatusEnum:
       type: string
       enum:
