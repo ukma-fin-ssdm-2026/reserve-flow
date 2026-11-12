@@ -31,6 +31,8 @@ services:
         sync: false
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: "30"
+      - key: EXPORT_OPENAPI
+        value: "0"
       - key: CORS_ORIGINS
         value: "http://localhost:5173,http://localhost:3000,https://ukma-fin-ssdm-2026.github.io"
 
