@@ -12,6 +12,8 @@
 - Заголовок `X-Correlation-ID` від клієнта перевіряється: приймається лише `[A-Za-z0-9-]{1,64}`, інакше генерується новий UUID, а в лог іде попередження без «сирого» значення — захист від підробки ID і log injection (#468, знахідка №11).
 - `GET /api/v1/bookings`: фільтр доступу за роллю, підрахунок і пагінація виконуються в БД (`JOIN`, `COUNT`, `ORDER BY created_at, id`, `OFFSET`/`LIMIT`) замість завантаження всієї таблиці й фільтрації в Python; прибрано N+1 запитів для постачальника — 3 SQL-запити на сторінку незалежно від розміру БД. Формат відповіді не змінився (#467, знахідка №5).
 - `GET /api/v1/health` перевіряє БД (`SELECT 1`): `200 {"status": "healthy", "db": "ok"}` або `503 {"status": "unhealthy", "db": "unavailable"}` без внутрішніх деталей — Render (`healthCheckPath`) бачить реальний стан сервісу. Маршрут перенесено в `routes/health.py` (раніше — мертвий модуль); `operationId` і шлях `/health` без змін (#458, знахідка №7).
+- `services/bookings.py::create_booking` перехоплює `except Exception:` замість `BaseException`: системні сигнали завершення (`SystemExit`, `KeyboardInterrupt`) більше не викликають мережевий `session.rollback()` і не затримують graceful shutdown воркера (знахідка №12).
+- `StarletteHTTPException` із кодом 4xx поза 401/403/404/405 тепер отримує `code = "BAD_REQUEST"` замість `"INTERNAL_ERROR"`, а `"INTERNAL_ERROR"` залишається лише для 5xx — помилки клієнта не маскуються під збої сервера (знахідка №14).
 
 ## [1.0.1] - 2026-11-09
 
