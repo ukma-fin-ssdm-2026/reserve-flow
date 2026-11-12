@@ -43,6 +43,13 @@ jobs:
       - name: Install dependencies
         run: 'pip install --only-binary :all: -r requirements.txt -r requirements-dev.txt'
 
+      # Тести надійності (Лаб 9, бонус, #459): обов'язковий прогін набору tests/reliability/
+      # (обробка помилок, ін'єкція зовнішніх збоїв, граничні умови, конкурентність) на кожному PR.
+      - name: Reliability tests (tests/reliability)
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg://reserveflow@localhost:${{ job.services.postgres.ports['5432'] }}/reserveflow_test
+        run: pytest tests/reliability -v
+
       - name: Run tests with coverage
         env:
           TEST_DATABASE_URL: postgresql+psycopg://reserveflow@localhost:${{ job.services.postgres.ports['5432'] }}/reserveflow_test
