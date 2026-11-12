@@ -141,8 +141,7 @@ def create_booking(
         # Захист від конкурентного створення активного бронювання.
         session.rollback()
         raise SlotUnavailable(str(slot_id)) from exc
-
-    except BaseException:
+    except Exception:
         session.rollback()
         raise
 

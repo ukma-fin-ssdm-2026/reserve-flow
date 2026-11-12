@@ -22,11 +22,11 @@
 | 9b | Нагадування для слота, що починається менш ніж за 24 год, планується в минулому | C / D | `services/bookings.py:94` | 🟠 Високий | ✅ виправлено, #443 (зафіксовано в #421) |
 | 10 | Запис файлів на старті без резервного шляху, помилка ховається | A / B / D | `main.py:24-38`, `export_openapi.py` | 🟡 Середній | ❌ відкрито |
 | 11 | Неперевірений заголовок `X-Correlation-ID` | C / B | `main.py` (`safe_correlation_id`) | 🟡 Середній | ✅ виправлено, #468 |
-| 12 | `except BaseException` у сервісі бронювання | A | `services/bookings.py:119` | 🟡 Середній | ❌ відкрито |
-| 13 | Слабка валідація `purpose` / `reason` | C | `schemas/bookings.py` (`BookingCreate`, `BookingUpdate`) | 🟡 Середній | ✅ виправлено, #457 |
+| 12 | `except BaseException` у сервісі бронювання | A | `services/bookings.py:119` (`create_booking`) | 🟡 Середній | ✅ виправлено, #479 |
+| 13 | Слабка валідація `purpose` / `reason` | C | `schemas/bookings.py:28-52` | 🟡 Середній | ❌ відкрито, частково (план — #455) |
 | 14 | Невідомі HTTP-коди маркуються як `INTERNAL_ERROR` | A | `errors.py:183-192` | 🟢 Низький | ❌ відкрито |
 
-**Підсумок:** виправлено 12 із 15 (№1, №2, №3, №4, №6 — #437; №5 — #467; №7 — #458; №8 — #469; №9a — #456; №9b — #443; №11 — #468; №13 — #457), відкрито 3. Нові знахідки учасників — №15+.
+**Підсумок:** виправлено 13 із 15 (№1, №2, №3, №4, №6 — #437; №5 — #467; №7 — #458; №8 — #469; №9b — #443; №11 — #468; №12 - #479), відкрито 2. Нові знахідки учасників — №15+.
 
 ---
 
@@ -288,7 +288,7 @@ response.headers["X-Correlation-ID"] = correlation_id
 
 ## 12. Занадто широке перехоплення — **A**
 
-> **Статус (10.11):** ❌ **Відкрито**: тепер `services/bookings.py:119`.
+> **Статус (12.11):** ✅ **Виправлено**: у `services/bookings.py:119` (`create_booking`) `except BaseException:` замінено на `except Exception:`, тож системні сигнали завершення (`SystemExit`, `KeyboardInterrupt`) не викликають мережевий `session.rollback()` під час зупинки воркера. Тест: `tests/reliability/test_booking_exception_scope.py`.
 
 ```python
 # services/bookings.py
