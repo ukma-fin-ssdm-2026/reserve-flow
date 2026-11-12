@@ -5,11 +5,17 @@ from enum import Enum
 from typing import Self
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    field_validator,
+    model_validator,
+)
 
 
 class BookingStatus(str, Enum):
-    """Статуси бронювання (D-03). Значення збігаються з Booking.status у data-model.md."""
+    """Статуси бронювання (D-03)."""
 
     PENDING = "Pending"
     CONFIRMED = "Confirmed"
@@ -20,6 +26,8 @@ class BookingStatus(str, Enum):
 class BookingCreate(BaseModel):
     """Модель створення нового бронювання."""
 
+    model_config = ConfigDict(str_strip_whitespace=True)
+
     slot_id: UUID = Field(
         ...,
         description="Унікальний ідентифікатор слоту, який бронюється",
@@ -29,13 +37,22 @@ class BookingCreate(BaseModel):
         ...,
         description="Мета бронювання приміщення",
         examples=["Зустріч студентського самоврядування"],
-        min_length=3,
+        min_length=1,
         max_length=200,
     )
+
+    @field_validator("purpose", mode="before")
+    @classmethod
+    def trim_purpose(cls, value):
+        if isinstance(value, str):
+            return value.strip()
+        return value
 
 
 class BookingUpdate(BaseModel):
     """Модель оновлення бронювання (переходи статусів)."""
+
+    model_config = ConfigDict(str_strip_whitespace=True)
 
     status: BookingStatus = Field(
         ...,
@@ -44,12 +61,20 @@ class BookingUpdate(BaseModel):
     )
     reason: str | None = Field(
         None,
+        max_length=500,
         description=(
             "Причина. Обов'язкова при відхиленні (`Rejected`, FR-010); "
             "при скасуванні (`Cancelled`) — за бажанням."
         ),
         examples=["Аудиторія на ремонті"],
     )
+
+    @field_validator("reason", mode="before")
+    @classmethod
+    def trim_reason(cls, value):
+        if isinstance(value, str):
+            return value.strip()
+        return value
 
     @model_validator(mode="after")
     def check_reason_for_rejection(self) -> Self:
@@ -93,7 +118,6 @@ class BookingOut(BaseModel):
         examples=["Змінився розклад пар"],
     )
     created_at: datetime = Field(
-        # timezone-aware UTC, як і решта застосунку (зауваження ctrl-alt-defeat, #245)
         default_factory=lambda: datetime.now(timezone.utc),
         description="Час створення запису",
         examples=["2025-10-24T14:30:00Z"],
