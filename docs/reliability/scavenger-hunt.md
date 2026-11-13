@@ -1,7 +1,7 @@
 # Resilience Scavenger Hunt — Reserve Flow API
 
 Етап 1: пошук критичних точок відмови в `src/api/` (звірено з кодом `main` @ `3d4fa8e`).
-**Статуси й номери рядків оновлено 10.11.2026 за `main` @ `aad09e1`** — після виправлень Етапу 3 (#437, #443).
+**Статуси оновлено 13.11.2026:** усі 15 знахідок виправлено (останнє — #481). Номери рядків у стовпці «Де» — за `main` @ `aad09e1`; для знахідок, виправлених пізніше, місце вказано назвою функції. Виправлення позначаємо номером PR, у дужках — issue, якщо він був.
 Номери знахідок пишемо як **№1–№14** (не через `#`, бо GitHub робить з `#9` посилання на старе issue).
 Категорії: **A** — обробка помилок, **B** — зовнішні залежності, **C** — валідація вхідних даних,
 **D** — мовчазні збої, **E** — продуктивність і блокування (класифікуємо через тайм-аути, §3.2).
@@ -14,19 +14,19 @@
 | 2 | Немає тайм-аутів на підключення і запити до PostgreSQL | B / E | `db.py:33-47` | 🔴 Критичний | ✅ виправлено, #437 |
 | 3 | `SELECT ... FOR UPDATE` без `lock_timeout` / `NOWAIT` | E | `services/rooms.py:11-17`, `db.py:47` | 🔴 Критичний | ✅ виправлено, #437 |
 | 4 | Бронювання й аудит комітяться в різних транзакціях | A / D | `services/bookings.py:105-113` | 🔴 Критичний | ✅ виправлено, #437 |
-| 5 | `GET /bookings` вантажить усю таблицю + N+1 запитів | E | `routes/bookings.py` (`_visible_bookings`, `get_bookings`) | 🟠 Високий | ✅ виправлено, #467 |
+| 5 | `GET /bookings` вантажить усю таблицю + N+1 запитів | E | `routes/bookings.py` (`_visible_bookings`, `get_bookings`) | 🟠 Високий | ✅ виправлено, #475 (#467) |
 | 6 | Гонка при зміні статусу (немає блокування бронювання) | D | `routes/bookings.py:279-282` | 🟠 Високий | ✅ виправлено, #437 |
-| 7 | Healthcheck каже «healthy», навіть коли БД лежить | B / D | `routes/health.py` (`health_check`) | 🟠 Високий | ✅ виправлено, #458 (бонус) |
-| 8 | Конфігурація перевіряється «ліниво» — збій лише на першому запиті | C / D | `db.py:24`, `security.py:39-48` | 🟠 Високий | ✅ виправлено, #469 |
+| 7 | Healthcheck каже «healthy», навіть коли БД лежить | B / D | `routes/health.py` (`health_check`) | 🟠 Високий | ✅ виправлено, #476 (бонус, #458) |
+| 8 | Конфігурація перевіряється «ліниво» — збій лише на першому запиті | C / D | `db.py:24`, `security.py:39-48` | 🟠 Високий | ✅ виправлено, #471 (#469) |
 | 9a | Можна забронювати слот, який уже почався / минув | C | `services/bookings.py` (`create_booking`) | 🟠 Високий | ✅ виправлено, #478 (#454) |
 | 9b | Нагадування для слота, що починається менш ніж за 24 год, планується в минулому | C / D | `services/bookings.py:94` | 🟠 Високий | ✅ виправлено, #443 (зафіксовано в #421) |
 | 10 | Запис файлів на старті без резервного шляху, помилка ховається | A / B / D | `main.py` (`_export_openapi_on_startup`) | 🟡 Середній | ✅ виправлено, #481 |
-| 11 | Неперевірений заголовок `X-Correlation-ID` | C / B | `main.py` (`safe_correlation_id`) | 🟡 Середній | ✅ виправлено, #468 |
+| 11 | Неперевірений заголовок `X-Correlation-ID` | C / B | `main.py` (`safe_correlation_id`) | 🟡 Середній | ✅ виправлено, #474 (#468) |
 | 12 | `except BaseException` у сервісі бронювання | A | `services/bookings.py:119` (`create_booking`) | 🟡 Середній | ✅ виправлено, #479 |
 | 13 | Слабка валідація `purpose` / `reason` | C | `schemas/bookings.py` (`BookingCreate`, `BookingUpdate`) | 🟡 Середній | ✅ виправлено, #478 (#455) |
 | 14 | Невідомі HTTP-коди маркуються як `INTERNAL_ERROR` | A | `errors.py` (`_default_http_error`) | 🟢 Низький | ✅ виправлено, #480 |
 
-**Підсумок:** виправлено 15 із 15 (№1, №2, №3, №4, №6 — #437; №5 — #467; №7 — #458; №8 — #469; №9a, №13 — #478; №9b — #443; №10 — #481; №11 — #468; №12 — #479; №14 — #480), відкритих немає. Нові знахідки учасників — №15+.
+**Підсумок:** виправлено 15 із 15 (№1, №2, №3, №4, №6 — #437; №5 — #475; №7 — #476; №8 — #471; №9a, №13 — #478; №9b — #443; №10 — #481; №11 — #474; №12 — #479; №14 — #480), відкритих немає. Нові знахідки учасників — №15+.
 
 ---
 
@@ -124,7 +124,7 @@ session.commit()                               # окрема, друга тра
 
 ## 5. Пагінація в пам'яті і N+1 — **E**
 
-> **Статус (12.11):** ✅ **Виправлено** в #467: `routes/bookings.py::_visible_bookings` будує фільтр доступу в SQL (клієнт — `client_id`, постачальник — `JOIN time_slots, rooms` за `provider_id`, адміністратор — без фільтра); `get_bookings` рахує `total` через `COUNT` і вибирає сторінку `ORDER BY created_at, id … OFFSET … LIMIT`. На сторінку — 3 SQL-запити незалежно від розміру БД (було для постачальника 28 на 12 бронюваннях і 108 на 52). `_can_view` лишився для `GET`/`PATCH /bookings/{id}`. Тест: `tests/reliability/test_bookings_list_query.py`.
+> **Статус (12.11):** ✅ **Виправлено** в #475 (#467): `routes/bookings.py::_visible_bookings` будує фільтр доступу в SQL (клієнт — `client_id`, постачальник — `JOIN time_slots, rooms` за `provider_id`, адміністратор — без фільтра); `get_bookings` рахує `total` через `COUNT` і вибирає сторінку `ORDER BY created_at, id … OFFSET … LIMIT`. На сторінку — 3 SQL-запити незалежно від розміру БД (було для постачальника 28 на 12 бронюваннях і 108 на 52). `_can_view` лишився для `GET`/`PATCH /bookings/{id}`. Тест: `tests/reliability/test_bookings_list_query.py`.
 
 ```python
 all_bookings = session.exec(select(Booking)).all()                         # уся таблиця
@@ -169,7 +169,7 @@ session.commit()
 
 ## 7. Healthcheck не перевіряє залежності — **B / D**
 
-> **Статус (12.11):** ✅ **Виправлено** в #458 (бонус): `/api/v1/health` виконує `SELECT 1` (тайм-аути з `db.py`: з'єднання, пул і запит — до 5 с). БД відповіла → `200 {"status": "healthy", "db": "ok"}`; будь-яка помилка SQLAlchemy → `503 {"status": "unhealthy", "db": "unavailable"}` без внутрішніх деталей, у лозі — попередження з типом помилки. Мертвий `routes/health.py` тепер підключено (з `main.py` маршрут прибрано); `operationId` не змінився, тож інструмент MCP `check_health` працює як раніше. Тест: `tests/reliability/test_health_db.py`.
+> **Статус (12.11):** ✅ **Виправлено** в #476 (бонус, #458): `/api/v1/health` виконує `SELECT 1` (тайм-аути з `db.py`: з'єднання, пул і запит — до 5 с). БД відповіла → `200 {"status": "healthy", "db": "ok"}`; будь-яка помилка SQLAlchemy → `503 {"status": "unhealthy", "db": "unavailable"}` без внутрішніх деталей, у лозі — попередження з типом помилки. Мертвий `routes/health.py` тепер підключено (з `main.py` маршрут прибрано); `operationId` не змінився, тож інструмент MCP `check_health` працює як раніше. Тест: `tests/reliability/test_health_db.py`.
 
 ```python
 @app.get("/api/v1/health", tags=["System"])
@@ -193,7 +193,7 @@ def health_check():
 
 ## 8. Конфігурація перевіряється лише під час запиту — **C / D**
 
-> **Статус (11.11):** ✅ **Виправлено** в #469: `config_check.validate_config()` на старті (`main.lifespan`) перевіряє `JWT_SECRET` (≥ 32 символи), `ACCESS_TOKEN_EXPIRE_MINUTES` (ціле, 5–1440) і наявність `DATABASE_URL` або `POSTGRES_PASSWORD`. Порушення → `CRITICAL` у лозі з назвами змінних (без значень) і сервер не стартує — швидка відмова. Тест: `tests/reliability/test_config_validation.py`.
+> **Статус (11.11):** ✅ **Виправлено** в #471 (#469): `config_check.validate_config()` на старті (`main.lifespan`) перевіряє `JWT_SECRET` (≥ 32 символи), `ACCESS_TOKEN_EXPIRE_MINUTES` (ціле, 5–1440) і наявність `DATABASE_URL` або `POSTGRES_PASSWORD`. Порушення → `CRITICAL` у лозі з назвами змінних (без значень) і сервер не стартує — швидка відмова. Тест: `tests/reliability/test_config_validation.py`.
 
 ```python
 # db.py
@@ -217,7 +217,7 @@ if len(secret) < MIN_SECRET_LENGTH:
 
 ## 9. Немає граничної перевірки часу слота — **C**
 
-> **Статус (12.11):** ⚠️ **Розділено на дві знахідки.** **№9a** — бронювання слота, що вже почався: ✅ виправлено в #478 (#454) (`create_booking` відхиляє `slot.start_time <= now` через `409 SLOT_ALREADY_STARTED`; у лог записується ID слота). **№9b** — нагадування в минулому: ✅ виправлено в #443 (`create_booking` викликає `compute_reminder_time`; для слота, що вже почався, нагадування не створюється; тест `tests/test_booking_reminder_time.py`), уперше зафіксовано в #421.
+> **Статус (12.11):** ⚠️ **Розділено на дві знахідки.** **№9a** — бронювання слота, що вже почався: ✅ виправлено в #478 (#454) (`create_booking` відхиляє `slot.start_time <= now` через `409 SLOT_ALREADY_STARTED`; у лог записується ID слота). **№9b** — нагадування в минулому: ✅ виправлено в #443 (`create_booking` викликає `compute_reminder_time`; для слота, що вже почався, нагадування не створюється; тест `tests/reliability/test_booking_reminder_time.py`), уперше зафіксовано в #421.
 
 ```python
 # services/bookings.py
@@ -245,7 +245,7 @@ if slot_start <= current_time:
 
 ## 10. Файлові операції на старті без резервного шляху — **A / B / D**
 
-> **Статус (12.11):** ✅ **Виправлено**: `main.py::_export_openapi_on_startup` дозволяє вимкнути запис на диск через `EXPORT_OPENAPI=0` (увімкнено у `Dockerfile` та `render.yaml`), відокремлює відсутність модуля `export_openapi` від помилки імпорту залежності `yaml`, а збої запису логує зі стеком через `logging.exception`. Тест: `tests/reliability/test_openapi_export_resilience.py`.
+> **Статус (12.11):** ✅ **Виправлено** в #481: `main.py::_export_openapi_on_startup` дозволяє вимкнути запис на диск через `EXPORT_OPENAPI=0` (увімкнено у `Dockerfile` та `render.yaml`), відокремлює відсутність модуля `export_openapi` від помилки імпорту залежності `yaml`, а збої запису логує зі стеком через `logging.exception`. Тест: `tests/reliability/test_openapi_export_resilience.py`.
 
 ```python
 # main.py
@@ -270,7 +270,7 @@ read-only файловій системі (контейнер, деякі PaaS) 
 
 ## 11. Неперевірений заголовок `X-Correlation-ID` — **C / B**
 
-> **Статус (12.11):** ✅ **Виправлено** в #468: `main.py::safe_correlation_id` приймає лише `[A-Za-z0-9-]{1,64}` (UUID підходить), інакше — новий UUID і попередження в лозі без «сирого» значення. Безпечна відмова: запит не відхиляється. Тест: `tests/reliability/test_correlation_id.py`.
+> **Статус (12.11):** ✅ **Виправлено** в #474 (#468): `main.py::safe_correlation_id` приймає лише `[A-Za-z0-9-]{1,64}` (UUID підходить), інакше — новий UUID і попередження в лозі без «сирого» значення. Безпечна відмова: запит не відхиляється. Тест: `tests/reliability/test_correlation_id.py`.
 
 ```python
 correlation_id = request.headers.get("X-Correlation-ID", str(uuid.uuid4()))
@@ -288,7 +288,7 @@ response.headers["X-Correlation-ID"] = correlation_id
 
 ## 12. Занадто широке перехоплення — **A**
 
-> **Статус (12.11):** ✅ **Виправлено**: у `services/bookings.py:119` (`create_booking`) `except BaseException:` замінено на `except Exception:`, тож системні сигнали завершення (`SystemExit`, `KeyboardInterrupt`) не викликають мережевий `session.rollback()` під час зупинки воркера. Тест: `tests/reliability/test_booking_exception_scope.py`.
+> **Статус (12.11):** ✅ **Виправлено** в #479: у `services/bookings.py:119` (`create_booking`) `except BaseException:` замінено на `except Exception:`, тож системні сигнали завершення (`SystemExit`, `KeyboardInterrupt`) не викликають мережевий `session.rollback()` під час зупинки воркера. Тест: `tests/reliability/test_booking_exception_scope.py`.
 
 ```python
 # services/bookings.py
@@ -333,7 +333,7 @@ class BookingUpdate(BaseModel):
 
 ## 14. Невідомі HTTP-коди маркуються як `INTERNAL_ERROR` — **A**
 
-> **Статус (12.11):** ✅ **Виправлено**: `errors.py::_default_http_error` повертає `ErrorCode.BAD_REQUEST` для всіх невідомих 4xx (400, 409, 413, 415, 429 тощо), зберігає спеціалізовані коди для 401/403/404/405 і залишає `INTERNAL_ERROR` лише для 5xx. Тест: `tests/reliability/test_http_exception_codes.py`.
+> **Статус (12.11):** ✅ **Виправлено** в #480: `errors.py::_default_http_error` повертає `ErrorCode.BAD_REQUEST` для всіх невідомих 4xx (400, 409, 413, 415, 429 тощо), зберігає спеціалізовані коди для 401/403/404/405 і залишає `INTERNAL_ERROR` лише для 5xx. Тест: `tests/reliability/test_http_exception_codes.py`.
 
 ```python
 code, default_message = _DEFAULT_ERRORS.get(

@@ -3,7 +3,6 @@
 **Код:** `main` після #437, #443, #471, #474–#476, #478–#481 · знахідки — [`scavenger-hunt.md`](scavenger-hunt.md) · авторство знахідок — #453.
 
 > Номери знахідок — як **№1–№14** (за `scavenger-hunt.md`), щоб GitHub не перетворював їх на посилання на issues.
-> Місця з `<…>` заповнюються, коли буде злито відповідний PR (бонус — #460).
 
 ## 1. Усі знайдені проблеми
 
@@ -129,7 +128,7 @@ if reminder_time is not None:
 - **Режим відмови:** **безпечна / контрольована деградація** — нагадати пізніше, ніж за 24 год, але одразу, краще, ніж не нагадати; для слота, що вже почався, нагадування не створюється.
 - **Що бачить користувач:** нагадування приходить одразу після бронювання, а не «губиться» в минулому.
 - **Відновлення:** не потрібне — поведінка коректна за будь-якого часу до початку.
-- **Тест:** `tests/test_booking_reminder_time.py` — слот через 2 год → нагадування «зараз» (на старому коді падає); слот через 48 год → `start − 24 год`.
+- **Тест:** `tests/reliability/test_booking_reminder_time.py` — слот через 2 год → нагадування «зараз» (на старому коді падає); слот через 48 год → `start − 24 год`.
 
 ### №8. Перевірка конфігурації на старті — #471
 
@@ -373,7 +372,7 @@ def _default_http_error(status_code: int) -> tuple[ErrorCode, str]:
 | Зовнішня відмова (ін'єкція збою) | `tests/reliability/test_db_timeouts.py` | lock / pool timeout → `503` + `Retry-After` |
 | Зовнішня відмова (ін'єкція збою) | `tests/reliability/test_config_validation.py` | некоректна конфігурація → сервер не стартує |
 | Граничний | `tests/reliability/test_config_validation.py` | TTL 4 / 5 / 1440 / 1441, `JWT_SECRET` 31 символ |
-| Граничний | `tests/test_booking_reminder_time.py` | слот через 2 год і через 48 год |
+| Граничний | `tests/reliability/test_booking_reminder_time.py` | слот через 2 год і через 48 год |
 | Конкурентність | `tests/reliability/test_booking_status_race.py` | гонка статусів → `409` |
 | Регресія | `tests/reliability/test_no_blocking_in_async.py` | жоден обробник з БД не `async` |
 | Граничний | `tests/reliability/test_booking_time_boundaries.py` | слот −1 с / рівно зараз / +1 с → `409` / `409` / `201` |
@@ -385,7 +384,7 @@ def _default_http_error(status_code: int) -> tuple[ErrorCode, str]:
 | Обробка помилки | `tests/reliability/test_http_exception_codes.py` | невідомі 4xx → `BAD_REQUEST`, 5xx → `INTERNAL_ERROR` |
 | Зовнішня відмова (ін'єкція збою) | `tests/reliability/test_openapi_export_resilience.py` | помилка запису / відсутній `yaml` → лог зі стеком, сервер стартує |
 
-Усі тести надійності Лаб 9 зібрано в `tests/reliability/` (#456, перенесення — #482) і запускаються в CI окремим кроком на кожен PR (#483); у корені `tests/` лишився лише `test_booking_reminder_time.py` (№9b).
+Усі тести надійності Лаб 9 зібрано в `tests/reliability/` (#456; перенесення — #482, останній файл `test_booking_reminder_time.py` (№9b) — під час фінальної звірки #465) і запускаються в CI окремим кроком на кожен PR (#483).
 
 ## 6. Презентація на парі (Етап 4)
 
@@ -397,7 +396,7 @@ def _default_http_error(status_code: int) -> tuple[ErrorCode, str]:
 |---|---|---|---|---|
 | Health check з перевіркою БД (#458) | Лавришин | `/api/v1/health` виконує `SELECT 1`: `200 healthy` або `503 unhealthy`; старий маршрут без перевірки прибрано | PR #476; тест з ін'єкцією збою `tests/reliability/test_health_db.py` | ✅ виконано |
 | Тести надійності — обов'язкова перевірка PR (#459) | Ромах | у `ci.yml` окремий крок «Reliability tests (tests/reliability)» — `pytest tests/reliability -v` на PostgreSQL у job «Tests with coverage», який входить до обов'язкових перевірок гілки `main` | PR #483; [прогін, де крок пройшов](https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/runs/43313415012/job/131515081068) | ✅ виконано |
-| Повтори з експоненційним відступом і full jitter (#460, за бажанням) | Балабанов | `<…>` | `<PR, тест>` | ⏳ **буде виконано пізніше** — на момент здачі Лаб 9 ще не готово |
+| Повтори з експоненційним відступом і full jitter (#460, за бажанням) | — | не виконано | — | ❌ не виконано в межах Лаб 9 (бонус за бажанням) |
 
 ---
 
