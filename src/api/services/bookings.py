@@ -34,6 +34,7 @@ def _as_utc(dt: datetime) -> datetime:
         return dt.replace(tzinfo=timezone.utc)
     return dt.astimezone(timezone.utc)
 
+
 def _now_utc() -> datetime:
     """Повертає поточний час UTC."""
     return datetime.now(timezone.utc)

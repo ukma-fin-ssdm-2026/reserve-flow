@@ -357,9 +357,7 @@ def update_booking(
     booking = _get_booking_or_404(session, booking_id)
     _validate_booking_transition(booking, booking_in, current_user, session)
 
-    slot_to_release = _slot_to_release_on_cancellation(
-        session, booking, booking_in.status
-    )
+    slot_to_release = _slot_to_release_on_cancellation(session, booking, booking_in.status)
     expected_status = booking.status
 
     _save_booking_status(

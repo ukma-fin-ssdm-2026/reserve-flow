@@ -45,7 +45,6 @@ def test_audit_failure_rolls_back_whole_booking(override_session, db_engine, mon
     assert _count(db_engine, Booking) == bookings_before
     assert _count(db_engine, Notification) == notifications_before
 
-    
     # Після відновлення той самий запит проходить: слот не «зависає» зайнятим
     monkeypatch.setattr(booking_service, "AuditLog", original_audit_log)
     retry = client.post("/api/v1/bookings", json=BOOKING, headers=auth("client"))
