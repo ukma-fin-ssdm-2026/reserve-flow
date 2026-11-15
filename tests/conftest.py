@@ -34,11 +34,15 @@ from seed import seed  # noqa: E402
 
 @pytest.fixture(autouse=True)
 def fixed_now(monkeypatch):
-    """Фіксований «зараз» для правила 2 годин (FR-007): тести не залежать від дати запуску."""
-    import routes.bookings as bookings_module
+    """Фіксований час для тестів, щоб вони не залежали від дати запуску."""
+    import routes.bookings as routes_bookings
+    import services.bookings as booking_service
     from mocks import KYIV
 
-    monkeypatch.setattr(bookings_module, "_now", lambda: datetime(2026, 10, 8, 10, 0, tzinfo=KYIV))
+    test_now = datetime(2026, 10, 8, 10, 0, tzinfo=KYIV)
+
+    monkeypatch.setattr(routes_bookings, "_now", lambda: test_now)
+    monkeypatch.setattr(booking_service, "_now_utc", lambda: test_now)
 
 
 @pytest.fixture

@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, func, select
 
 import services.bookings as booking_service
-from conftest import auth
+from conftest import auth, client
 from main import app
 from mocks import SLOT_1_ID
 from models import AuditAction, AuditLog, Booking, Notification
@@ -33,6 +33,8 @@ def test_audit_failure_rolls_back_whole_booking(override_session, db_engine, mon
     def broken_audit(**_kwargs):
         raise RuntimeError("audit storage is down")
 
+    original_audit_log = booking_service.AuditLog
+
     monkeypatch.setattr(booking_service, "AuditLog", broken_audit)
     client = TestClient(app, raise_server_exceptions=False)
 
@@ -43,8 +45,9 @@ def test_audit_failure_rolls_back_whole_booking(override_session, db_engine, mon
     assert _count(db_engine, Booking) == bookings_before
     assert _count(db_engine, Notification) == notifications_before
 
+    
     # Після відновлення той самий запит проходить: слот не «зависає» зайнятим
-    monkeypatch.undo()
+    monkeypatch.setattr(booking_service, "AuditLog", original_audit_log)
     retry = client.post("/api/v1/bookings", json=BOOKING, headers=auth("client"))
     assert retry.status_code == 201
 
