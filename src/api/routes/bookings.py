@@ -212,21 +212,13 @@ PATCH_DESCRIPTION = """Змінює статус бронювання (D-03).
 """
 
 
-@router.patch(
-    "/{booking_id}",
-    response_model=BookingOut,
-    summary="Змінити статус бронювання",
-    description=PATCH_DESCRIPTION,
-    responses=error_responses(401, 403, 404, 409, 422),
-)
-def update_booking(
-    booking_id: Annotated[UUID, Path(description="ID бронювання")],
+def _validate_booking_transition(
+    booking: Booking,
     booking_in: BookingUpdate,
-    current_user: Annotated[UserOut, Depends(get_current_user)],
-    session: Annotated[Session, Depends(get_session)],
-) -> BookingOut:
-    booking = _get_booking_or_404(session, booking_id)
-
+    current_user: UserOut,
+    session: Session,
+) -> None:
+    """Перевіряє, чи має користувач право виконати запитаний перехід."""
     allowed_role = _ALLOWED_ROLE_FOR_STATUS.get(booking_in.status)
     if allowed_role is None:
         raise AppError(
@@ -242,56 +234,73 @@ def update_booking(
             "Недостатньо прав для цієї зміни статусу",
         )
 
-    if booking.status.value not in _ALLOWED_FROM[booking_in.status]:
+    allowed_from = _ALLOWED_FROM.get(booking_in.status, set())
+    if booking.status.value not in allowed_from:
         raise AppError(
             status.HTTP_409_CONFLICT,
             ErrorCode.INVALID_STATUS_TRANSITION,
             f"Перехід {booking.status.value} → {booking_in.status.value} не дозволений",
         )
 
-    slot_to_release = None
 
-    if booking_in.status == BookingStatus.CANCELLED:
-        slot = session.get(TimeSlot, booking.slot_id)
+def _slot_to_release_on_cancellation(
+    session: Session,
+    booking: Booking,
+    target_status: BookingStatus,
+) -> TimeSlot | None:
+    """Перевіряє строк скасування та повертає слот, який треба звільнити."""
+    if target_status != BookingStatus.CANCELLED:
+        return None
 
-        if slot is None:
-            raise AppError(
-                status.HTTP_404_NOT_FOUND,
-                ErrorCode.NOT_FOUND,
-                "Слот бронювання не знайдено",
-            )
+    slot = session.get(TimeSlot, booking.slot_id)
+    if slot is None:
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            ErrorCode.NOT_FOUND,
+            "Слот бронювання не знайдено",
+        )
 
-        slot_start = slot.start_time
+    slot_start = slot.start_time
+    # SQLite може повертати datetime без tzinfo; naive-час у БД зберігається в UTC.
+    if slot_start.tzinfo is None:
+        slot_start = slot_start.replace(tzinfo=timezone.utc)
 
-        # SQLite може повертати datetime без tzinfo.
-        # Це коректно лише за умови, що naive-час у БД зберігається в UTC.
-        if slot_start.tzinfo is None:
-            slot_start = slot_start.replace(tzinfo=timezone.utc)
+    if not can_cancel(slot_start, _now()):
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            ErrorCode.CANCELLATION_TOO_LATE,
+            "Скасувати можна не пізніше ніж за 2 години до початку",
+        )
+    return slot
 
-        if not can_cancel(slot_start, _now()):
-            raise AppError(
-                status.HTTP_409_CONFLICT,
-                ErrorCode.CANCELLATION_TOO_LATE,
-                "Скасувати можна не пізніше ніж за 2 години до початку",
-            )
 
-        slot_to_release = slot
-
-    # Новий статус пишемо умовним UPDATE (compare-and-set, Лаб 9, знахідка #6): рядок
-    # зміниться, лише якщо статус досі той, який ми перевіряли вище. Паралельний запит,
-    # що встиг змінити статус першим, «виграє», а цей отримує 409, а не хибний 200.
-    expected_status = booking.status
-    new_values: dict = {"status": DbBookingStatus(booking_in.status.value)}
-    if booking_in.reason:
-        new_values["rejection_reason"] = booking_in.reason
-
-    audit_action = {
+def _audit_action_for_status(target_status: BookingStatus) -> AuditAction | None:
+    """Повертає тип аудиту для статусів, що потребують журналювання."""
+    return {
         BookingStatus.CONFIRMED: AuditAction.BOOKING_CONFIRMED,
         BookingStatus.REJECTED: AuditAction.BOOKING_REJECTED,
         BookingStatus.CANCELLED: AuditAction.BOOKING_CANCELLED,
-    }.get(booking_in.status)
+    }.get(target_status)
+
+
+def _save_booking_status(
+    session: Session,
+    booking_id: UUID,
+    expected_status: DbBookingStatus,
+    target_status: BookingStatus,
+    reason: str | None,
+    current_user: UserOut,
+    slot_to_release: TimeSlot | None,
+) -> None:
+    """Атомарно оновлює статус, звільняє слот і створює запис аудиту."""
+    new_values: dict = {"status": DbBookingStatus(target_status.value)}
+    if reason:
+        new_values["rejection_reason"] = reason
+
+    audit_action = _audit_action_for_status(target_status)
 
     try:
+        # Compare-and-set захищає від паралельної зміни статусу.
         changed = session.exec(
             update(Booking)
             .where(Booking.id == booking_id, Booking.status == expected_status)
@@ -302,7 +311,7 @@ def update_booking(
                 "Concurrent status change of booking %s: expected %s, request wanted %s",
                 booking_id,
                 expected_status.value,
-                booking_in.status.value,
+                target_status.value,
             )
             raise AppError(
                 status.HTTP_409_CONFLICT,
@@ -310,12 +319,10 @@ def update_booking(
                 "Статус бронювання щойно змінив інший запит. Оновіть дані й спробуйте ще раз.",
             )
 
-        # Скасування звільняє слот у тій самій транзакції.
         if slot_to_release is not None:
             slot_to_release.is_available = True
             session.add(slot_to_release)
 
-        # Один запис аудиту на одну зміну статусу.
         if audit_action is not None:
             session.add(
                 AuditLog(
@@ -324,17 +331,46 @@ def update_booking(
                     action=audit_action,
                     entity_type=EntityType.BOOKING,
                     entity_id=booking_id,
-                    details=booking_in.reason,
+                    details=reason,
                 )
             )
 
         session.commit()
-        session.refresh(booking)
-
     except Exception:
         session.rollback()
         raise
 
+
+@router.patch(
+    "/{booking_id}",
+    response_model=BookingOut,
+    summary="Змінити статус бронювання",
+    description=PATCH_DESCRIPTION,
+    responses=error_responses(401, 403, 404, 409, 422),
+)
+def update_booking(
+    booking_id: Annotated[UUID, Path(description="ID бронювання")],
+    booking_in: BookingUpdate,
+    current_user: Annotated[UserOut, Depends(get_current_user)],
+    session: Annotated[Session, Depends(get_session)],
+) -> BookingOut:
+    booking = _get_booking_or_404(session, booking_id)
+    _validate_booking_transition(booking, booking_in, current_user, session)
+
+    slot_to_release = _slot_to_release_on_cancellation(session, booking, booking_in.status)
+    expected_status = booking.status
+
+    _save_booking_status(
+        session=session,
+        booking_id=booking_id,
+        expected_status=expected_status,
+        target_status=booking_in.status,
+        reason=booking_in.reason,
+        current_user=current_user,
+        slot_to_release=slot_to_release,
+    )
+
+    session.refresh(booking)
     return _to_out(booking)
 
 
