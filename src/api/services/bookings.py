@@ -34,6 +34,10 @@ def _as_utc(dt: datetime) -> datetime:
         return dt.replace(tzinfo=timezone.utc)
     return dt.astimezone(timezone.utc)
 
+def _now_utc() -> datetime:
+    """Повертає поточний час UTC."""
+    return datetime.now(timezone.utc)
+
 
 def create_booking(
     session: Session,
@@ -47,7 +51,7 @@ def create_booking(
     Перевіряє доступність слота, час його початку та перетини з іншими
     активними бронюваннями клієнта.
     """
-    current_time = _as_utc(now or datetime.now(timezone.utc))
+    current_time = _as_utc(now or _now_utc())
 
     try:
         # Блокування слота до завершення транзакції.
