@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, func, select
 
 import services.bookings as booking_service
-from conftest import auth, client
+from conftest import auth
 from main import app
 from mocks import SLOT_1_ID
 from models import AuditAction, AuditLog, Booking, Notification
