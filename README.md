@@ -188,6 +188,7 @@ RESERVE_FLOW_ROLE=provider python src/api/mcp_server.py
 | 7 | Планування тестування | [план тестування](docs/validation/test-plan.md), [журнал огляду](docs/validation/review-log.md) | [`Labs/Lab07/`](Labs/Lab07/) |
 | 8 | Рефакторинг | [звіт SonarQube Cloud](docs/refactoring/sonarcloud-report.md), [CHANGELOG](CHANGELOG.md) | [`Labs/Lab08/`](Labs/Lab08/) |
 | 9 | Надійність | [пошук ризиків](docs/reliability/scavenger-hunt.md), [звіт про надійність](docs/reliability/reliability-report.md), [тести надійності](tests/reliability/) | [`Labs/Lab09/`](Labs/Lab09/) |
+| 10 | Аналітика CI/CD (DORA) | [сирі дані запусків](docs/ci-cd/metrics-raw.md), [звіт DORA і план покращень](docs/ci-cd/dora-summary.md), [докази](docs/ci-cd/evidence/) | [`Labs/Lab10/`](Labs/Lab10/) |
 | — | Проміжне оцінювання | [розгортання і демо](Labs/midterm-presentation.txt) | — |
 
 ## Робочий процес
