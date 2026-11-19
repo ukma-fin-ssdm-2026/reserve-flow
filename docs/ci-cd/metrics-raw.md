@@ -6,7 +6,7 @@
 
 ## Як отримано дані
 
-Дані зібрано через GitHub API — це ті самі поля, що повертають `gh run list` і `gh run view --json jobs`:
+Дані зібрано через GitHub API — це ті самі поля, що повертають `gh run list` і `gh run view --json jobs`. Вивантаження, час завдань кожного запуску й уривки логів червоних запусків — у [`evidence/`](evidence/README.md):
 
 ```bash
 gh run list --workflow ci.yml --branch main --event push --limit 200 \
