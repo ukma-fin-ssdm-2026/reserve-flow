@@ -949,7 +949,7 @@
           "purpose": {
             "type": "string",
             "maxLength": 200,
-            "minLength": 1,
+            "minLength": 3,
             "title": "Purpose",
             "description": "Мета бронювання приміщення",
             "examples": [

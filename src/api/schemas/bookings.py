@@ -37,7 +37,7 @@ class BookingCreate(BaseModel):
         ...,
         description="Мета бронювання приміщення",
         examples=["Зустріч студентського самоврядування"],
-        min_length=1,
+        min_length=3,
         max_length=200,
     )
 
