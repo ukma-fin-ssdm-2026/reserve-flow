@@ -1,4 +1,4 @@
-"""Знахідка №13 (#457): нормалізація purpose та межа довжини reason."""
+"""Знахідка №13 (#457): purpose — 3–200 символів після обрізання; межа довжини reason."""
 
 import pytest
 
@@ -26,6 +26,23 @@ def test_purpose_empty_after_trimming_returns_422(client, purpose):
 
     assert response.status_code == 422
     assert response.json()["error"]["code"] == "VALIDATION_ERROR"
+
+
+@pytest.mark.parametrize("purpose", ["ab", "  ab  "], ids=["two-chars", "two-chars-after-trim"])
+def test_purpose_shorter_than_min_length_returns_422(client, purpose):
+    """Межа знизу: 2 символи (зокрема після обрізання пробілів) — замало."""
+    response = _post(client, purpose)
+
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "VALIDATION_ERROR"
+
+
+def test_purpose_at_min_length_is_accepted_and_trimmed(client):
+    """Межа знизу: рівно 3 символи після обрізання пробілів — приймається."""
+    response = _post(client, "  abc  ")
+
+    assert response.status_code == 201
+    assert response.json()["purpose"] == "abc"
 
 
 def test_purpose_at_max_length_is_accepted_and_trimmed(client):
