@@ -3,8 +3,21 @@ name: CI
 on:
   push:
     branches: [ "main" ]
+    # Лаб 10 (#500): після злиття PR лише з документацією/відео не запускаємо 5 важких job на main.
+    # На pull_request фільтр свідомо НЕ ставимо, щоб обов'язкові перевірки (required status checks)
+    # у захисті main не зависали в стані "Expected — Waiting for status to be reported".
+    # Не ігноруємо docs/requirements/rtm.md (перевіряє lint) і docs/architecture/uml/** (перевіряє uml).
+    paths-ignore:
+      - "Labs/**"
+      - "**/video_*.txt"
+      - "README.md"
+      - "CHANGELOG.md"
   pull_request:
     branches: [ "main" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   # Тести з покриттям (L6-09, #256): модульні, API та інтеграційні — на PostgreSQL,
