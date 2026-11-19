@@ -184,7 +184,7 @@ reason: str | None = Field(None, ...)
 # Після (schemas/bookings.py): пробіли обрізаються до перевірки довжини
 class BookingCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
-    purpose: str = Field(..., min_length=1, max_length=200)
+    purpose: str = Field(..., min_length=3, max_length=200)
 
 class BookingUpdate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
@@ -193,9 +193,9 @@ class BookingUpdate(BaseModel):
 
 - **Патерн:** перевірка входу на межі системи — до бізнес-логіки й запису в БД.
 - **Режим відмови:** **швидка** — `422 VALIDATION_ERROR` замість порожнього за змістом запису чи `500` на обмеженні колонки.
-- **Що бачить користувач:** `422` з полем і причиною: `purpose` порожній після обрізання або > 200 символів; `reason` > 500 символів; для `Rejected` — порожня причина.
+- **Що бачить користувач:** `422` з полем і причиною: `purpose` коротший за 3 символи після обрізання або > 200 символів; `reason` > 500 символів; для `Rejected` — порожня причина.
 - **Відновлення:** ручне — виправити поле й надіслати знову.
-- **Тест:** `tests/reliability/test_booking_input_validation.py` — `purpose` з пробілів, рівно 200 / 201 символ; `reason` з пробілів, рівно 500 / 501; значення на межі зберігається без крайових пробілів.
+- **Тест:** `tests/reliability/test_booking_input_validation.py` — `purpose` з пробілів, 2 / 3 символи після обрізання, рівно 200 / 201 символ; `reason` з пробілів, рівно 500 / 501; значення на межі зберігається без крайових пробілів.
 
 ### №5. `GET /bookings`: уся таблиця + N+1 — #475 (#467, Лавришин)
 
@@ -380,7 +380,7 @@ def _default_http_error(status_code: int) -> tuple[ErrorCode, str]:
 | Конкурентність | `tests/reliability/test_booking_status_race.py` | гонка статусів → `409` |
 | Регресія | `tests/reliability/test_no_blocking_in_async.py` | жоден обробник з БД не `async` |
 | Граничний | `tests/reliability/test_booking_time_boundaries.py` | слот −1 с / рівно зараз / +1 с → `409` / `409` / `201` |
-| Граничний | `tests/reliability/test_booking_input_validation.py` | `purpose` 200 / 201, `reason` 500 / 501, пробіли |
+| Граничний | `tests/reliability/test_booking_input_validation.py` | `purpose` 2 / 3 і 200 / 201, `reason` 500 / 501, пробіли |
 | Зовнішня відмова (ін'єкція збою) | `tests/reliability/test_health_db.py` | зламана / недоступна БД → health `503` |
 | Обробка помилки | `tests/reliability/test_correlation_id.py` | невалідний заголовок → новий UUID, запит не падає |
 | Регресія | `tests/reliability/test_bookings_list_query.py` | фільтр доступу й пагінація в SQL |
