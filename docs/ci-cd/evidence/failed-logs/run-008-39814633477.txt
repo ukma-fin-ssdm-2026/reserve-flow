@@ -1,0 +1,76 @@
+# Запуск №8 · run 39814633477 · коміт 0e7fff9 · створено 2026-10-22T16:30:25Z (UTC)
+# Джерело: gh run view 39814633477 -R ukma-fin-ssdm-2026/reserve-flow --log-failed
+# https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/runs/39814633477
+# Уривок: рядки з помилками і 4 рядки контексту перед ними; «…» — пропуск.
+
+[Code Quality and Security Linting] 2026-10-22T16:30:48.7878037Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+[Code Quality and Security Linting] 2026-10-22T16:30:48.7878435Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+[Code Quality and Security Linting] 2026-10-22T16:30:48.7878746Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib
+[Code Quality and Security Linting] 2026-10-22T16:30:48.7879016Z ##[endgroup]
+[Code Quality and Security Linting] 2026-10-22T16:30:49.5157470Z would reformat /home/runner/actions-runner/_work/reserve-flow/reserve-flow/tests/test_slots_unit.py
+[Code Quality and Security Linting] 2026-10-22T16:30:49.5177376Z
+[Code Quality and Security Linting] 2026-10-22T16:30:49.5179175Z Oh no! 💥 💔 💥
+[Code Quality and Security Linting] 2026-10-22T16:30:49.5179561Z 1 file would be reformatted, 42 files would be left unchanged.
+[Code Quality and Security Linting] 2026-10-22T16:30:49.5422140Z ##[error]Process completed with exit code 1.
+[Code Quality and Security Linting] 2026-10-22T16:30:49.5553884Z Post job cleanup.
+…
+[Tests with coverage] 2026-10-22T16:31:28.9976797Z ........................................................................ [ 79%]
+[Tests with coverage] 2026-10-22T16:31:32.5650837Z ...................................FFF                                   [100%]
+[Tests with coverage] 2026-10-22T16:31:32.5651351Z =================================== FAILURES ===================================
+[Tests with coverage] 2026-10-22T16:31:32.5651823Z _______ test_search_slots_invalid_time_range_raises_422[start_t0-end_t0] _______
+[Tests with coverage] 2026-10-22T16:31:32.5677256Z async def functions are not natively supported.
+[Tests with coverage] 2026-10-22T16:31:32.5677783Z You need to install a suitable plugin for your async framework, for example:
+…
+[Tests with coverage] 2026-10-22T16:31:32.5678728Z   - pytest-tornasync
+[Tests with coverage] 2026-10-22T16:31:32.5678996Z   - pytest-trio
+[Tests with coverage] 2026-10-22T16:31:32.5679250Z   - pytest-twisted
+[Tests with coverage] 2026-10-22T16:31:32.5679642Z _______ test_search_slots_invalid_time_range_raises_422[start_t1-end_t1] _______
+[Tests with coverage] 2026-10-22T16:31:32.5680076Z async def functions are not natively supported.
+[Tests with coverage] 2026-10-22T16:31:32.5680905Z You need to install a suitable plugin for your async framework, for example:
+…
+[Tests with coverage] 2026-10-22T16:31:32.5681791Z   - pytest-tornasync
+[Tests with coverage] 2026-10-22T16:31:32.5682053Z   - pytest-trio
+[Tests with coverage] 2026-10-22T16:31:32.5682300Z   - pytest-twisted
+[Tests with coverage] 2026-10-22T16:31:32.5682639Z _____________________ test_search_slots_pagination_bounds ______________________
+[Tests with coverage] 2026-10-22T16:31:32.5683046Z async def functions are not natively supported.
+[Tests with coverage] 2026-10-22T16:31:32.5683508Z You need to install a suitable plugin for your async framework, for example:
+…
+[Tests with coverage] 2026-10-22T16:31:32.5686814Z   /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+[Tests with coverage] 2026-10-22T16:31:32.5687661Z     from starlette.testclient import TestClient as TestClient  # noqa
+[Tests with coverage] 2026-10-22T16:31:32.5687971Z
+[Tests with coverage] 2026-10-22T16:31:32.5688133Z tests/test_slots_unit.py:63
+[Tests with coverage] 2026-10-22T16:31:32.5689070Z   /home/runner/actions-runner/_work/reserve-flow/reserve-flow/tests/test_slots_unit.py:63: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+[Tests with coverage] 2026-10-22T16:31:32.5690020Z     @pytest.mark.asyncio
+[Tests with coverage] 2026-10-22T16:31:32.5690226Z
+[Tests with coverage] 2026-10-22T16:31:32.5690624Z tests/test_slots_unit.py:85
+[Tests with coverage] 2026-10-22T16:31:32.5691516Z   /home/runner/actions-runner/_work/reserve-flow/reserve-flow/tests/test_slots_unit.py:85: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+[Tests with coverage] 2026-10-22T16:31:32.5692402Z     @pytest.mark.asyncio
+…
+[Tests with coverage] 2026-10-22T16:31:32.5723839Z -------------------------------------------------------------------------------
+[Tests with coverage] 2026-10-22T16:31:32.5724159Z TOTAL                                 797     43    104      6    94%
+[Tests with coverage] 2026-10-22T16:31:32.5724418Z Coverage HTML written to dir htmlcov
+[Tests with coverage] 2026-10-22T16:31:32.5724882Z =========================== short test summary info ============================
+[Tests with coverage] 2026-10-22T16:31:32.5725477Z FAILED tests/test_slots_unit.py::test_search_slots_invalid_time_range_raises_422[start_t0-end_t0] - Failed: async def functions are not natively supported.
+[Tests with coverage] 2026-10-22T16:31:32.5726059Z You need to install a suitable plugin for your async framework, for example:
+…
+[Tests with coverage] 2026-10-22T16:31:32.5747218Z   - pytest-asyncio
+[Tests with coverage] 2026-10-22T16:31:32.5747462Z   - pytest-tornasync
+[Tests with coverage] 2026-10-22T16:31:32.5747681Z   - pytest-trio
+[Tests with coverage] 2026-10-22T16:31:32.5747869Z   - pytest-twisted
+[Tests with coverage] 2026-10-22T16:31:32.5748405Z FAILED tests/test_slots_unit.py::test_search_slots_invalid_time_range_raises_422[start_t1-end_t1] - Failed: async def functions are not natively supported.
+[Tests with coverage] 2026-10-22T16:31:32.5749030Z You need to install a suitable plugin for your async framework, for example:
+…
+[Tests with coverage] 2026-10-22T16:31:32.5749527Z   - pytest-asyncio
+[Tests with coverage] 2026-10-22T16:31:32.5749712Z   - pytest-tornasync
+[Tests with coverage] 2026-10-22T16:31:32.5749917Z   - pytest-trio
+[Tests with coverage] 2026-10-22T16:31:32.5750100Z   - pytest-twisted
+[Tests with coverage] 2026-10-22T16:31:32.5750520Z FAILED tests/test_slots_unit.py::test_search_slots_pagination_bounds - Failed: async def functions are not natively supported.
+[Tests with coverage] 2026-10-22T16:31:32.5751053Z You need to install a suitable plugin for your async framework, for example:
+…
+[Tests with coverage] 2026-10-22T16:31:32.5751529Z   - pytest-asyncio
+[Tests with coverage] 2026-10-22T16:31:32.5751710Z   - pytest-tornasync
+[Tests with coverage] 2026-10-22T16:31:32.5751895Z   - pytest-trio
+[Tests with coverage] 2026-10-22T16:31:32.5752068Z   - pytest-twisted
+[Tests with coverage] 2026-10-22T16:31:32.5752281Z 3 failed, 179 passed, 15 warnings in 22.98s
+[Tests with coverage] 2026-10-22T16:31:33.1693521Z ##[error]Process completed with exit code 1.
+[Tests with coverage] 2026-10-22T16:31:33.1756358Z ##[group]Run echo "## Покриття тестами" >> "$GITHUB_STEP_SUMMARY"

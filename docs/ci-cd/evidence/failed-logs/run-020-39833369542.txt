@@ -1,0 +1,11 @@
+# Запуск №20 · run 39833369542 · коміт be002e4 · створено 2026-10-22T18:40:03Z (UTC)
+# Джерело: gh run view 39833369542 -R ukma-fin-ssdm-2026/reserve-flow --log-failed
+# https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/runs/39833369542
+# Уривок: рядки з помилками і 4 рядки контексту перед ними; «…» — пропуск.
+
+[uml] 2026-10-22T18:40:34.4419168Z (Use `node --trace-deprecation ...` to show where the warning was created)
+[uml] 2026-10-22T18:40:34.6348676Z Resolved latest version as 17.0.21+9
+[uml] 2026-10-22T18:40:34.6349263Z Trying to download...
+[uml] 2026-10-22T18:40:34.6350152Z Downloading Java 17.0.21+9 (Temurin-Hotspot) from https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.21.9/OpenJDK17U-jdk_x64_linux_hotspot_17.0.21_9.tar.gz ...
+[uml] 2026-10-22T18:40:34.8957494Z ##[error]Unexpected HTTP response: 404
+[uml] 2026-10-22T18:40:34.9163702Z Post job cleanup.

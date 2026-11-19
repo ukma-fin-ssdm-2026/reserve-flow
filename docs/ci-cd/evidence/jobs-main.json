@@ -1,0 +1,3860 @@
+[
+ {
+  "n": 1,
+  "databaseId": 39785298417,
+  "headSha": "7cb6a3958023d1b6616ecc55bf71e67093b6c1d2",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T13:15:51Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T13:15:53Z",
+    "completedAt": "2026-10-22T13:16:20Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T13:15:53Z",
+    "completedAt": "2026-10-22T13:16:40Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T13:16:40Z",
+    "completedAt": "2026-10-22T13:17:07Z"
+   },
+   {
+    "name": "build-and-test",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T13:16:33Z",
+    "completedAt": "2026-10-22T13:16:40Z"
+   }
+  ]
+ },
+ {
+  "n": 2,
+  "databaseId": 39793104690,
+  "headSha": "2dce2cb300870b8390eedbc4352b9c4c7a243e9b",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T14:08:16Z",
+  "jobs": [
+   {
+    "name": "build-and-test",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:08:18Z",
+    "completedAt": "2026-10-22T14:08:26Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:08:18Z",
+    "completedAt": "2026-10-22T14:09:02Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:08:40Z",
+    "completedAt": "2026-10-22T14:13:18Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:08:19Z",
+    "completedAt": "2026-10-22T14:08:46Z"
+   }
+  ]
+ },
+ {
+  "n": 3,
+  "databaseId": 39795142630,
+  "headSha": "f99f284f279096f903c79a50642105b79e3e0205",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T14:22:44Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:22:47Z",
+    "completedAt": "2026-10-22T14:23:34Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:22:47Z",
+    "completedAt": "2026-10-22T14:23:41Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:22:47Z",
+    "completedAt": "2026-10-22T14:23:14Z"
+   },
+   {
+    "name": "build-and-test",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:22:47Z",
+    "completedAt": "2026-10-22T14:22:55Z"
+   }
+  ]
+ },
+ {
+  "n": 4,
+  "databaseId": 39796709681,
+  "headSha": "32b864920afd04d319bf2ff6f8990fb882da97dd",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T14:33:38Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:34:03Z",
+    "completedAt": "2026-10-22T14:34:30Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:34:08Z",
+    "completedAt": "2026-10-22T14:34:58Z"
+   },
+   {
+    "name": "build-and-test",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:34:10Z",
+    "completedAt": "2026-10-22T14:34:20Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:34:33Z",
+    "completedAt": "2026-10-22T14:35:09Z"
+   }
+  ]
+ },
+ {
+  "n": 5,
+  "databaseId": 39799884581,
+  "headSha": "f9ba7f82ed07fd4754c6159ccb651cf035e9bac5",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T14:54:47Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:54:49Z",
+    "completedAt": "2026-10-22T14:55:28Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:54:49Z",
+    "completedAt": "2026-10-22T14:56:17Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:54:49Z",
+    "completedAt": "2026-10-22T14:55:16Z"
+   },
+   {
+    "name": "build-and-test",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T14:54:49Z",
+    "completedAt": "2026-10-22T14:54:57Z"
+   }
+  ]
+ },
+ {
+  "n": 6,
+  "databaseId": 39803763589,
+  "headSha": "624047bd614e9307c5fb26a4788fb3530d301d94",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T15:19:36Z",
+  "jobs": [
+   {
+    "name": "build-and-test",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T15:19:39Z",
+    "completedAt": "2026-10-22T15:19:47Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T15:19:39Z",
+    "completedAt": "2026-10-22T15:25:28Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T15:19:39Z",
+    "completedAt": "2026-10-22T15:20:07Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T15:20:01Z",
+    "completedAt": "2026-10-22T15:20:39Z"
+   }
+  ]
+ },
+ {
+  "n": 7,
+  "databaseId": 39813762104,
+  "headSha": "3b987f45bb610c1b616589d73ee9885f8b585114",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T16:24:17Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:24:20Z",
+    "completedAt": "2026-10-22T16:24:49Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:24:20Z",
+    "completedAt": "2026-10-22T16:25:31Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:24:22Z",
+    "completedAt": "2026-10-22T16:24:48Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:25:01Z",
+    "completedAt": "2026-10-22T16:25:29Z"
+   }
+  ]
+ },
+ {
+  "n": 8,
+  "databaseId": 39814633477,
+  "headSha": "0e7fff99d9fb6fc9d74e6004ef83758539cf533c",
+  "conclusion": "failure",
+  "createdAt": "2026-10-22T16:30:25Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "failure",
+    "startedAt": "2026-10-22T16:30:27Z",
+    "completedAt": "2026-10-22T16:30:53Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:31:06Z",
+    "completedAt": "2026-10-22T16:31:40Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:30:27Z",
+    "completedAt": "2026-10-22T16:30:56Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "failure",
+    "startedAt": "2026-10-22T16:30:27Z",
+    "completedAt": "2026-10-22T16:31:39Z"
+   }
+  ]
+ },
+ {
+  "n": 9,
+  "databaseId": 39814904089,
+  "headSha": "977530b7b96900251842dc3b4fb12363f9909211",
+  "conclusion": "failure",
+  "createdAt": "2026-10-22T16:32:22Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "failure",
+    "startedAt": "2026-10-22T16:32:25Z",
+    "completedAt": "2026-10-22T16:32:53Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:32:25Z",
+    "completedAt": "2026-10-22T16:32:57Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "failure",
+    "startedAt": "2026-10-22T16:33:06Z",
+    "completedAt": "2026-10-22T16:34:19Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:33:10Z",
+    "completedAt": "2026-10-22T16:33:37Z"
+   }
+  ]
+ },
+ {
+  "n": 10,
+  "databaseId": 39818337048,
+  "headSha": "9b07b717ad2cf0889410e708e4c7aa8f3c4f8c36",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T16:56:46Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:56:48Z",
+    "completedAt": "2026-10-22T16:57:20Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:56:48Z",
+    "completedAt": "2026-10-22T16:57:20Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:56:48Z",
+    "completedAt": "2026-10-22T16:57:25Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T16:56:49Z",
+    "completedAt": "2026-10-22T16:58:11Z"
+   }
+  ]
+ },
+ {
+  "n": 11,
+  "databaseId": 39819336791,
+  "headSha": "bfcc34c3c3f7287096dc51ab3f740f4849f74be3",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T17:03:38Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:03:41Z",
+    "completedAt": "2026-10-22T17:04:11Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:03:41Z",
+    "completedAt": "2026-10-22T17:04:16Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:03:41Z",
+    "completedAt": "2026-10-22T17:04:14Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:03:41Z",
+    "completedAt": "2026-10-22T17:04:58Z"
+   }
+  ]
+ },
+ {
+  "n": 12,
+  "databaseId": 39822642597,
+  "headSha": "0b4e4bc64cac77f91800870bb531eb3ce7df8d97",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T17:26:05Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:26:08Z",
+    "completedAt": "2026-10-22T17:26:42Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:26:08Z",
+    "completedAt": "2026-10-22T17:26:38Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:26:09Z",
+    "completedAt": "2026-10-22T17:26:45Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:26:51Z",
+    "completedAt": "2026-10-22T17:28:03Z"
+   }
+  ]
+ },
+ {
+  "n": 13,
+  "databaseId": 39824855119,
+  "headSha": "a382162d30c425686f854834c0eae69665d00a10",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T17:41:08Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:41:10Z",
+    "completedAt": "2026-10-22T17:42:01Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:41:10Z",
+    "completedAt": "2026-10-22T17:41:40Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:41:11Z",
+    "completedAt": "2026-10-22T17:41:38Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:41:10Z",
+    "completedAt": "2026-10-22T17:42:29Z"
+   }
+  ]
+ },
+ {
+  "n": 14,
+  "databaseId": 39826080080,
+  "headSha": "3fdbe4aeeea7c828f667ff9f131035bc4d9d0774",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T17:49:49Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:49:52Z",
+    "completedAt": "2026-10-22T17:50:25Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:49:52Z",
+    "completedAt": "2026-10-22T17:50:26Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:50:36Z",
+    "completedAt": "2026-10-22T17:51:49Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:49:52Z",
+    "completedAt": "2026-10-22T17:50:23Z"
+   }
+  ]
+ },
+ {
+  "n": 15,
+  "databaseId": 39826413297,
+  "headSha": "f077a7fbeb3d9ef9f04c0953779b875649af3f87",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T17:52:08Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:52:10Z",
+    "completedAt": "2026-10-22T17:52:38Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:52:10Z",
+    "completedAt": "2026-10-22T17:53:30Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:52:10Z",
+    "completedAt": "2026-10-22T17:52:39Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:52:51Z",
+    "completedAt": "2026-10-22T17:53:20Z"
+   }
+  ]
+ },
+ {
+  "n": 16,
+  "databaseId": 39827339465,
+  "headSha": "729647c9ffe018679d93910595ad11dfbb0ae35d",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T17:58:38Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:58:40Z",
+    "completedAt": "2026-10-22T18:00:00Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:59:19Z",
+    "completedAt": "2026-10-22T17:59:50Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:59:25Z",
+    "completedAt": "2026-10-22T17:59:56Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T17:59:55Z",
+    "completedAt": "2026-10-22T18:00:20Z"
+   }
+  ]
+ },
+ {
+  "n": 17,
+  "databaseId": 39828069209,
+  "headSha": "0174e96a1d35ab46f90b6ff5a0e590d976a78d8f",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T18:03:41Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:03:44Z",
+    "completedAt": "2026-10-22T18:04:17Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:03:44Z",
+    "completedAt": "2026-10-22T18:04:15Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:03:44Z",
+    "completedAt": "2026-10-22T18:04:15Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:03:44Z",
+    "completedAt": "2026-10-22T18:05:04Z"
+   }
+  ]
+ },
+ {
+  "n": 18,
+  "databaseId": 39832581337,
+  "headSha": "20859ae3efd94feb059b089e569c212ddd6d10a2",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T18:34:25Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:34:28Z",
+    "completedAt": "2026-10-22T18:35:00Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:34:28Z",
+    "completedAt": "2026-10-22T18:35:00Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:34:28Z",
+    "completedAt": "2026-10-22T18:34:59Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:34:28Z",
+    "completedAt": "2026-10-22T18:35:46Z"
+   }
+  ]
+ },
+ {
+  "n": 19,
+  "databaseId": 39832856569,
+  "headSha": "ae49a45fab313de98861374de5492dc5233b01ab",
+  "conclusion": "failure",
+  "createdAt": "2026-10-22T18:36:22Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:36:25Z",
+    "completedAt": "2026-10-22T18:36:54Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "failure",
+    "startedAt": "2026-10-22T18:36:33Z",
+    "completedAt": "2026-10-22T18:36:43Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:37:05Z",
+    "completedAt": "2026-10-22T18:38:19Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:37:07Z",
+    "completedAt": "2026-10-22T18:37:38Z"
+   }
+  ]
+ },
+ {
+  "n": 20,
+  "databaseId": 39833369542,
+  "headSha": "be002e474f571d5314d496ea20489f01cee8e76b",
+  "conclusion": "failure",
+  "createdAt": "2026-10-22T18:40:03Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "failure",
+    "startedAt": "2026-10-22T18:40:29Z",
+    "completedAt": "2026-10-22T18:40:39Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:40:22Z",
+    "completedAt": "2026-10-22T18:41:40Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:40:52Z",
+    "completedAt": "2026-10-22T18:41:20Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:40:57Z",
+    "completedAt": "2026-10-22T18:41:23Z"
+   }
+  ]
+ },
+ {
+  "n": 21,
+  "databaseId": 39835493772,
+  "headSha": "06f5ed46a304a9fb8cd94eb93743c3a0a52d839d",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T18:54:40Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:54:42Z",
+    "completedAt": "2026-10-22T18:55:11Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:54:42Z",
+    "completedAt": "2026-10-22T18:55:12Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:54:43Z",
+    "completedAt": "2026-10-22T18:56:07Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:54:42Z",
+    "completedAt": "2026-10-22T18:55:14Z"
+   }
+  ]
+ },
+ {
+  "n": 22,
+  "databaseId": 39835772373,
+  "headSha": "0e729ed422b09c59adc9653716cccbe615bbf18d",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T18:56:39Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:56:41Z",
+    "completedAt": "2026-10-22T18:57:11Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:56:42Z",
+    "completedAt": "2026-10-22T18:57:14Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:56:42Z",
+    "completedAt": "2026-10-22T18:58:02Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T18:56:41Z",
+    "completedAt": "2026-10-22T18:57:12Z"
+   }
+  ]
+ },
+ {
+  "n": 23,
+  "databaseId": 39838887493,
+  "headSha": "1992c0fb9408ea8cbbdcfa44ec9207cde3feabb3",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T19:18:14Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:18:16Z",
+    "completedAt": "2026-10-22T19:19:35Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:18:16Z",
+    "completedAt": "2026-10-22T19:18:47Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:18:16Z",
+    "completedAt": "2026-10-22T19:18:53Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:19:00Z",
+    "completedAt": "2026-10-22T19:19:26Z"
+   }
+  ]
+ },
+ {
+  "n": 24,
+  "databaseId": 39840460139,
+  "headSha": "0bc10ad5a9c27a7f28f334b12f16e9b7e4192859",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T19:29:00Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:29:02Z",
+    "completedAt": "2026-10-22T19:29:32Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:29:02Z",
+    "completedAt": "2026-10-22T19:29:37Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:29:02Z",
+    "completedAt": "2026-10-22T19:29:32Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:29:45Z",
+    "completedAt": "2026-10-22T19:30:59Z"
+   }
+  ]
+ },
+ {
+  "n": 25,
+  "databaseId": 39841916931,
+  "headSha": "c1c3436e9dca9f414be2ee196593cee8b73cafd9",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T19:38:52Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:38:54Z",
+    "completedAt": "2026-10-22T19:39:22Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:38:54Z",
+    "completedAt": "2026-10-22T19:40:13Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:39:24Z",
+    "completedAt": "2026-10-22T19:39:50Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T19:38:55Z",
+    "completedAt": "2026-10-22T19:39:25Z"
+   }
+  ]
+ },
+ {
+  "n": 26,
+  "databaseId": 39848973891,
+  "headSha": "ba88041a7bcadfa1cdd3ec97708351009c4052ab",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T20:27:13Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:28:21Z",
+    "completedAt": "2026-10-22T20:28:54Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:27:16Z",
+    "completedAt": "2026-10-22T20:28:38Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:27:15Z",
+    "completedAt": "2026-10-22T20:27:43Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:27:41Z",
+    "completedAt": "2026-10-22T20:28:08Z"
+   }
+  ]
+ },
+ {
+  "n": 27,
+  "databaseId": 39849068350,
+  "headSha": "fac08c0fa58afcd5de0f373f59feb74c78134423",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T20:27:52Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:30:01Z",
+    "completedAt": "2026-10-22T20:30:29Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:29:08Z",
+    "completedAt": "2026-10-22T20:30:34Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:30:30Z",
+    "completedAt": "2026-10-22T20:30:59Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:30:43Z",
+    "completedAt": "2026-10-22T20:31:09Z"
+   }
+  ]
+ },
+ {
+  "n": 28,
+  "databaseId": 39850572885,
+  "headSha": "0bb180e4f82fdb195ffab52af0337f5ad05f58f0",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T20:38:15Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:38:17Z",
+    "completedAt": "2026-10-22T20:38:46Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:38:17Z",
+    "completedAt": "2026-10-22T20:38:50Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:38:17Z",
+    "completedAt": "2026-10-22T20:38:46Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:38:17Z",
+    "completedAt": "2026-10-22T20:39:40Z"
+   }
+  ]
+ },
+ {
+  "n": 29,
+  "databaseId": 39851802326,
+  "headSha": "3c8210256a898a564176f2c1e571b9b87af1860e",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T20:46:58Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:47:00Z",
+    "completedAt": "2026-10-22T20:47:33Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:47:00Z",
+    "completedAt": "2026-10-22T20:47:30Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:47:44Z",
+    "completedAt": "2026-10-22T20:48:13Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T20:47:02Z",
+    "completedAt": "2026-10-22T20:48:27Z"
+   }
+  ]
+ },
+ {
+  "n": 30,
+  "databaseId": 39853885684,
+  "headSha": "c90fd6d3b8459d740dcac32ca057ee56536aec92",
+  "conclusion": "success",
+  "createdAt": "2026-10-22T21:01:56Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T21:02:00Z",
+    "completedAt": "2026-10-22T21:02:28Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T21:01:59Z",
+    "completedAt": "2026-10-22T21:03:19Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T21:02:00Z",
+    "completedAt": "2026-10-22T21:02:32Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-22T21:02:42Z",
+    "completedAt": "2026-10-22T21:03:08Z"
+   }
+  ]
+ },
+ {
+  "n": 31,
+  "databaseId": 39945477252,
+  "headSha": "1074d92a7d64ab55db9c51b11fe53a3e430333d2",
+  "conclusion": "success",
+  "createdAt": "2026-10-23T11:21:16Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-23T11:21:18Z",
+    "completedAt": "2026-10-23T11:22:37Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-23T11:21:18Z",
+    "completedAt": "2026-10-23T11:21:53Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-23T11:21:18Z",
+    "completedAt": "2026-10-23T11:21:51Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-23T11:22:03Z",
+    "completedAt": "2026-10-23T11:22:29Z"
+   }
+  ]
+ },
+ {
+  "n": 32,
+  "databaseId": 40718390535,
+  "headSha": "9fdbee195b596b0cdeddc48c41d78a4f3778f38c",
+  "conclusion": "success",
+  "createdAt": "2026-10-28T15:40:47Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-28T15:40:49Z",
+    "completedAt": "2026-10-28T15:41:20Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-28T15:41:33Z",
+    "completedAt": "2026-10-28T15:42:01Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-28T15:41:49Z",
+    "completedAt": "2026-10-28T15:42:23Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-28T15:42:05Z",
+    "completedAt": "2026-10-28T15:43:25Z"
+   }
+  ]
+ },
+ {
+  "n": 33,
+  "databaseId": 40869839125,
+  "headSha": "dbec8026bae1f9ffedf0f9a0875e300b9e975884",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T12:01:00Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:01:03Z",
+    "completedAt": "2026-10-29T12:01:36Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:01:03Z",
+    "completedAt": "2026-10-29T12:01:42Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:01:03Z",
+    "completedAt": "2026-10-29T12:02:30Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:01:48Z",
+    "completedAt": "2026-10-29T12:02:18Z"
+   }
+  ]
+ },
+ {
+  "n": 34,
+  "databaseId": 40870251948,
+  "headSha": "cc693be71c03429c5c30a1b3030fa538bea23c66",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T12:04:05Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:04:34Z",
+    "completedAt": "2026-10-29T12:05:04Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:04:36Z",
+    "completedAt": "2026-10-29T12:05:23Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:05:02Z",
+    "completedAt": "2026-10-29T12:05:30Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:05:17Z",
+    "completedAt": "2026-10-29T12:06:31Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:05:35Z",
+    "completedAt": "2026-10-29T12:06:04Z"
+   }
+  ]
+ },
+ {
+  "n": 35,
+  "databaseId": 40874860782,
+  "headSha": "46d3ce22b7bf29487484fcd58bfb48ab91674621",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T12:37:58Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:46:25Z",
+    "completedAt": "2026-10-29T12:46:56Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:48:04Z",
+    "completedAt": "2026-10-29T12:48:37Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:46:06Z",
+    "completedAt": "2026-10-29T12:46:57Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:48:26Z",
+    "completedAt": "2026-10-29T12:48:55Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:49:55Z",
+    "completedAt": "2026-10-29T12:51:19Z"
+   }
+  ]
+ },
+ {
+  "n": 36,
+  "databaseId": 40875615475,
+  "headSha": "79e4e98cb7d36e81fcf229b77b8273f7bc25f45b",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T12:43:23Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:50:54Z",
+    "completedAt": "2026-10-29T12:51:22Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:51:12Z",
+    "completedAt": "2026-10-29T12:52:31Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:50:27Z",
+    "completedAt": "2026-10-29T12:51:15Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:50:11Z",
+    "completedAt": "2026-10-29T12:50:42Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:51:58Z",
+    "completedAt": "2026-10-29T12:52:25Z"
+   }
+  ]
+ },
+ {
+  "n": 37,
+  "databaseId": 40877167322,
+  "headSha": "2ae4230d405727629fe6ffb367f56bcfa005f765",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T12:54:21Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:54:23Z",
+    "completedAt": "2026-10-29T12:54:53Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:54:26Z",
+    "completedAt": "2026-10-29T12:55:50Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:55:34Z",
+    "completedAt": "2026-10-29T12:56:01Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:55:05Z",
+    "completedAt": "2026-10-29T12:55:51Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:55:20Z",
+    "completedAt": "2026-10-29T12:55:48Z"
+   }
+  ]
+ },
+ {
+  "n": 38,
+  "databaseId": 40877194986,
+  "headSha": "253318e101392e3a6e6dd243de7aedf84b01c264",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T12:54:32Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:56:00Z",
+    "completedAt": "2026-10-29T12:56:28Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:56:03Z",
+    "completedAt": "2026-10-29T12:57:23Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:56:12Z",
+    "completedAt": "2026-10-29T12:57:00Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:56:04Z",
+    "completedAt": "2026-10-29T12:56:33Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T12:56:42Z",
+    "completedAt": "2026-10-29T12:57:11Z"
+   }
+  ]
+ },
+ {
+  "n": 39,
+  "databaseId": 40897402940,
+  "headSha": "a70284d554b3d835c7942a97a28c73e0b299b95b",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T15:01:54Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:01:56Z",
+    "completedAt": "2026-10-29T15:03:22Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:01:56Z",
+    "completedAt": "2026-10-29T15:02:30Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:01:56Z",
+    "completedAt": "2026-10-29T15:02:26Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:02:39Z",
+    "completedAt": "2026-10-29T15:03:08Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:02:43Z",
+    "completedAt": "2026-10-29T15:03:31Z"
+   }
+  ]
+ },
+ {
+  "n": 40,
+  "databaseId": 40897483065,
+  "headSha": "2a9a3414883485906cf58dce6a7068833b4a4bb6",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T15:02:22Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:02:52Z",
+    "completedAt": "2026-10-29T15:03:39Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:03:21Z",
+    "completedAt": "2026-10-29T15:03:49Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:03:35Z",
+    "completedAt": "2026-10-29T15:05:00Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:03:51Z",
+    "completedAt": "2026-10-29T15:04:22Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:04:02Z",
+    "completedAt": "2026-10-29T15:04:31Z"
+   }
+  ]
+ },
+ {
+  "n": 41,
+  "databaseId": 40901928073,
+  "headSha": "1e0df38ae3904a7c9c4b42d1e73532d261cd422a",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T15:28:30Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:28:33Z",
+    "completedAt": "2026-10-29T15:30:00Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:28:33Z",
+    "completedAt": "2026-10-29T15:29:26Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:28:33Z",
+    "completedAt": "2026-10-29T15:29:04Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:29:33Z",
+    "completedAt": "2026-10-29T15:30:01Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:29:39Z",
+    "completedAt": "2026-10-29T15:30:07Z"
+   }
+  ]
+ },
+ {
+  "n": 42,
+  "databaseId": 40902192769,
+  "headSha": "20e5fb1772302b64d75753f15967c4d79687ddb6",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T15:30:06Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:30:13Z",
+    "completedAt": "2026-10-29T15:30:43Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:30:13Z",
+    "completedAt": "2026-10-29T15:30:43Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:30:26Z",
+    "completedAt": "2026-10-29T15:31:13Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:30:56Z",
+    "completedAt": "2026-10-29T15:31:24Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T15:30:57Z",
+    "completedAt": "2026-10-29T15:32:12Z"
+   }
+  ]
+ },
+ {
+  "n": 43,
+  "databaseId": 40907294601,
+  "headSha": "689dec659a5b3d2be61bfddc66ad50892fca32be",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T16:00:40Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T16:00:43Z",
+    "completedAt": "2026-10-29T16:01:12Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T16:00:43Z",
+    "completedAt": "2026-10-29T16:02:10Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T16:00:43Z",
+    "completedAt": "2026-10-29T16:01:13Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T16:00:43Z",
+    "completedAt": "2026-10-29T16:01:33Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T16:01:25Z",
+    "completedAt": "2026-10-29T16:01:59Z"
+   }
+  ]
+ },
+ {
+  "n": 44,
+  "databaseId": 40908962823,
+  "headSha": "518fa4c5df53061102ef05f4dc3b9ed5aa77da84",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T16:10:38Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T16:10:40Z",
+    "completedAt": "2026-10-29T16:11:19Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T16:11:45Z",
+    "completedAt": "2026-10-29T16:13:14Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T16:11:32Z",
+    "completedAt": "2026-10-29T16:12:03Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T16:12:15Z",
+    "completedAt": "2026-10-29T16:12:46Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T16:13:00Z",
+    "completedAt": "2026-10-29T16:13:48Z"
+   }
+  ]
+ },
+ {
+  "n": 45,
+  "databaseId": 40917672177,
+  "headSha": "7971e3d231d50b8a9def67b84f502dad4ba58796",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T17:03:48Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:03:50Z",
+    "completedAt": "2026-10-29T17:04:21Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:03:50Z",
+    "completedAt": "2026-10-29T17:04:22Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:03:50Z",
+    "completedAt": "2026-10-29T17:05:15Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:04:35Z",
+    "completedAt": "2026-10-29T17:05:07Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:04:32Z",
+    "completedAt": "2026-10-29T17:05:19Z"
+   }
+  ]
+ },
+ {
+  "n": 46,
+  "databaseId": 40918394145,
+  "headSha": "e2b2330c69c870f281a8cab44c476ab2c23b6d14",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T17:08:12Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:08:14Z",
+    "completedAt": "2026-10-29T17:08:44Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:09:51Z",
+    "completedAt": "2026-10-29T17:10:22Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:08:14Z",
+    "completedAt": "2026-10-29T17:09:41Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:09:18Z",
+    "completedAt": "2026-10-29T17:09:46Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:08:14Z",
+    "completedAt": "2026-10-29T17:09:05Z"
+   }
+  ]
+ },
+ {
+  "n": 47,
+  "databaseId": 40918455677,
+  "headSha": "029513a92e1d1ab25c1563d28f40345ab41420b3",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T17:08:35Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:09:53Z",
+    "completedAt": "2026-10-29T17:10:40Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:09:58Z",
+    "completedAt": "2026-10-29T17:11:21Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:10:38Z",
+    "completedAt": "2026-10-29T17:11:08Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:09:56Z",
+    "completedAt": "2026-10-29T17:10:25Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:10:36Z",
+    "completedAt": "2026-10-29T17:11:06Z"
+   }
+  ]
+ },
+ {
+  "n": 48,
+  "databaseId": 40919665752,
+  "headSha": "0be2c22e37d10dae4262838c4d9550c396f62b7e",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T17:16:00Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:16:02Z",
+    "completedAt": "2026-10-29T17:17:28Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:16:02Z",
+    "completedAt": "2026-10-29T17:16:32Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:16:02Z",
+    "completedAt": "2026-10-29T17:16:52Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:16:44Z",
+    "completedAt": "2026-10-29T17:17:12Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:16:58Z",
+    "completedAt": "2026-10-29T17:17:27Z"
+   }
+  ]
+ },
+ {
+  "n": 49,
+  "databaseId": 40926465503,
+  "headSha": "ed03147827ce45d4426fa481058603a69870ab89",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T17:58:58Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T17:59:49Z",
+    "completedAt": "2026-10-29T18:00:19Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:00:31Z",
+    "completedAt": "2026-10-29T18:01:54Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:00:32Z",
+    "completedAt": "2026-10-29T18:01:00Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:00:50Z",
+    "completedAt": "2026-10-29T18:01:20Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:01:13Z",
+    "completedAt": "2026-10-29T18:02:00Z"
+   }
+  ]
+ },
+ {
+  "n": 50,
+  "databaseId": 40926772283,
+  "headSha": "135d27b8565ba08a3f73f8fdbed2c05f30b1a183",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T18:00:54Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:02:13Z",
+    "completedAt": "2026-10-29T18:03:32Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:01:56Z",
+    "completedAt": "2026-10-29T18:02:24Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:02:34Z",
+    "completedAt": "2026-10-29T18:03:03Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:02:08Z",
+    "completedAt": "2026-10-29T18:02:37Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:01:33Z",
+    "completedAt": "2026-10-29T18:02:21Z"
+   }
+  ]
+ },
+ {
+  "n": 51,
+  "databaseId": 40931478422,
+  "headSha": "eced203aff569214249b5f8b1b340cdf589f55c7",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T18:30:36Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:30:39Z",
+    "completedAt": "2026-10-29T18:32:01Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:30:39Z",
+    "completedAt": "2026-10-29T18:31:06Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:31:20Z",
+    "completedAt": "2026-10-29T18:32:14Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:30:58Z",
+    "completedAt": "2026-10-29T18:31:26Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T18:32:10Z",
+    "completedAt": "2026-10-29T18:32:42Z"
+   }
+  ]
+ },
+ {
+  "n": 52,
+  "databaseId": 40973913221,
+  "headSha": "5f476a2f3f330c77ad90feccac6f0c6057211326",
+  "conclusion": "success",
+  "createdAt": "2026-10-29T23:33:11Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T23:33:54Z",
+    "completedAt": "2026-10-29T23:34:26Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T23:34:32Z",
+    "completedAt": "2026-10-29T23:36:08Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T23:36:21Z",
+    "completedAt": "2026-10-29T23:36:52Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T23:37:16Z",
+    "completedAt": "2026-10-29T23:38:07Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-29T23:37:36Z",
+    "completedAt": "2026-10-29T23:38:07Z"
+   }
+  ]
+ },
+ {
+  "n": 53,
+  "databaseId": 41052339401,
+  "headSha": "4f0d996f7442f260939c3b619ec65f505492109f",
+  "conclusion": "success",
+  "createdAt": "2026-10-30T12:02:04Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T12:30:50Z",
+    "completedAt": "2026-10-30T12:32:26Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T12:32:39Z",
+    "completedAt": "2026-10-30T12:33:31Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T12:35:20Z",
+    "completedAt": "2026-10-30T12:35:48Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T12:33:44Z",
+    "completedAt": "2026-10-30T12:34:18Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T12:35:46Z",
+    "completedAt": "2026-10-30T12:36:16Z"
+   }
+  ]
+ },
+ {
+  "n": 54,
+  "databaseId": 41057899666,
+  "headSha": "f344ee5e3f12136e0d101a14b6c5c9bafd11be65",
+  "conclusion": "success",
+  "createdAt": "2026-10-30T12:46:34Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T12:51:18Z",
+    "completedAt": "2026-10-30T12:51:48Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T13:09:40Z",
+    "completedAt": "2026-10-30T13:10:18Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T13:31:21Z",
+    "completedAt": "2026-10-30T13:31:51Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T13:39:25Z",
+    "completedAt": "2026-10-30T13:40:54Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T14:11:27Z",
+    "completedAt": "2026-10-30T14:12:19Z"
+   }
+  ]
+ },
+ {
+  "n": 55,
+  "databaseId": 41059053810,
+  "headSha": "5c917e8f4c7522cc2d02cb42849c774802f59255",
+  "conclusion": "success",
+  "createdAt": "2026-10-30T12:55:33Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T14:53:35Z",
+    "completedAt": "2026-10-30T14:54:11Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T14:54:26Z",
+    "completedAt": "2026-10-30T14:56:10Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T15:03:28Z",
+    "completedAt": "2026-10-30T15:03:58Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T15:05:47Z",
+    "completedAt": "2026-10-30T15:06:17Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T15:09:05Z",
+    "completedAt": "2026-10-30T15:09:57Z"
+   }
+  ]
+ },
+ {
+  "n": 56,
+  "databaseId": 41088278020,
+  "headSha": "cc0b323c48473e5d79fbe34a0b1888a18de1d614",
+  "conclusion": "success",
+  "createdAt": "2026-10-30T16:15:53Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T16:21:08Z",
+    "completedAt": "2026-10-30T16:21:40Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T16:22:45Z",
+    "completedAt": "2026-10-30T16:23:16Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T16:23:20Z",
+    "completedAt": "2026-10-30T16:23:51Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T16:24:38Z",
+    "completedAt": "2026-10-30T16:25:28Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T16:27:18Z",
+    "completedAt": "2026-10-30T16:28:55Z"
+   }
+  ]
+ },
+ {
+  "n": 57,
+  "databaseId": 41088599504,
+  "headSha": "e6084bc8020c283c10898ec0b3459060ab8e6c2f",
+  "conclusion": "success",
+  "createdAt": "2026-10-30T16:17:56Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T16:31:50Z",
+    "completedAt": "2026-10-30T16:32:35Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T16:31:05Z",
+    "completedAt": "2026-10-30T16:31:38Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T16:31:04Z",
+    "completedAt": "2026-10-30T16:31:34Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T16:31:05Z",
+    "completedAt": "2026-10-30T16:31:39Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-30T16:31:47Z",
+    "completedAt": "2026-10-30T16:33:01Z"
+   }
+  ]
+ },
+ {
+  "n": 58,
+  "databaseId": 41239100562,
+  "headSha": "30e9a5b24678238acad03ccddacefdbdc23bab27",
+  "conclusion": "success",
+  "createdAt": "2026-10-31T20:28:59Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-10-31T20:31:25Z",
+    "completedAt": "2026-10-31T20:31:54Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-10-31T20:31:16Z",
+    "completedAt": "2026-10-31T20:32:02Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-10-31T20:30:50Z",
+    "completedAt": "2026-10-31T20:31:26Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-10-31T20:31:39Z",
+    "completedAt": "2026-10-31T20:32:57Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-10-31T20:32:01Z",
+    "completedAt": "2026-10-31T20:32:28Z"
+   }
+  ]
+ },
+ {
+  "n": 59,
+  "databaseId": 41302479220,
+  "headSha": "a242cc553a615df9def7e2f509c4a83356494f37",
+  "conclusion": "success",
+  "createdAt": "2026-11-01T11:34:27Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T11:46:23Z",
+    "completedAt": "2026-11-01T11:47:13Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T11:47:26Z",
+    "completedAt": "2026-11-01T11:47:54Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T11:51:09Z",
+    "completedAt": "2026-11-01T11:52:36Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T11:49:52Z",
+    "completedAt": "2026-11-01T11:50:20Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T11:55:23Z",
+    "completedAt": "2026-11-01T11:55:59Z"
+   }
+  ]
+ },
+ {
+  "n": 60,
+  "databaseId": 41305158196,
+  "headSha": "c370adbfa48321d4b1e4cbe845b260bcc73ef8bc",
+  "conclusion": "success",
+  "createdAt": "2026-11-01T12:09:59Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T12:10:01Z",
+    "completedAt": "2026-11-01T12:10:54Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T12:10:02Z",
+    "completedAt": "2026-11-01T12:11:27Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T12:11:07Z",
+    "completedAt": "2026-11-01T12:11:38Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T12:11:44Z",
+    "completedAt": "2026-11-01T12:12:12Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T12:11:40Z",
+    "completedAt": "2026-11-01T12:12:08Z"
+   }
+  ]
+ },
+ {
+  "n": 61,
+  "databaseId": 41332403891,
+  "headSha": "36d0c0340ce162e1c68f1e1ef529252f83e78325",
+  "conclusion": "success",
+  "createdAt": "2026-11-01T17:37:15Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T17:57:44Z",
+    "completedAt": "2026-11-01T17:58:14Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:10:03Z",
+    "completedAt": "2026-11-01T18:10:36Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:00:41Z",
+    "completedAt": "2026-11-01T18:01:30Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:13:27Z",
+    "completedAt": "2026-11-01T18:15:06Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:17:06Z",
+    "completedAt": "2026-11-01T18:17:38Z"
+   }
+  ]
+ },
+ {
+  "n": 62,
+  "databaseId": 41333414249,
+  "headSha": "c1e5d7abe1ee934601ae34b1fef5af518a5b6f82",
+  "conclusion": "success",
+  "createdAt": "2026-11-01T17:49:16Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:25:41Z",
+    "completedAt": "2026-11-01T18:26:14Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:18:44Z",
+    "completedAt": "2026-11-01T18:19:37Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:22:56Z",
+    "completedAt": "2026-11-01T18:23:31Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:21:05Z",
+    "completedAt": "2026-11-01T18:22:43Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:28:53Z",
+    "completedAt": "2026-11-01T18:29:27Z"
+   }
+  ]
+ },
+ {
+  "n": 63,
+  "databaseId": 41336779211,
+  "headSha": "315ea8b8f7ea281c066e9e6c6e9c1b3c99ea6778",
+  "conclusion": "success",
+  "createdAt": "2026-11-01T18:28:14Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:48:43Z",
+    "completedAt": "2026-11-01T18:49:13Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:58:40Z",
+    "completedAt": "2026-11-01T18:59:11Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T18:59:24Z",
+    "completedAt": "2026-11-01T19:01:04Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T19:06:57Z",
+    "completedAt": "2026-11-01T19:07:53Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T19:08:07Z",
+    "completedAt": "2026-11-01T19:08:45Z"
+   }
+  ]
+ },
+ {
+  "n": 64,
+  "databaseId": 41336898520,
+  "headSha": "d0e600c5506504afcb74dadd5223fa05059a70ad",
+  "conclusion": "failure",
+  "createdAt": "2026-11-01T18:29:43Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "failure",
+    "startedAt": "2026-11-01T20:07:12Z",
+    "completedAt": "2026-11-01T20:10:51Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T20:08:39Z",
+    "completedAt": "2026-11-01T20:09:39Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T20:38:45Z",
+    "completedAt": "2026-11-01T20:39:52Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T20:39:52Z",
+    "completedAt": "2026-11-01T20:41:16Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T21:08:31Z",
+    "completedAt": "2026-11-01T21:10:12Z"
+   }
+  ]
+ },
+ {
+  "n": 65,
+  "databaseId": 41337095116,
+  "headSha": "a4776e4280ec8d1ffa228fd210939a9822dae893",
+  "conclusion": "failure",
+  "createdAt": "2026-11-01T18:31:53Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T21:16:47Z",
+    "completedAt": "2026-11-01T21:18:32Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "failure",
+    "startedAt": "2026-11-01T21:25:44Z",
+    "completedAt": "2026-11-01T21:29:10Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T22:10:22Z",
+    "completedAt": "2026-11-01T22:11:20Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T22:32:44Z",
+    "completedAt": "2026-11-01T22:33:43Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T23:08:58Z",
+    "completedAt": "2026-11-01T23:10:16Z"
+   }
+  ]
+ },
+ {
+  "n": 66,
+  "databaseId": 41337380304,
+  "headSha": "57418782915bc23818df2ac30a40e2365d1c024d",
+  "conclusion": "success",
+  "createdAt": "2026-11-01T18:35:11Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T23:44:06Z",
+    "completedAt": "2026-11-01T23:45:54Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-01T23:57:45Z",
+    "completedAt": "2026-11-01T23:58:44Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T00:23:09Z",
+    "completedAt": "2026-11-02T00:24:10Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T00:25:49Z",
+    "completedAt": "2026-11-02T00:29:23Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T00:31:12Z",
+    "completedAt": "2026-11-02T00:32:29Z"
+   }
+  ]
+ },
+ {
+  "n": 67,
+  "databaseId": 41339596863,
+  "headSha": "9383ba18312062d3bc8a81a6c5125679bc3f51e3",
+  "conclusion": "success",
+  "createdAt": "2026-11-01T19:01:35Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T01:13:23Z",
+    "completedAt": "2026-11-02T01:14:23Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T00:55:49Z",
+    "completedAt": "2026-11-02T00:57:42Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T01:24:27Z",
+    "completedAt": "2026-11-02T01:25:25Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T01:31:47Z",
+    "completedAt": "2026-11-02T01:32:56Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T01:29:01Z",
+    "completedAt": "2026-11-02T01:32:18Z"
+   }
+  ]
+ },
+ {
+  "n": 68,
+  "databaseId": 41340916970,
+  "headSha": "50b5acddf89761e850ca6a5665f85dabfaf3d2d2",
+  "conclusion": "success",
+  "createdAt": "2026-11-01T19:16:45Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T01:35:19Z",
+    "completedAt": "2026-11-02T01:37:00Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T01:38:07Z",
+    "completedAt": "2026-11-02T01:39:02Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T01:49:08Z",
+    "completedAt": "2026-11-02T01:50:15Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T02:11:29Z",
+    "completedAt": "2026-11-02T02:13:13Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T01:38:48Z",
+    "completedAt": "2026-11-02T01:40:03Z"
+   }
+  ]
+ },
+ {
+  "n": 69,
+  "databaseId": 41344134479,
+  "headSha": "4e0145b813d35226d5e144170eafbff3e9e62c14",
+  "conclusion": "success",
+  "createdAt": "2026-11-01T19:54:54Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T02:13:32Z",
+    "completedAt": "2026-11-02T02:14:45Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T02:24:21Z",
+    "completedAt": "2026-11-02T02:25:55Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T02:27:01Z",
+    "completedAt": "2026-11-02T02:27:57Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T02:27:05Z",
+    "completedAt": "2026-11-02T02:28:02Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-02T02:28:02Z",
+    "completedAt": "2026-11-02T02:30:59Z"
+   }
+  ]
+ },
+ {
+  "n": 70,
+  "databaseId": 42038885859,
+  "headSha": "3cbd8ae1e37729809d75e143467b1634c1c8a453",
+  "conclusion": "success",
+  "createdAt": "2026-11-05T13:47:25Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T13:47:27Z",
+    "completedAt": "2026-11-05T13:47:58Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T13:47:27Z",
+    "completedAt": "2026-11-05T13:48:03Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T13:47:27Z",
+    "completedAt": "2026-11-05T13:48:16Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T13:48:11Z",
+    "completedAt": "2026-11-05T13:49:27Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T13:48:15Z",
+    "completedAt": "2026-11-05T13:48:42Z"
+   }
+  ]
+ },
+ {
+  "n": 71,
+  "databaseId": 42085112843,
+  "headSha": "c2761c0b6ad71b2a6466ccb68c402bcd943ed324",
+  "conclusion": "success",
+  "createdAt": "2026-11-05T18:31:51Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T18:31:53Z",
+    "completedAt": "2026-11-05T18:32:22Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T18:31:53Z",
+    "completedAt": "2026-11-05T18:32:23Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T18:31:53Z",
+    "completedAt": "2026-11-05T18:33:19Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T18:31:53Z",
+    "completedAt": "2026-11-05T18:32:45Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T18:32:36Z",
+    "completedAt": "2026-11-05T18:33:07Z"
+   }
+  ]
+ },
+ {
+  "n": 72,
+  "databaseId": 42100122842,
+  "headSha": "3d4fa8e685e42e935feb8402a64cecffac9d7a2a",
+  "conclusion": "success",
+  "createdAt": "2026-11-05T20:05:43Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T20:07:28Z",
+    "completedAt": "2026-11-05T20:07:57Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T20:07:08Z",
+    "completedAt": "2026-11-05T20:07:36Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T20:07:50Z",
+    "completedAt": "2026-11-05T20:08:46Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T20:08:10Z",
+    "completedAt": "2026-11-05T20:08:45Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-05T20:08:52Z",
+    "completedAt": "2026-11-05T20:10:07Z"
+   }
+  ]
+ },
+ {
+  "n": 73,
+  "databaseId": 42213515018,
+  "headSha": "84a192f492e310c02987529363a2ea61b9534f68",
+  "conclusion": "success",
+  "createdAt": "2026-11-06T11:53:11Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-06T11:53:13Z",
+    "completedAt": "2026-11-06T11:53:46Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-06T11:53:13Z",
+    "completedAt": "2026-11-06T11:53:44Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-06T11:53:58Z",
+    "completedAt": "2026-11-06T11:55:16Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-06T11:53:13Z",
+    "completedAt": "2026-11-06T11:54:02Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-06T11:53:56Z",
+    "completedAt": "2026-11-06T11:54:24Z"
+   }
+  ]
+ },
+ {
+  "n": 74,
+  "databaseId": 42215656715,
+  "headSha": "8aab34e9ca8790e1331f2f028da845b6a1482410",
+  "conclusion": "success",
+  "createdAt": "2026-11-06T12:10:35Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-06T12:10:38Z",
+    "completedAt": "2026-11-06T12:11:08Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-06T12:10:38Z",
+    "completedAt": "2026-11-06T12:11:06Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-06T12:10:38Z",
+    "completedAt": "2026-11-06T12:12:06Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-06T12:11:19Z",
+    "completedAt": "2026-11-06T12:11:50Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-06T12:11:24Z",
+    "completedAt": "2026-11-06T12:12:12Z"
+   }
+  ]
+ },
+ {
+  "n": 75,
+  "databaseId": 42398998794,
+  "headSha": "2dbc79622bbbc1f06458dbcbd23647d7f8c369ac",
+  "conclusion": "success",
+  "createdAt": "2026-11-07T17:59:33Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T17:59:35Z",
+    "completedAt": "2026-11-07T18:00:08Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T17:59:36Z",
+    "completedAt": "2026-11-07T18:01:00Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T17:59:35Z",
+    "completedAt": "2026-11-07T18:00:07Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:00:20Z",
+    "completedAt": "2026-11-07T18:01:10Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:00:36Z",
+    "completedAt": "2026-11-07T18:01:05Z"
+   }
+  ]
+ },
+ {
+  "n": 76,
+  "databaseId": 42400610103,
+  "headSha": "36db6b69f045f3e5821e283bfd0ea54db517bb0d",
+  "conclusion": "success",
+  "createdAt": "2026-11-07T18:18:17Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:18:19Z",
+    "completedAt": "2026-11-07T18:19:46Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:18:19Z",
+    "completedAt": "2026-11-07T18:18:51Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:19:04Z",
+    "completedAt": "2026-11-07T18:19:32Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:18:19Z",
+    "completedAt": "2026-11-07T18:19:10Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:19:17Z",
+    "completedAt": "2026-11-07T18:19:48Z"
+   }
+  ]
+ },
+ {
+  "n": 77,
+  "databaseId": 42401332321,
+  "headSha": "32f037fcf65378573534488e1f535511e14c9d85",
+  "conclusion": "success",
+  "createdAt": "2026-11-07T18:26:50Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:29:58Z",
+    "completedAt": "2026-11-07T18:34:51Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:32:23Z",
+    "completedAt": "2026-11-07T18:32:53Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:34:00Z",
+    "completedAt": "2026-11-07T18:34:27Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:34:03Z",
+    "completedAt": "2026-11-07T18:35:28Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:35:04Z",
+    "completedAt": "2026-11-07T18:35:53Z"
+   }
+  ]
+ },
+ {
+  "n": 78,
+  "databaseId": 42401360674,
+  "headSha": "5aa2aa162734b403330d62ae334a3a81932efaed",
+  "conclusion": "success",
+  "createdAt": "2026-11-07T18:27:12Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:35:39Z",
+    "completedAt": "2026-11-07T18:36:27Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:35:40Z",
+    "completedAt": "2026-11-07T18:36:09Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:36:14Z",
+    "completedAt": "2026-11-07T18:37:39Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:36:06Z",
+    "completedAt": "2026-11-07T18:36:35Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:36:41Z",
+    "completedAt": "2026-11-07T18:37:09Z"
+   }
+  ]
+ },
+ {
+  "n": 79,
+  "databaseId": 42401643799,
+  "headSha": "0e704411247c1a4cd67d97ad7120c82db02c38e9",
+  "conclusion": "success",
+  "createdAt": "2026-11-07T18:30:43Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:37:05Z",
+    "completedAt": "2026-11-07T18:37:35Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:36:48Z",
+    "completedAt": "2026-11-07T18:37:36Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:37:23Z",
+    "completedAt": "2026-11-07T18:37:51Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:37:52Z",
+    "completedAt": "2026-11-07T18:38:21Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:37:48Z",
+    "completedAt": "2026-11-07T18:39:14Z"
+   }
+  ]
+ },
+ {
+  "n": 80,
+  "databaseId": 42401676904,
+  "headSha": "34067a80dabeeda5a277bafbc9fc7c11f1030d39",
+  "conclusion": "success",
+  "createdAt": "2026-11-07T18:31:05Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:38:03Z",
+    "completedAt": "2026-11-07T18:38:32Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:38:14Z",
+    "completedAt": "2026-11-07T18:38:46Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:39:18Z",
+    "completedAt": "2026-11-07T18:40:04Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:38:45Z",
+    "completedAt": "2026-11-07T18:39:14Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-07T18:38:58Z",
+    "completedAt": "2026-11-07T18:40:17Z"
+   }
+  ]
+ },
+ {
+  "n": 81,
+  "databaseId": 42613264927,
+  "headSha": "0972fd539b7021f5a5d8aeccfb94727927dc2383",
+  "conclusion": "success",
+  "createdAt": "2026-11-09T11:59:05Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T11:59:07Z",
+    "completedAt": "2026-11-09T11:59:57Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T11:59:07Z",
+    "completedAt": "2026-11-09T11:59:37Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T11:59:07Z",
+    "completedAt": "2026-11-09T11:59:40Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T11:59:50Z",
+    "completedAt": "2026-11-09T12:00:17Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T11:59:52Z",
+    "completedAt": "2026-11-09T12:01:08Z"
+   }
+  ]
+ },
+ {
+  "n": 82,
+  "databaseId": 42615355399,
+  "headSha": "7070169ce39ccbc3fff561cd168416d0b91b7d9a",
+  "conclusion": "success",
+  "createdAt": "2026-11-09T12:14:32Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T12:14:34Z",
+    "completedAt": "2026-11-09T12:16:02Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T12:14:34Z",
+    "completedAt": "2026-11-09T12:15:04Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T12:15:16Z",
+    "completedAt": "2026-11-09T12:15:46Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T12:14:34Z",
+    "completedAt": "2026-11-09T12:15:24Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T12:15:37Z",
+    "completedAt": "2026-11-09T12:16:05Z"
+   }
+  ]
+ },
+ {
+  "n": 83,
+  "databaseId": 42622936262,
+  "headSha": "302fc1dcc9788add06251b543ab39187c800aae7",
+  "conclusion": "success",
+  "createdAt": "2026-11-09T13:09:05Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:10:19Z",
+    "completedAt": "2026-11-09T13:10:51Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:11:00Z",
+    "completedAt": "2026-11-09T13:11:32Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:11:45Z",
+    "completedAt": "2026-11-09T13:12:34Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:12:12Z",
+    "completedAt": "2026-11-09T13:12:41Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:11:56Z",
+    "completedAt": "2026-11-09T13:13:23Z"
+   }
+  ]
+ },
+ {
+  "n": 84,
+  "databaseId": 42624611995,
+  "headSha": "c320dc18934ee53fc729904c1bf2f887502a97ee",
+  "conclusion": "success",
+  "createdAt": "2026-11-09T13:20:29Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:21:23Z",
+    "completedAt": "2026-11-09T13:22:12Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:22:00Z",
+    "completedAt": "2026-11-09T13:22:29Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:21:36Z",
+    "completedAt": "2026-11-09T13:22:05Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:22:18Z",
+    "completedAt": "2026-11-09T13:23:42Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:21:38Z",
+    "completedAt": "2026-11-09T13:22:07Z"
+   }
+  ]
+ },
+ {
+  "n": 85,
+  "databaseId": 42624642398,
+  "headSha": "263b658f2392e34aa16246520ede337ed45cd7f9",
+  "conclusion": "success",
+  "createdAt": "2026-11-09T13:20:41Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:23:58Z",
+    "completedAt": "2026-11-09T13:24:48Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:25:01Z",
+    "completedAt": "2026-11-09T13:25:32Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:26:12Z",
+    "completedAt": "2026-11-09T13:26:43Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:25:14Z",
+    "completedAt": "2026-11-09T13:25:42Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:25:55Z",
+    "completedAt": "2026-11-09T13:27:22Z"
+   }
+  ]
+ },
+ {
+  "n": 86,
+  "databaseId": 42624693763,
+  "headSha": "aad09e1ab6bc3f8ee9e80c65b0b3beba65dd34aa",
+  "conclusion": "success",
+  "createdAt": "2026-11-09T13:21:02Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:26:22Z",
+    "completedAt": "2026-11-09T13:26:51Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:26:55Z",
+    "completedAt": "2026-11-09T13:27:43Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:27:04Z",
+    "completedAt": "2026-11-09T13:28:30Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:27:26Z",
+    "completedAt": "2026-11-09T13:27:55Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-09T13:27:56Z",
+    "completedAt": "2026-11-09T13:28:26Z"
+   }
+  ]
+ },
+ {
+  "n": 87,
+  "databaseId": 42834584640,
+  "headSha": "07446dcf5971acf736ea627954dd950d2c63c3fb",
+  "conclusion": "success",
+  "createdAt": "2026-11-10T14:29:25Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-10T14:29:27Z",
+    "completedAt": "2026-11-10T14:30:17Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-10T14:29:27Z",
+    "completedAt": "2026-11-10T14:30:53Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-10T14:29:27Z",
+    "completedAt": "2026-11-10T14:29:57Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-10T14:30:27Z",
+    "completedAt": "2026-11-10T14:31:51Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-10T14:30:10Z",
+    "completedAt": "2026-11-10T14:30:39Z"
+   }
+  ]
+ },
+ {
+  "n": 88,
+  "databaseId": 42834630770,
+  "headSha": "6c5c8b1c2ce516952a11513b49de087299e9549f",
+  "conclusion": "success",
+  "createdAt": "2026-11-10T14:29:42Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-10T14:30:30Z",
+    "completedAt": "2026-11-10T14:30:59Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-10T14:30:52Z",
+    "completedAt": "2026-11-10T14:31:20Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-10T14:31:12Z",
+    "completedAt": "2026-11-10T14:32:36Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-10T14:32:00Z",
+    "completedAt": "2026-11-10T14:32:28Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-10T14:31:33Z",
+    "completedAt": "2026-11-10T14:32:20Z"
+   }
+  ]
+ },
+ {
+  "n": 89,
+  "databaseId": 43109086057,
+  "headSha": "9b9eaedfb884a240226cc28fd93f5000946a9ee8",
+  "conclusion": "success",
+  "createdAt": "2026-11-11T22:07:40Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T22:07:42Z",
+    "completedAt": "2026-11-11T22:08:16Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T22:07:42Z",
+    "completedAt": "2026-11-11T22:08:16Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T22:08:29Z",
+    "completedAt": "2026-11-11T22:09:08Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T22:07:42Z",
+    "completedAt": "2026-11-11T22:09:35Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T22:07:42Z",
+    "completedAt": "2026-11-11T22:08:35Z"
+   }
+  ]
+ },
+ {
+  "n": 90,
+  "databaseId": 43109190466,
+  "headSha": "ab52357c85bfa73f09a5ff6c58d649b6dbfaf86f",
+  "conclusion": "success",
+  "createdAt": "2026-11-11T22:08:23Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T22:09:21Z",
+    "completedAt": "2026-11-11T22:09:50Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T22:09:26Z",
+    "completedAt": "2026-11-11T22:10:17Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T22:10:03Z",
+    "completedAt": "2026-11-11T22:11:35Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T22:09:48Z",
+    "completedAt": "2026-11-11T22:10:21Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T22:10:29Z",
+    "completedAt": "2026-11-11T22:11:00Z"
+   }
+  ]
+ },
+ {
+  "n": 91,
+  "databaseId": 43116405608,
+  "headSha": "7f4602d861dc5d4325b502db945ce55b1a2a9dcf",
+  "conclusion": "success",
+  "createdAt": "2026-11-11T23:00:31Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T23:00:33Z",
+    "completedAt": "2026-11-11T23:01:05Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T23:00:34Z",
+    "completedAt": "2026-11-11T23:02:11Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T23:00:34Z",
+    "completedAt": "2026-11-11T23:01:30Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T23:00:34Z",
+    "completedAt": "2026-11-11T23:01:10Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-11T23:01:18Z",
+    "completedAt": "2026-11-11T23:01:46Z"
+   }
+  ]
+ },
+ {
+  "n": 92,
+  "databaseId": 43259704998,
+  "headSha": "2552934d2b45fb9fa305e28ed21855219efe976a",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T16:32:05Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T16:33:53Z",
+    "completedAt": "2026-11-12T16:34:43Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T16:34:16Z",
+    "completedAt": "2026-11-12T16:34:44Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T16:33:43Z",
+    "completedAt": "2026-11-12T16:34:14Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T16:34:17Z",
+    "completedAt": "2026-11-12T16:35:40Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T16:34:27Z",
+    "completedAt": "2026-11-12T16:34:59Z"
+   }
+  ]
+ },
+ {
+  "n": 93,
+  "databaseId": 43265979841,
+  "headSha": "5667c6eac19fe55fafa97371af0c107669f928aa",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T17:07:01Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T17:07:03Z",
+    "completedAt": "2026-11-12T17:07:33Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T17:07:03Z",
+    "completedAt": "2026-11-12T17:08:33Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T17:07:03Z",
+    "completedAt": "2026-11-12T17:07:56Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T17:07:46Z",
+    "completedAt": "2026-11-12T17:08:16Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T17:08:09Z",
+    "completedAt": "2026-11-12T17:08:39Z"
+   }
+  ]
+ },
+ {
+  "n": 94,
+  "databaseId": 43269078219,
+  "headSha": "474b1e5174454b8520cbadc7b02089f367aac633",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T17:24:21Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T17:24:24Z",
+    "completedAt": "2026-11-12T17:25:20Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T17:24:24Z",
+    "completedAt": "2026-11-12T17:25:53Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T17:25:36Z",
+    "completedAt": "2026-11-12T17:26:23Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T17:25:36Z",
+    "completedAt": "2026-11-12T17:28:09Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T17:26:06Z",
+    "completedAt": "2026-11-12T17:26:56Z"
+   }
+  ]
+ },
+ {
+  "n": 95,
+  "databaseId": 43298316473,
+  "headSha": "9b99cf231caa5773921ec8b53405d964270895ba",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T20:14:31Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T20:14:33Z",
+    "completedAt": "2026-11-12T20:15:25Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T20:14:33Z",
+    "completedAt": "2026-11-12T20:15:27Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T20:15:41Z",
+    "completedAt": "2026-11-12T20:16:33Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T20:15:43Z",
+    "completedAt": "2026-11-12T20:17:31Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T20:14:34Z",
+    "completedAt": "2026-11-12T20:16:03Z"
+   }
+  ]
+ },
+ {
+  "n": 96,
+  "databaseId": 43298892083,
+  "headSha": "7feb27405a374d57e2fc4b3eddad9e843313a9ea",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T20:17:53Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T20:17:56Z",
+    "completedAt": "2026-11-12T20:18:33Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T20:17:56Z",
+    "completedAt": "2026-11-12T20:18:51Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T20:17:56Z",
+    "completedAt": "2026-11-12T20:18:35Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T20:18:47Z",
+    "completedAt": "2026-11-12T20:19:35Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T20:19:07Z",
+    "completedAt": "2026-11-12T20:22:11Z"
+   }
+  ]
+ },
+ {
+  "n": 97,
+  "databaseId": 43305042141,
+  "headSha": "aa1f42be70c2f835b28b234ebeeba0084aa624f1",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T20:55:12Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:02:37Z",
+    "completedAt": "2026-11-12T21:03:30Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:03:10Z",
+    "completedAt": "2026-11-12T21:04:39Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:05:00Z",
+    "completedAt": "2026-11-12T21:07:52Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:05:25Z",
+    "completedAt": "2026-11-12T21:06:15Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:06:31Z",
+    "completedAt": "2026-11-12T21:07:20Z"
+   }
+  ]
+ },
+ {
+  "n": 98,
+  "databaseId": 43307880113,
+  "headSha": "bd33dc9a7ac1a6e541f23ecc80aaa3b61d7e4adf",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T21:12:09Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:12:11Z",
+    "completedAt": "2026-11-12T21:13:11Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:16:06Z",
+    "completedAt": "2026-11-12T21:16:56Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:12:11Z",
+    "completedAt": "2026-11-12T21:13:05Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:13:56Z",
+    "completedAt": "2026-11-12T21:15:23Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:14:28Z",
+    "completedAt": "2026-11-12T21:17:27Z"
+   }
+  ]
+ },
+ {
+  "n": 99,
+  "databaseId": 43310255905,
+  "headSha": "59d979aca6c437e76df6a55f2e919f89a64745cd",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T21:26:20Z",
+  "jobs": [
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:29:52Z",
+    "completedAt": "2026-11-12T21:30:52Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:26:22Z",
+    "completedAt": "2026-11-12T21:27:57Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:26:22Z",
+    "completedAt": "2026-11-12T21:29:27Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:26:22Z",
+    "completedAt": "2026-11-12T21:27:15Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:29:57Z",
+    "completedAt": "2026-11-12T21:30:51Z"
+   }
+  ]
+ },
+ {
+  "n": 100,
+  "databaseId": 43313826725,
+  "headSha": "54a1fb18ce57b34364af7624580e648fec191b18",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T21:48:16Z",
+  "jobs": [
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:49:37Z",
+    "completedAt": "2026-11-12T21:50:27Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:54:51Z",
+    "completedAt": "2026-11-12T21:56:16Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:53:06Z",
+    "completedAt": "2026-11-12T21:53:57Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:53:57Z",
+    "completedAt": "2026-11-12T21:56:54Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:51:49Z",
+    "completedAt": "2026-11-12T21:52:48Z"
+   }
+  ]
+ },
+ {
+  "n": 101,
+  "databaseId": 43314759188,
+  "headSha": "dc06c6ab234ccfac0c9a111a39e37ddeaf9ca549",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T21:54:03Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:56:34Z",
+    "completedAt": "2026-11-12T21:59:50Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T21:57:11Z",
+    "completedAt": "2026-11-12T21:58:01Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T22:02:18Z",
+    "completedAt": "2026-11-12T22:03:11Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T22:00:08Z",
+    "completedAt": "2026-11-12T22:00:57Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T22:02:20Z",
+    "completedAt": "2026-11-12T22:03:43Z"
+   }
+  ]
+ },
+ {
+  "n": 102,
+  "databaseId": 43316976234,
+  "headSha": "dfd0442dd0f15dcc8e25fb4c74fd4e8213d437c5",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T22:07:47Z",
+  "jobs": [
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T22:07:49Z",
+    "completedAt": "2026-11-12T22:10:58Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T22:09:06Z",
+    "completedAt": "2026-11-12T22:10:25Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T22:07:49Z",
+    "completedAt": "2026-11-12T22:08:50Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T22:07:49Z",
+    "completedAt": "2026-11-12T22:08:44Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T22:09:00Z",
+    "completedAt": "2026-11-12T22:09:48Z"
+   }
+  ]
+ },
+ {
+  "n": 103,
+  "databaseId": 43325024815,
+  "headSha": "1fa668c718271db2944bfd85bf810290aa8e080c",
+  "conclusion": "success",
+  "createdAt": "2026-11-12T23:00:21Z",
+  "jobs": [
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T23:00:23Z",
+    "completedAt": "2026-11-12T23:01:53Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T23:00:23Z",
+    "completedAt": "2026-11-12T23:01:15Z"
+   },
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T23:01:31Z",
+    "completedAt": "2026-11-12T23:02:19Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T23:00:23Z",
+    "completedAt": "2026-11-12T23:01:26Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-12T23:01:42Z",
+    "completedAt": "2026-11-12T23:04:34Z"
+   }
+  ]
+ },
+ {
+  "n": 104,
+  "databaseId": 43339474220,
+  "headSha": "bbb25b473981d866f984139bc40c84fabf558441",
+  "conclusion": "success",
+  "createdAt": "2026-11-13T00:44:35Z",
+  "jobs": [
+   {
+    "name": "Code Quality and Security Linting",
+    "conclusion": "success",
+    "startedAt": "2026-11-13T00:44:38Z",
+    "completedAt": "2026-11-13T00:45:08Z"
+   },
+   {
+    "name": "uml",
+    "conclusion": "success",
+    "startedAt": "2026-11-13T00:44:38Z",
+    "completedAt": "2026-11-13T00:45:13Z"
+   },
+   {
+    "name": "api",
+    "conclusion": "success",
+    "startedAt": "2026-11-13T00:44:38Z",
+    "completedAt": "2026-11-13T00:45:07Z"
+   },
+   {
+    "name": "Tests with coverage",
+    "conclusion": "success",
+    "startedAt": "2026-11-13T00:44:38Z",
+    "completedAt": "2026-11-13T00:46:14Z"
+   },
+   {
+    "name": "Performance Tests (NFR)",
+    "conclusion": "success",
+    "startedAt": "2026-11-13T00:45:20Z",
+    "completedAt": "2026-11-13T00:46:06Z"
+   }
+  ]
+ }
+]

@@ -1,0 +1,22 @@
+# Запуск №65 · run 41337095116 · коміт a4776e4 · створено 2026-11-01T18:31:53Z (UTC)
+# Джерело: gh run view 41337095116 -R ukma-fin-ssdm-2026/reserve-flow --log-failed
+# https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/runs/41337095116
+# Уривок: рядки з помилками і 4 рядки контексту перед ними; «…» — пропуск.
+
+[Tests with coverage] 2026-11-01T21:28:59.0938128Z         # слот знову в пошуку, і його можна забронювати повторно
+[Tests with coverage] 2026-11-01T21:28:59.0968341Z         search = client.get("/api/v1/slots", headers=CLIENT, params={"date": "2026-10-15"})
+[Tests with coverage] 2026-11-01T21:28:59.0997977Z         assert search.status_code == 200
+[Tests with coverage] 2026-11-01T21:28:59.1013925Z >       assert SLOT in [s["id"] for s in search.json()["items"]]
+[Tests with coverage] 2026-11-01T21:28:59.1057921Z E       AssertionError: assert 'b2000000-0000-4000-8000-000000000001' in []
+[Tests with coverage] 2026-11-01T21:28:59.1081488Z
+[Tests with coverage] 2026-11-01T21:28:59.1104007Z tests/test_booking_e2e.py:34: AssertionError
+[Tests with coverage] 2026-11-01T21:28:59.1128075Z ----------------------------- Captured stderr call -----------------------------
+…
+[Tests with coverage] 2026-11-01T21:28:59.1569592Z TOTAL                                 829     14    118      7    98%
+[Tests with coverage] 2026-11-01T21:28:59.1570161Z Coverage HTML written to dir htmlcov
+[Tests with coverage] 2026-11-01T21:28:59.1570748Z Required test coverage of 80.0% reached. Total coverage: 97.78%
+[Tests with coverage] 2026-11-01T21:28:59.1571496Z =========================== short test summary info ============================
+[Tests with coverage] 2026-11-01T21:28:59.1572647Z FAILED tests/test_booking_e2e.py::test_row0_end_to_end - AssertionError: assert 'b2000000-0000-4000-8000-000000000001' in []
+[Tests with coverage] 2026-11-01T21:28:59.1573709Z 1 failed, 235 passed, 1 deselected, 13 warnings in 95.06s (0:01:35)
+[Tests with coverage] 2026-11-01T21:29:00.3690427Z ##[error]Process completed with exit code 1.
+[Tests with coverage] 2026-11-01T21:29:00.3882536Z ##[group]Run echo "## Покриття тестами" >> "$GITHUB_STEP_SUMMARY"
