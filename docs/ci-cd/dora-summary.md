@@ -50,7 +50,7 @@
 ### 🧩 Технічні
 1. **Черга на спільний раннер курсу.** У пікові години (30.10 вдень, 01.11 увечері) черга сягала 6,3 год. Понад 10 хв у черзі простояли 13 запусків (#372–#375, #378, #387, #389–#396).
 2. **Кожен push запускає 5 паралельних завдань**, і кожне окремо ставить Python і залежності (`Set up Python` + `Install` ≈ 30–60 с на завдання). Набір тестів продуктивності (`Performance Tests (NFR)`) і рендер UML (`uml`) запускаються на кожен коміт, навіть якщо коміт змінює лише README (#374, #373, #378, #389–#392).
-3. **Документацію перевіряє весь конвеєр:** 47 % запусків — лише `*.md`, `Labs/**` чи `video_*.txt` (#300, #387, #378, #392, #394–#396). 
+3. **Документацію перевіряє весь конвеєр:** 47 % запусків — лише `*.md`, `Labs/**` чи `video_*.txt` (#300, #387, #378, #392, #394–#396).
 4. **Залежності без фіксованої версії:** `setup-java` з `java-version: "17"` підтягнув зламаний реліз 17.0.21+9 (#297, #300). Виправлено в #301.
 5. **Тести, що залежать від даних у seed:** e2e-тест шукав слот на жорстко задану дату 15.10 (#391, #390). Виправлено в #393.
 6. **Немає pytest-asyncio**, хоча тести мають `async def`. Модульні тести, написані як async, падають (#286, #287). Виправлено в #288.
@@ -109,7 +109,38 @@
 
 ---
 
-## 6. Дашборд
+## 6. Бонуси
+
+### Скорочення зайвих запусків CI на `main` (`paths-ignore` + `concurrency`, #500)
+
+**Відповідальна (пояснює у відео):** Марія Ромах (@regjine) · **PR зі зміною `ci.yml`:** [#513](https://github.com/ukma-fin-ssdm-2026/reserve-flow/pull/513) ([прогін CI на `main`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/actions/runs/44606510346))
+
+**Що змінено в [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml):**
+1. **`paths-ignore` на `push` у `main`** для змін лише в документації та посиланнях на відео (`Labs/**`, `**/video_*.txt`, `README.md`, `CHANGELOG.md`). Файли `docs/requirements/rtm.md` і `docs/architecture/uml/**` свідомо **не ігноруються**, оскільки їх перевіряють завдання `lint` (`check_traceability.py`) та `uml` (PlantUML).
+2. **Захист від «зависання» обов'язкових перевірок у PR:** фільтр `paths-ignore` поставлено лише на подію `push` (на `main`), а **не** на `pull_request`. Завдяки цьому в PR лише з документацією обов'язкові перевірки (`Tests with coverage`, `lint`, `api`, `uml`) виконуються штатно і не блокують злиття в стані *«Expected — Waiting for status to be reported»*, але після злиття такого PR у `main` конвеєр не запускає повторно 5 важких завдань на `main`.
+3. **`concurrency` з `cancel-in-progress` для PR:** додано групу конкурентності `${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}` із `cancel-in-progress: ${{ github.event_name == 'pull_request' }}`. Новий коміт у відкритий PR автоматично скасовує застарілий запуск цього PR у черзі на спільний раннер курсу, а запуски на `main` (`push`) ніколи не перериваються посеред роботи.
+
+#### Запуски на `main` ДО зміни (5 останніх PR зі змінами в коді, тестах або конфігурації з [`metrics-raw.md`](metrics-raw.md))
+
+| № у `metrics-raw.md` | Коміт на `main` | PR | Що змінено (код / тести / конфігурація) | Черга, хв | Виконання, хв | Разом у CI, хв | Статус |
+|---|---|---|---|:---:|:---:|:---:|:---:|
+| 97 | [`aa1f42b`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/commit/aa1f42be70c2f835b28b234ebeeba0084aa624f1) | #479 | код + тести (`services/bookings.py`, `tests/reliability/`) | 7 | 5 | 12 | ✅ |
+| 98 | [`bd33dc9`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/commit/bd33dc9a7ac1a6e541f23ecc80aaa3b61d7e4adf) | #480 | код + OpenAPI + тести (`errors.py`, `tests/reliability/`) | 0 | 5 | 5 | ✅ |
+| 99 | [`59d979a`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/commit/59d979aca6c437e76df6a55f2e919f89a64745cd) | #481 | код + конфіг + тести (`main.py`, `Dockerfile`, `render.yaml`) | 0 | 4 | 4 | ✅ |
+| 100 | [`54a1fb1`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/commit/54a1fb18ce57b34364af7624580e648fec191b18) | #482 | тести (`tests/reliability/` — реорганізація набору) | 1 | 7 | 8 | ✅ |
+| 101 | [`dc06c6a`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/commit/dc06c6ab234ccfac0c9a111a39e37ddeaf9ca549) | #483 | конфігурація CI (`.github/workflows/ci.yml` — крок reliability) | 3 | 7 | 10 | ✅ |
+
+#### Запуски на `main` ПІСЛЯ зміни (≥ 3 PR зі змінами в коді, тестах або конфігурації)
+
+| № після зміни | Коміт на `main` | PR | Що змінено (код / тести / конфігурація) | Черга, хв | Виконання, хв | Разом у CI, хв | Статус |
+|---|---|---|---|:---:|:---:|:---:|:---:|
+| 1 | [`259fe18`](https://github.com/ukma-fin-ssdm-2026/reserve-flow/commit/259fe18bbc825fbbb3c11bddc12fee05e7349608) | [#513](https://github.com/ukma-fin-ssdm-2026/reserve-flow/pull/513) | конфігурація CI (`.github/workflows/ci.yml`: `paths-ignore` + `concurrency`, #500) | 5 | 6 | 11 | ✅ |
+| 2 | `<sha_2>` | `#<PR_2>` | `<код / тести / конфігурація>` | `<…>` | `<…>` | `<…>` | ✅ |
+| 3 | `<sha_3>` | `#<PR_3>` | `<код / тести / конфігурація>` | `<…>` | `<…>` | `<…>` | ✅ |
+
+---
+
+## 7. Дашборд
 
 ### Запуски CI на `main` по днях
 
