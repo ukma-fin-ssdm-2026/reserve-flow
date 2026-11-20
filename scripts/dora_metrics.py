@@ -7,6 +7,7 @@ The script is intentionally manual/local; it does not create a scheduled workflo
 
 from __future__ import annotations
 
+import re
 import argparse
 import json
 import statistics
@@ -15,6 +16,10 @@ import sys
 from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any
+
+ENDPOINT_PATTERN = re.compile(
+    r"^repos/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+" r"(?:/[A-Za-z0-9_.-]+)*(?:\?[A-Za-z0-9_.=&%-]+)?$"
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -43,6 +48,9 @@ def parse_date(value: str) -> date:
 
 
 def gh_json(endpoint: str, *, paginate: bool = False) -> Any:
+    if not ENDPOINT_PATTERN.fullmatch(endpoint):
+        raise ValueError("Некоректний GitHub API endpoint")
+
     command = ["gh", "api"]
     if paginate:
         command += ["--paginate", "--slurp"]
@@ -180,7 +188,15 @@ def main() -> int:
         print("--until не може бути раніше за --since", file=sys.stderr)
         return 2
 
-    repo = args.repo
+    repo = args.repo or "ukma-fin-ssdm-2026/reserve-flow"
+
+    if not re.fullmatch(
+        r"[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9_.-]{1,100}",
+        repo,
+    ):
+        print("Некоректний формат репозиторію owner/repository", file=sys.stderr)
+        return 2
+
     if not repo:
         result = subprocess.run(
             ["gh", "repo", "view", "--json", "nameWithOwner", "--jq", ".nameWithOwner"],
@@ -406,7 +422,18 @@ def main() -> int:
         "",
     ]
 
-    output = Path(args.output)
+    output_root = (Path.cwd() / "docs" / "ci-cd").resolve()
+    output = Path(args.output).resolve()
+
+    try:
+        output.relative_to(output_root)
+    except ValueError:
+        print(
+            "Шлях звіту має бути всередині docs/ci-cd",
+            file=sys.stderr,
+        )
+        return 2
+
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text("\n".join(report), encoding="utf-8")
     print(f"Звіт збережено: {output}")
